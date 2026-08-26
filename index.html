@@ -2113,6 +2113,92 @@ body{
 const attendance = {};
 
 
+/* =========================================
+   ISTORIC - ULTIMELE 6 ANTRENAMENTE
+========================================= */
+
+let attendanceHistory =
+    JSON.parse(
+        localStorage.getItem(
+            "juniorstats_history"
+        )
+    ) || {};
+
+
+/* Data antrenamentului curent */
+
+function getTrainingDate(){
+
+    const now = new Date();
+
+    return now.toISOString().split("T")[0];
+
+}
+
+
+/* =========================================
+   AFIȘARE ISTORIC
+========================================= */
+
+function renderAttendanceHistory(){
+
+    document
+        .querySelectorAll(".player")
+        .forEach(player => {
+
+            const id =
+                player.dataset.id;
+
+            const history =
+                attendanceHistory[id] || [];
+
+            const historyBox =
+                player.querySelector(
+                    ".player-history"
+                );
+
+            if(!historyBox){
+                return;
+            }
+
+            historyBox.innerHTML = "";
+
+            history.forEach(status => {
+
+                const box =
+                    document.createElement("span");
+
+                box.className =
+                    "history-box " +
+                    (
+                        status === "present"
+                            ? "present"
+                            : "absent"
+                    );
+
+                box.textContent =
+                    status === "present"
+                        ? "✓"
+                        : "×";
+
+                historyBox.appendChild(box);
+
+            });
+
+        });
+
+}
+
+
+/* =========================================
+   ÎNCĂRCARE ISTORIC LA DESCHIDERE
+========================================= */
+
+renderAttendanceHistory();
+
+      
+
+
 function openAttendance(){
 
     document
@@ -2225,14 +2311,19 @@ function updateAttendanceSummary(){
 
 function saveAttendance(){
 
+    const players =
+        document.querySelectorAll(".player");
+
     const total =
-        document
-        .querySelectorAll(".player")
-        .length;
+        players.length;
 
     const marked =
         Object.keys(attendance).length;
 
+
+    /* =====================================
+       VERIFICĂM DACĂ TOȚI AU FOST MARCAȚI
+    ===================================== */
 
     if(marked < total){
 
@@ -2244,15 +2335,107 @@ function saveAttendance(){
     }
 
 
+    /* =====================================
+       DATA ANTRENAMENTULUI
+    ===================================== */
+
+    const trainingDate =
+        getTrainingDate();
+
+
+    /* =====================================
+       PENTRU FIECARE JUCĂTOR
+    ===================================== */
+
+    players.forEach(player => {
+
+        const id =
+            player.dataset.id;
+
+        let history =
+            attendanceHistory[id] || [];
+
+
+        /* =================================
+           PREZENȚA DE AZI
+
+           PREZENT = ✓
+           ABSENT = ×
+
+           "late" este considerat prezent
+           pentru istoricul celor 6.
+        ================================= */
+
+        const todayStatus =
+            attendance[id] === "absent"
+                ? "absent"
+                : "present";
+
+
+        /* =================================
+           ADAUGĂM ANTRENAMENTUL DE AZI
+        ================================= */
+
+        history.push(todayStatus);
+
+
+        /* =================================
+           PĂSTRĂM DOAR ULTIMELE 6
+        ================================= */
+
+        if(history.length > 6){
+
+            history =
+                history.slice(-6);
+
+        }
+
+
+        attendanceHistory[id] =
+            history;
+
+    });
+
+
+    /* =====================================
+       SALVĂM ISTORICUL
+    ===================================== */
+
     localStorage.setItem(
-        "juniorstats_attendance",
-        JSON.stringify(attendance)
+        "juniorstats_history",
+        JSON.stringify(
+            attendanceHistory
+        )
     );
 
+
+    /* =====================================
+       SALVĂM ȘI PREZENȚA CURENTĂ
+    ===================================== */
+
+    localStorage.setItem(
+        "juniorstats_attendance",
+        JSON.stringify(
+            attendance
+        )
+    );
+
+
+    /* =====================================
+       ACTUALIZĂM VIZUAL CELE 6
+    ===================================== */
+
+    renderAttendanceHistory();
+
+
+    /* =====================================
+       CONFIRMARE
+    ===================================== */
 
     showToast(
         "Docházka byla uložena ✓"
     );
+
 }
 
 
