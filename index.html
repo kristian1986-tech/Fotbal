@@ -1,0 +1,2030 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<meta name="theme-color"
+      content="#07111f">
+
+<title>JuniorStats – U12</title>
+
+<style>
+
+/* =========================================
+   ZÁKLAD
+========================================= */
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:Inter,Arial,sans-serif;
+    background:#07111f;
+    color:#ffffff;
+    min-height:100vh;
+}
+
+.app{
+    width:100%;
+    max-width:900px;
+    margin:auto;
+    min-height:100vh;
+    background:#0b1727;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.header{
+    padding:22px 20px 18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #0c1c31,
+            #10243b
+        );
+
+    border-bottom:1px solid #20344b;
+}
+
+.header-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.logo-icon{
+    width:44px;
+    height:44px;
+
+    border-radius:14px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #35d07f,
+            #1ca864
+        );
+
+    font-size:21px;
+
+    box-shadow:
+        0 8px 25px rgba(53,208,127,.22);
+}
+
+.logo-text strong{
+    display:block;
+    font-size:19px;
+    letter-spacing:-.4px;
+}
+
+.logo-text span{
+    display:block;
+    margin-top:2px;
+
+    color:#8fa3b8;
+    font-size:12px;
+}
+
+.team-badge{
+    background:#162a40;
+    border:1px solid #29435e;
+
+    padding:9px 13px;
+    border-radius:12px;
+
+    font-size:13px;
+    font-weight:800;
+    color:#61e39a;
+}
+
+
+/* =========================================
+   DASHBOARD HEADER
+========================================= */
+
+.page-title{
+    margin-top:24px;
+}
+
+.page-title .small{
+    color:#61e39a;
+
+    font-size:11px;
+    font-weight:800;
+
+    letter-spacing:1.4px;
+}
+
+.page-title h1{
+    margin-top:6px;
+
+    font-size:30px;
+    letter-spacing:-1px;
+}
+
+.page-title p{
+    margin-top:6px;
+
+    color:#8fa3b8;
+    font-size:14px;
+}
+
+
+/* =========================================
+   DASHBOARD
+========================================= */
+
+.dashboard{
+    padding:18px 16px 30px;
+}
+
+
+/* =========================================
+   QUICK STATS
+========================================= */
+
+.summary{
+    display:grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap:10px;
+
+    margin-bottom:16px;
+}
+
+.summary-card{
+    background:#102137;
+
+    border:1px solid #203852;
+
+    border-radius:16px;
+
+    padding:15px 12px;
+
+    text-align:center;
+}
+
+.summary-number{
+    font-size:25px;
+    font-weight:800;
+}
+
+.summary-label{
+    margin-top:4px;
+
+    font-size:11px;
+    color:#8fa3b8;
+}
+
+
+/* =========================================
+   SECTION TITLE
+========================================= */
+
+.section-title{
+    margin:22px 2px 11px;
+}
+
+.section-title h2{
+    font-size:16px;
+}
+
+.section-title p{
+    margin-top:3px;
+
+    color:#71869c;
+    font-size:12px;
+}
+
+
+/* =========================================
+   FEATURE CARDS
+========================================= */
+
+.feature-grid{
+    display:grid;
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+    gap:12px;
+}
+
+.feature-card{
+    position:relative;
+
+    min-height:145px;
+
+    padding:18px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #12253b,
+            #0e1d30
+        );
+
+    border:1px solid #203852;
+
+    border-radius:19px;
+
+    cursor:pointer;
+
+    overflow:hidden;
+
+    transition:
+        transform .18s ease,
+        border-color .18s ease,
+        background .18s ease;
+}
+
+.feature-card:active{
+    transform:scale(.97);
+}
+
+.feature-card:hover{
+    border-color:#31516f;
+}
+
+.feature-icon{
+    width:47px;
+    height:47px;
+
+    border-radius:14px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:21px;
+
+    margin-bottom:17px;
+}
+
+
+/* ICON COLORS */
+
+.feature-icon.green{
+    background:#163d2d;
+    color:#61e39a;
+}
+
+.feature-icon.blue{
+    background:#172f4b;
+    color:#67b7ff;
+}
+
+.feature-icon.orange{
+    background:#47331c;
+    color:#ffbd5b;
+}
+
+.feature-icon.purple{
+    background:#322748;
+    color:#c49aff;
+}
+
+.feature-icon.red{
+    background:#47262d;
+    color:#ff7c88;
+}
+
+.feature-icon.cyan{
+    background:#15383e;
+    color:#67dbe5;
+}
+
+
+.feature-card h3{
+    font-size:15px;
+    font-weight:800;
+}
+
+.feature-card p{
+    margin-top:5px;
+
+    color:#7f94aa;
+    font-size:11px;
+
+    line-height:1.4;
+}
+
+.feature-arrow{
+    position:absolute;
+
+    right:15px;
+    bottom:15px;
+
+    width:29px;
+    height:29px;
+
+    border-radius:9px;
+
+    background:#172b42;
+
+    color:#7890a7;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:12px;
+}
+
+
+/* =========================================
+   NEXT TRAINING
+========================================= */
+
+.next-training{
+    margin-top:16px;
+
+    padding:17px;
+
+    border-radius:18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #15392d,
+            #102d25
+        );
+
+    border:1px solid #24533f;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:15px;
+}
+
+.next-left{
+    display:flex;
+
+    align-items:center;
+
+    gap:13px;
+}
+
+.next-icon{
+    width:45px;
+    height:45px;
+
+    border-radius:13px;
+
+    background:#1e5940;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:19px;
+}
+
+.next-label{
+    color:#65d99a;
+
+    font-size:10px;
+    font-weight:800;
+
+    letter-spacing:1px;
+}
+
+.next-title{
+    margin-top:4px;
+
+    font-size:14px;
+    font-weight:800;
+}
+
+.next-info{
+    margin-top:4px;
+
+    color:#8bad9e;
+    font-size:11px;
+}
+
+.next-arrow{
+    width:36px;
+    height:36px;
+
+    border-radius:11px;
+
+    border:1px solid #2b654c;
+
+    background:#173d30;
+
+    color:#61e39a;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    cursor:pointer;
+}
+
+
+/* =========================================
+   DOCHÁZKA PAGE
+========================================= */
+
+.attendance-page{
+    display:none;
+
+    padding:18px 16px 110px;
+}
+
+.attendance-page.show{
+    display:block;
+}
+
+.dashboard.hide{
+    display:none;
+}
+
+
+/* BACK BUTTON */
+
+.back-button{
+    display:flex;
+    align-items:center;
+    gap:8px;
+
+    border:0;
+
+    background:none;
+
+    color:#8fa3b8;
+
+    font-size:13px;
+    font-weight:700;
+
+    padding:6px 0;
+
+    cursor:pointer;
+}
+
+.back-button:hover{
+    color:#ffffff;
+}
+
+
+/* ATTENDANCE HEADER */
+
+.attendance-title{
+    margin-top:18px;
+}
+
+.attendance-title .small{
+    color:#61e39a;
+
+    font-size:11px;
+    font-weight:800;
+
+    letter-spacing:1.2px;
+}
+
+.attendance-title h2{
+    margin-top:5px;
+
+    font-size:27px;
+}
+
+.attendance-title p{
+    margin-top:5px;
+
+    color:#8fa3b8;
+    font-size:13px;
+}
+
+
+/* ATTENDANCE SUMMARY */
+
+.attendance-summary{
+    display:grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap:9px;
+
+    margin:18px 0;
+}
+
+.att-summary{
+    background:#102137;
+
+    border:1px solid #203852;
+
+    border-radius:14px;
+
+    padding:13px 8px;
+
+    text-align:center;
+}
+
+.att-summary strong{
+    display:block;
+
+    font-size:22px;
+}
+
+.att-summary span{
+    display:block;
+
+    margin-top:3px;
+
+    font-size:10px;
+    color:#8296ab;
+}
+
+
+/* DATE */
+
+.date-bar{
+    margin-bottom:14px;
+
+    background:#101f33;
+
+    border:1px solid #203852;
+
+    border-radius:16px;
+
+    padding:13px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:10px;
+}
+
+.date-info{
+    display:flex;
+
+    align-items:center;
+
+    gap:11px;
+}
+
+.calendar-icon{
+    width:40px;
+    height:40px;
+
+    border-radius:12px;
+
+    background:#163b30;
+
+    color:#61e39a;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.date-text strong{
+    display:block;
+    font-size:13px;
+}
+
+.date-text span{
+    display:block;
+
+    margin-top:3px;
+
+    font-size:11px;
+    color:#8296ab;
+}
+
+
+/* =========================================
+   PLAYER ROW
+========================================= */
+
+.players-list{
+    display:flex;
+
+    flex-direction:column;
+
+    gap:9px;
+}
+
+.player{
+    background:#101f33;
+
+    border:1px solid #203852;
+
+    border-radius:16px;
+
+    padding:11px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:10px;
+}
+
+.player-left{
+    min-width:0;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:11px;
+}
+
+.number{
+    width:40px;
+    height:40px;
+
+    flex-shrink:0;
+
+    border-radius:12px;
+
+    background:#172b42;
+
+    color:#9fb1c4;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    font-size:12px;
+
+    font-weight:800;
+}
+
+.player-name{
+    font-size:13px;
+    font-weight:800;
+
+    white-space:nowrap;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
+}
+
+.player-position{
+    margin-top:3px;
+
+    font-size:10px;
+
+    color:#71869c;
+}
+
+
+/* =========================================
+   ATTENDANCE BUTTONS
+========================================= */
+
+.attendance-buttons{
+    display:flex;
+
+    gap:5px;
+
+    flex-shrink:0;
+}
+
+.att-btn{
+    width:36px;
+    height:36px;
+
+    border-radius:10px;
+
+    border:1px solid #294159;
+
+    background:#14263b;
+
+    color:#71879e;
+
+    cursor:pointer;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    font-size:14px;
+
+    transition:.15s ease;
+}
+
+.att-btn:active{
+    transform:scale(.92);
+}
+
+.att-btn.present.active{
+    background:#174b35;
+
+    border-color:#2bc675;
+
+    color:#61e39a;
+}
+
+.att-btn.absent.active{
+    background:#51252b;
+
+    border-color:#e05261;
+
+    color:#ff7c88;
+}
+
+.att-btn.late.active{
+    background:#4c3b1c;
+
+    border-color:#e3a52f;
+
+    color:#ffc85c;
+}
+
+
+/* =========================================
+   SAVE
+========================================= */
+
+.save-button{
+    width:100%;
+
+    margin-top:17px;
+
+    padding:15px;
+
+    border:0;
+
+    border-radius:15px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #35d07f,
+            #1ca864
+        );
+
+    color:white;
+
+    font-size:14px;
+    font-weight:800;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 10px 30px rgba(53,208,127,.2);
+}
+
+
+/* =========================================
+   TOAST
+========================================= */
+
+.toast{
+    position:fixed;
+
+    left:50%;
+
+    bottom:25px;
+
+    transform:
+        translate(-50%,20px);
+
+    background:#172b42;
+
+    border:1px solid #29435e;
+
+    padding:12px 17px;
+
+    border-radius:12px;
+
+    font-size:12px;
+    font-weight:700;
+
+    opacity:0;
+
+    pointer-events:none;
+
+    transition:.25s ease;
+
+    z-index:100;
+}
+
+.toast.show{
+    opacity:1;
+
+    transform:
+        translate(-50%,0);
+}
+
+
+/* =========================================
+   DESKTOP
+========================================= */
+
+@media(min-width:700px){
+
+    body{
+        padding:20px;
+    }
+
+    .app{
+        min-height:
+            calc(100vh - 40px);
+
+        border-radius:24px;
+
+        overflow:hidden;
+
+        box-shadow:
+            0 30px 80px rgba(0,0,0,.35);
+    }
+
+    .dashboard{
+        padding:
+            25px 22px 40px;
+    }
+
+    .feature-grid{
+        grid-template-columns:
+            repeat(3,1fr);
+    }
+
+    .attendance-page{
+        padding:
+            25px 22px 40px;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<div class="app">
+
+
+<!-- =========================================
+     HEADER
+========================================= -->
+
+<header class="header">
+
+    <div class="header-top">
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                ⚽
+            </div>
+
+            <div class="logo-text">
+
+                <strong>
+                    JuniorStats
+                </strong>
+
+                <span>
+                    Evidence fotbalového týmu
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="team-badge">
+            U12
+        </div>
+
+    </div>
+
+
+    <div class="page-title">
+
+        <div class="small">
+            MOJE TÝM
+        </div>
+
+        <h1>
+            Dobrý den, trenére 👋
+        </h1>
+
+        <p>
+            Přehled vašeho týmu U12
+        </p>
+
+    </div>
+
+</header>
+
+
+
+<!-- =========================================
+     DASHBOARD
+========================================= -->
+
+<main
+    id="dashboard"
+    class="dashboard">
+
+
+    <!-- SUMMARY -->
+
+    <section class="summary">
+
+        <div class="summary-card">
+
+            <div class="summary-number">
+                25
+            </div>
+
+            <div class="summary-label">
+                Hráčů
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div class="summary-number">
+                92%
+            </div>
+
+            <div class="summary-label">
+                Docházka
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div class="summary-number">
+                34
+            </div>
+
+            <div class="summary-label">
+                Gólů
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- MODULES -->
+
+    <div class="section-title">
+
+        <h2>
+            Přehled týmu
+        </h2>
+
+        <p>
+            Vyberte funkci, kterou chcete otevřít.
+        </p>
+
+    </div>
+
+
+    <section class="feature-grid">
+
+
+        <!-- HRÁČI -->
+
+        <div
+            class="feature-card"
+            onclick="openFeature('Hráči')">
+
+            <div class="feature-icon blue">
+                👥
+            </div>
+
+            <h3>
+                Hráči
+            </h3>
+
+            <p>
+                Soupiska a profily hráčů
+            </p>
+
+            <div class="feature-arrow">
+                →
+            </div>
+
+        </div>
+
+
+
+        <!-- DOCHÁZKA -->
+
+        <div
+            class="feature-card"
+            onclick="openAttendance()">
+
+            <div class="feature-icon green">
+                ✓
+            </div>
+
+            <h3>
+                Docházka
+            </h3>
+
+            <p>
+                Přítomnost na trénincích
+            </p>
+
+            <div class="feature-arrow">
+                →
+            </div>
+
+        </div>
+
+
+
+        <!-- ZÁPASY -->
+
+        <div
+            class="feature-card"
+            onclick="openFeature('Zápasy')">
+
+            <div class="feature-icon orange">
+                ⚽
+            </div>
+
+            <h3>
+                Zápasy
+            </h3>
+
+            <p>
+                Výsledky a statistiky zápasů
+            </p>
+
+            <div class="feature-arrow">
+                →
+            </div>
+
+        </div>
+
+
+
+        <!-- STATISTIKY -->
+
+        <div
+            class="feature-card"
+            onclick="openFeature('Statistiky')">
+
+            <div class="feature-icon purple">
+                📊
+            </div>
+
+            <h3>
+                Statistiky
+            </h3>
+
+            <p>
+                Výkon týmu a hráčů
+            </p>
+
+            <div class="feature-arrow">
+                →
+            </div>
+
+        </div>
+
+
+
+        <!-- HODNOCENÍ -->
+
+        <div
+            class="feature-card"
+            onclick="openFeature('Hodnocení')">
+
+            <div class="feature-icon red">
+                ⭐
+            </div>
+
+            <h3>
+                Hodnocení
+            </h3>
+
+            <p>
+                Výkon, chování a progres
+            </p>
+
+            <div class="feature-arrow">
+                →
+            </div>
+
+        </div>
+
+
+
+        <!-- PROGRAM -->
+
+        <div
+            class="feature-card"
+            onclick="openFeature('Program')">
+
+            <div class="feature-icon cyan">
+                📅
+            </div>
+
+            <h3>
+                Program
+            </h3>
+
+            <p>
+                Tréninky a nadcházející zápasy
+            </p>
+
+            <div class="feature-arrow">
+                →
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- NEXT TRAINING -->
+
+    <div class="section-title">
+
+        <h2>
+            Další trénink
+        </h2>
+
+    </div>
+
+
+    <section class="next-training">
+
+        <div class="next-left">
+
+            <div class="next-icon">
+                🏃
+            </div>
+
+            <div>
+
+                <div class="next-label">
+                    DNES
+                </div>
+
+                <div class="next-title">
+                    Trénink U12
+                </div>
+
+                <div class="next-info">
+                    17:30 · Sportovní areál
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <button
+            class="next-arrow"
+            onclick="openFeature('Program')">
+
+            →
+
+        </button>
+
+    </section>
+
+
+</main>
+
+
+
+<!-- =========================================
+     DOCHÁZKA PAGE
+========================================= -->
+
+<section
+    id="attendancePage"
+    class="attendance-page">
+
+
+    <button
+        class="back-button"
+        onclick="closeAttendance()">
+
+        ←
+
+        Zpět na dashboard
+
+    </button>
+
+
+    <div class="attendance-title">
+
+        <div class="small">
+            TRÉNINK
+        </div>
+
+        <h2>
+            Docházka
+        </h2>
+
+        <p>
+            Označte přítomnost hráčů.
+        </p>
+
+    </div>
+
+
+
+    <!-- SUMMARY -->
+
+    <div class="attendance-summary">
+
+        <div class="att-summary">
+
+            <strong id="presentCount">
+                0
+            </strong>
+
+            <span>
+                Přítomni
+            </span>
+
+        </div>
+
+
+        <div class="att-summary">
+
+            <strong id="absentCount">
+                0
+            </strong>
+
+            <span>
+                Chybí
+            </span>
+
+        </div>
+
+
+        <div class="att-summary">
+
+            <strong id="lateCount">
+                0
+            </strong>
+
+            <span>
+                Pozdě
+            </span>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- DATE -->
+
+    <div class="date-bar">
+
+        <div class="date-info">
+
+            <div class="calendar-icon">
+                📅
+            </div>
+
+            <div class="date-text">
+
+                <strong>
+                    Dnešní trénink
+                </strong>
+
+                <span id="todayDate">
+                    26. srpna 2026
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- PLAYERS -->
+
+    <div
+        id="playersList"
+        class="players-list">
+
+
+        <!-- 25 HRÁČŮ -->
+
+        <div class="player" data-id="1">
+
+            <div class="player-left">
+
+                <div class="number">01</div>
+
+                <div>
+
+                    <div class="player-name">
+                        Jan Novák
+                    </div>
+
+                    <div class="player-position">
+                        Brankář
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="attendance-buttons">
+
+                <button
+                    class="att-btn present"
+                    onclick="setAttendance(this,'present')">
+                    ✓
+                </button>
+
+                <button
+                    class="att-btn absent"
+                    onclick="setAttendance(this,'absent')">
+                    ×
+                </button>
+
+                <button
+                    class="att-btn late"
+                    onclick="setAttendance(this,'late')">
+                    ⏱
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div class="player" data-id="2">
+            <div class="player-left">
+                <div class="number">02</div>
+                <div>
+                    <div class="player-name">Adam Svoboda</div>
+                    <div class="player-position">Obránce</div>
+                </div>
+            </div>
+            <div class="attendance-buttons">
+                <button class="att-btn present" onclick="setAttendance(this,'present')">✓</button>
+                <button class="att-btn absent" onclick="setAttendance(this,'absent')">×</button>
+                <button class="att-btn late" onclick="setAttendance(this,'late')">⏱</button>
+            </div>
+        </div>
+
+
+        <div class="player" data-id="3">
+            <div class="player-left">
+                <div class="number">03</div>
+                <div>
+                    <div class="player-name">Tomáš Dvořák</div>
+                    <div class="player-position">Obránce</div>
+                </div>
+            </div>
+            <div class="attendance-buttons">
+                <button class="att-btn present" onclick="setAttendance(this,'present')">✓</button>
+                <button class="att-btn absent" onclick="setAttendance(this,'absent')">×</button>
+                <button class="att-btn late" onclick="setAttendance(this,'late')">⏱</button>
+            </div>
+        </div>
+
+
+        <div class="player" data-id="4">
+            <div class="player-left">
+                <div class="number">04</div>
+                <div>
+                    <div class="player-name">Matěj Černý</div>
+                    <div class="player-position">Obránce</div>
+                </div>
+            </div>
+            <div class="attendance-buttons">
+                <button class="att-btn present" onclick="setAttendance(this,'present')">✓</button>
+                <button class="att-btn absent" onclick="setAttendance(this,'absent')">×</button>
+                <button class="att-btn late" onclick="setAttendance(this,'late')">⏱</button>
+            </div>
+        </div>
+
+
+        <div class="player" data-id="5">
+            <div class="player-left">
+                <div class="number">05</div>
+                <div>
+                    <div class="player-name">David Král</div>
+                    <div class="player-position">Záložník</div>
+                </div>
+            </div>
+            <div class="attendance-buttons">
+                <button class="att-btn present" onclick="setAttendance(this,'present')">✓</button>
+                <button class="att-btn absent" onclick="setAttendance(this,'absent')">×</button>
+                <button class="att-btn late" onclick="setAttendance(this,'late')">⏱</button>
+            </div>
+        </div>
+
+
+        <div class="player" data-id="6">
+            <div class="player-left">
+                <div class="number">06</div>
+                <div>
+                    <div class="player-name">Filip Procházka</div>
+                    <div class="player-position">Záložník</div>
+                </div>
+            </div>
+            <div class="attendance-buttons">
+                <button class="att-btn present" onclick="setAttendance(this,'present')">✓</button>
+                <button class="att-btn absent" onclick="setAttendance(this,'absent')">×</button>
+                <button class="att-btn late" onclick="setAttendance(this,'late')">⏱</button>
+            </div>
+        </div>
+
+
+        <div class="player" data-id="7">
+            <div class="player-left">
+                <div class="number">07</div>
+                <div>
+                    <div class="player-name">Lukáš Beneš</div>
+                    <div class="player-position">Záložník</div>
+                </div>
+            </div>
+            <div class="attendance-buttons">
+                <button class="att-btn present" onclick="setAttendance(this,'present')">✓</button>
+                <button class="att-btn absent" onclick="setAttendance(this,'absent')">×</button>
+                <button class="att-btn late" onclick="setAttendance(this,'late')">⏱</button>
+            </div>
+        </div>
+
+
+        <div class="player" data-id="8">
+            <div class="player-left">
+                <div class="number">08</div>
+                <div>
+                    <div class="player-name">Jakub Veselý</div>
+                    <div class="player-position">Útočník</div>
+                </div>
+            </div>
+            <div class="attendance-buttons">
+                <button class="att-btn present" onclick="setAttendance(this,'present')">✓</button>
+                <button class="att-btn absent" onclick="setAttendance(this,'absent')">×</button>
+                <button class="att-btn late" onclick="setAttendance(this,'late')">⏱</button>
+            </div>
+        </div>
+
+
+        <div class="player" data-id="9">
+            <div class="player-left">
+                <div class="number">09</div>
+                <div>
+                    <div class="player-name">Martin Horák</div>
+                    <div class="player-position">Útočník</div>
+                </div>
+            </div>
+            <div class="attendance-buttons">
+                <button class="att-btn present" onclick="setAttendance(this,'present')">✓</button>
+                <button class="att-btn absent" onclick="setAttendance(this,'absent')">×</button>
+                <button class="att-btn late" onclick="setAttendance(this,'late')">⏱</button>
+            </div>
+        </div>
+
+
+        <div class="player" data-id="10">
+            <div class="player-left">
+                <div class="number">10</div>
+                <div>
+                    <div class="player-name">Matyáš Konečný</div>
+                    <div class="player-position">Útočník</div>
+                </div>
+            </div>
+            <div class="attendance-buttons">
+                <button class="att-btn present" onclick="setAttendance(this,'present')">✓</button>
+                <button class="att-btn absent" onclick="setAttendance(this,'absent')">×</button>
+                <button class="att-btn late" onclick="setAttendance(this,'late')">⏱</button>
+            </div>
+        </div>
+
+
+        <div class="player" data-id="11">
+            <div class="player-left">
+                <div class="number">11</div>
+                <div>
+                    <div class="player-name">Vojtěch Marek</div>
+                    <div class="player-position">Záložník</div>
+                </div>
+            </div>
+            <div class="attendance-buttons">
+                <button class="att-btn present" onclick="setAttendance(this,'present')">✓</button>
+                <button class="att-btn absent" onclick="setAttendance(this,'absent')">×</button>
+                <button class="att-btn late" onclick="setAttendance(this,'late')">⏱</button>
+            </div>
+        </div>
+
+
+        <div class="player" data-id="12">
+            <div class="player-left">
+                <div class="number">12</div>
+                <div>
+                    <div class="player-name">Daniel Urban</div>
+                    <div class="player-position">Obránce</div>
+                </div>
+            </div>
+            <div class="attendance-buttons">
+                <button class="att-btn present" onclick="setAttendance(this,'present')">✓</button>
+                <button class="att-btn absent" onclick="setAttendance(this,'absent')">×</button>
+                <button class="att-btn late" onclick="setAttendance(this,'late')">⏱</button>
+            </div>
+        </div>
+
+
+        <div class="player" data-id="13">
+            <div class="player-left">
+                <div class="number">13</div>
+                <div>
+                    <div class="player-name">Ondřej Šimek</div>
+                    <div class="player-position">Obránce</div>
+                </div>
+            </div>
+            <div class="attendance-buttons">
+                <button class="att-btn present" onclick="setAttendance(this,'present')">✓</button>
+                <button class="att-btn absent" onclick="setAttendance(this,'absent')">×</button>
+                <button class="att-btn late" onclick="setAttendance(this,'late')">⏱</button>
+            </div>
+        </div>
+
+
+        <div class="player" data-id="14">
+            <div class="player-left">
+                <div class="number">14</div>
+                <div>
+                    <div class="player-name">Jakub Jelínek</div>
+                    <div class="player-position">Záložník</div>
+                </div>
+            </div>
+            <div class="attendance-buttons">
+                <button class="att-btn present" onclick="setAttendance(this,'present')">✓</button>
+                <button class="att-btn absent" onclick="setAttendance(this,'absent')">×</button>
+                <button class="att-btn late" onclick="setAttendance(this,'late')">⏱</button>
+            </div>
+        </div>
+
+
+        <div class="player" data-id="15">
+            <div class="player-left">
+                <div class="number">15</div>
+                <div>
+                    <div class="player-name">Šimon Fiala</div>
+                    <div class="player-position">Záložník</div>
+                </div>
+            </div>
+            <div class="attendance-buttons">
+                <button class="att-btn present" onclick="setAttendance(this,'present')">✓</button>
+                <button class="att-btn absent" onclick="setAttendance(this,'absent')">×</button>
+                <button class="att-btn late" onclick="setAttendance(this,'late')">⏱</button>
+            </div>
+        </div>
+
+
+        <div class="player" data-id="16">
+            <div class="player-left">
+                <div class="number">16</div>
+                <div>
+                    <div class="player-name">Michal Kučera</div>
+                    <div class="player-position">Útočník</div>
+                </div>
+            </div>
+            <div class="attendance-buttons">
+                <button class="att-btn present" onclick="setAttendance(this,'present')">✓</button>
+                <button class="att-btn absent" onclick="setAttendance(this,'absent')">×</button>
+                <button class="att-btn late" onclick="setAttendance(this,'late')">⏱</button>
+            </div>
+        </div>
+
+
+        <div class="player" data-id="17">
+            <div class="player-left">
+                <div class="number">17</div>
+                <div>
+                    <div class="player-name">Patrik Němec</div>
+                    <div class="player-position">Útočník</div>
+                </div>
+            </div>
+            <div class="attendance-buttons">
+                <button class="att-btn present" onclick="setAttendance(this,'present')">✓</button>
+                <button class="att-btn absent" onclick="setAttendance(this,'absent')">×</button>
+                <button class="att-btn late" onclick="setAttendance(this,'late')">⏱</button>
+            </div>
+        </div>
+
+
+        <div class="player" data-id="18">
+            <div class="player-left">
+                <div class="number">18</div>
+                <div>
+                    <div class="player-name">Kryštof Blažek</div>
+                    <div class="player-position">Obránce</div>
+                </div>
+            </div>
+            <div class="attendance-buttons">
+                <button class="att-btn present" onclick="setAttendance(this,'present')">✓</button>
+                <button class="att-btn absent" onclick="setAttendance(this,'absent')">×</button>
+                <button class="att-btn late" onclick="setAttendance(this,'late')">⏱</button>
+            </div>
+        </div>
+
+
+        <div class="player" data-id="19">
+            <div class="player-left">
+                <div class="number">19</div>
+                <div>
+                    <div class="player-name">Adam Kolář</div>
+                    <div class="player-position">Záložník</div>
+                </div>
+            </div>
+            <div class="attendance-buttons">
+                <button class="att-btn present" onclick="setAttendance(this,'present')">✓</button>
+                <button class="att-btn absent" onclick="setAttendance(this,'absent')">×</button>
+                <button class="att-btn late" onclick="setAttendance(this,'late')">⏱</button>
+            </div>
+        </div>
+
+
+        <div class="player" data-id="20">
+            <div class="player-left">
+                <div class="number">20</div>
+                <div>
+                    <div class="player-name">Samuel Bartoš</div>
+                    <div class="player-position">Obránce</div>
+                </div>
+            </div>
+            <div class="attendance-buttons">
+                <button class="att-btn present" onclick="setAttendance(this,'present')">✓</button>
+                <button class="att-btn absent" onclick="setAttendance(this,'absent')">×</button>
+                <button class="att-btn late" onclick="setAttendance(this,'late')">⏱</button>
+            </div>
+        </div>
+
+
+        <div class="player" data-id="21">
+            <div class="player-left">
+                <div class="number">21</div>
+                <div>
+                    <div class="player-name">Lukáš Malý</div>
+                    <div class="player-position">Záložník</div>
+                </div>
+            </div>
+            <div class="attendance-buttons">
+                <button class="att-btn present" onclick="setAttendance(this,'present')">✓</button>
+                <button class="att-btn absent" onclick="setAttendance(this,'absent')">×</button>
+                <button class="att-btn late" onclick="setAttendance(this,'late')">⏱</button>
+            </div>
+        </div>
+
+
+        <div class="player" data-id="22">
+            <div class="player-left">
+                <div class="number">22</div>
+                <div>
+                    <div class="player-name">Martin Vlček</div>
+                    <div class="player-position">Útočník</div>
+                </div>
+            </div>
+            <div class="attendance-buttons">
+                <button class="att-btn present" onclick="setAttendance(this,'present')">✓</button>
+                <button class="att-btn absent" onclick="setAttendance(this,'absent')">×</button>
+                <button class="att-btn late" onclick="setAttendance(this,'late')">⏱</button>
+            </div>
+        </div>
+
+
+        <div class="player" data-id="23">
+            <div class="player-left">
+                <div class="number">23</div>
+                <div>
+                    <div class="player-name">David Sedláček</div>
+                    <div class="player-position">Obránce</div>
+                </div>
+            </div>
+            <div class="attendance-buttons">
+                <button class="att-btn present" onclick="setAttendance(this,'present')">✓</button>
+                <button class="att-btn absent" onclick="setAttendance(this,'absent')">×</button>
+                <button class="att-btn late" onclick="setAttendance(this,'late')">⏱</button>
+            </div>
+        </div>
+
+
+        <div class="player" data-id="24">
+            <div class="player-left">
+                <div class="number">24</div>
+                <div>
+                    <div class="player-name">Petr Kříž</div>
+                    <div class="player-position">Záložník</div>
+                </div>
+            </div>
+            <div class="attendance-buttons">
+                <button class="att-btn present" onclick="setAttendance(this,'present')">✓</button>
+                <button class="att-btn absent" onclick="setAttendance(this,'absent')">×</button>
+                <button class="att-btn late" onclick="setAttendance(this,'late')">⏱</button>
+            </div>
+        </div>
+
+
+        <div class="player" data-id="25">
+            <div class="player-left">
+                <div class="number">25</div>
+                <div>
+                    <div class="player-name">Filip Novotný</div>
+                    <div class="player-position">Útočník</div>
+                </div>
+            </div>
+            <div class="attendance-buttons">
+                <button class="att-btn present" onclick="setAttendance(this,'present')">✓</button>
+                <button class="att-btn absent" onclick="setAttendance(this,'absent')">×</button>
+                <button class="att-btn late" onclick="setAttendance(this,'late')">⏱</button>
+            </div>
+        </div>
+
+
+    </div>
+
+
+    <button
+        class="save-button"
+        onclick="saveAttendance()">
+
+        ✓ &nbsp; Uložit docházku
+
+    </button>
+
+</section>
+
+
+
+<!-- TOAST -->
+
+<div
+    id="toast"
+    class="toast">
+
+    Docházka byla uložena ✓
+
+</div>
+
+
+
+<script>
+
+/* =========================================
+   DOCHÁZKA
+========================================= */
+
+const attendance = {};
+
+
+function openAttendance(){
+
+    document
+        .getElementById("dashboard")
+        .classList.add("hide");
+
+    document
+        .getElementById("attendancePage")
+        .classList.add("show");
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+}
+
+
+function closeAttendance(){
+
+    document
+        .getElementById("attendancePage")
+        .classList.remove("show");
+
+    document
+        .getElementById("dashboard")
+        .classList.remove("hide");
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+}
+
+
+/* =========================================
+   SELECT ATTENDANCE
+========================================= */
+
+function setAttendance(button,status){
+
+    const player =
+        button.closest(".player");
+
+    const id =
+        player.dataset.id;
+
+    player
+        .querySelectorAll(".att-btn")
+        .forEach(btn=>{
+            btn.classList.remove("active");
+        });
+
+    button.classList.add("active");
+
+    attendance[id] = status;
+
+    updateAttendanceSummary();
+}
+
+
+/* =========================================
+   SUMMARY
+========================================= */
+
+function updateAttendanceSummary(){
+
+    let present = 0;
+    let absent = 0;
+    let late = 0;
+
+    Object.values(attendance)
+        .forEach(status=>{
+
+            if(status === "present"){
+                present++;
+            }
+
+            if(status === "absent"){
+                absent++;
+            }
+
+            if(status === "late"){
+                late++;
+            }
+
+        });
+
+
+    document
+        .getElementById("presentCount")
+        .textContent = present;
+
+
+    document
+        .getElementById("absentCount")
+        .textContent = absent;
+
+
+    document
+        .getElementById("lateCount")
+        .textContent = late;
+}
+
+
+/* =========================================
+   SAVE
+========================================= */
+
+function saveAttendance(){
+
+    const total =
+        document
+        .querySelectorAll(".player")
+        .length;
+
+    const marked =
+        Object.keys(attendance).length;
+
+
+    if(marked < total){
+
+        showToast(
+            "Nejdříve označte všechny hráče."
+        );
+
+        return;
+    }
+
+
+    localStorage.setItem(
+        "juniorstats_attendance",
+        JSON.stringify(attendance)
+    );
+
+
+    showToast(
+        "Docházka byla uložena ✓"
+    );
+}
+
+
+/* =========================================
+   OTHER CARDS
+========================================= */
+
+function openFeature(name){
+
+    showToast(
+        name + " připravíme v další části aplikace."
+    );
+
+}
+
+
+/* =========================================
+   TOAST
+========================================= */
+
+function showToast(message){
+
+    const toast =
+        document.getElementById("toast");
+
+    toast.textContent = message;
+
+    toast.classList.add("show");
+
+
+    setTimeout(()=>{
+
+        toast.classList.remove("show");
+
+    },2500);
+
+}
+
+
+/* =========================================
+   DATE
+========================================= */
+
+const today =
+    new Date();
+
+document
+    .getElementById("todayDate")
+    .textContent =
+    today.toLocaleDateString(
+        "cs-CZ",
+        {
+            day:"numeric",
+            month:"long",
+            year:"numeric"
+        }
+    );
+
+
+updateAttendanceSummary();
+
+</script>
+
+</body>
+                  </html>
