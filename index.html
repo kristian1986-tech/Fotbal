@@ -2525,24 +2525,75 @@ function renderAttendanceHistory(){
             const id =
                 player.dataset.id;
 
-            const history =
+            let history =
                 attendanceHistory[id] || [];
+
 
             const historyBox =
                 player.querySelector(
                     ".player-history"
                 );
 
+
             if(!historyBox){
                 return;
             }
 
+
+            /* Dacă nu există istoric salvat,
+               citim cele 6 valori puse inițial în HTML */
+
+            if(history.length === 0){
+
+                history = [];
+
+                historyBox
+                    .querySelectorAll(".history-box")
+                    .forEach(box => {
+
+                        if(
+                            box.classList.contains(
+                                "present"
+                            )
+                        ){
+
+                            history.push(
+                                "present"
+                            );
+
+                        }else{
+
+                            history.push(
+                                "absent"
+                            );
+
+                        }
+
+                    });
+
+                attendanceHistory[id] =
+                    history;
+
+            }
+
+
+            /* Păstrăm maximum 6 */
+
+            history =
+                history.slice(-6);
+
+
             historyBox.innerHTML = "";
+
+
+            /* Afișăm cele 6 rezultate */
 
             history.forEach(status => {
 
                 const box =
-                    document.createElement("span");
+                    document.createElement(
+                        "span"
+                    );
 
                 box.className =
                     "history-box " +
@@ -2561,10 +2612,100 @@ function renderAttendanceHistory(){
 
             });
 
+
+            /* Calculăm procentul */
+
+            updatePlayerAttendance(
+                player,
+                history
+            );
+
         });
+
+
+    /* Salvăm istoricul inițial */
+
+    localStorage.setItem(
+        "juniorstats_history",
+        JSON.stringify(
+            attendanceHistory
+        )
+    );
 
 }
 
+
+
+function updatePlayerAttendance(
+    player,
+    history
+){
+
+    const attendanceBox =
+        player.querySelector(
+            ".player-attendance"
+        );
+
+
+    if(!attendanceBox){
+        return;
+    }
+
+
+    const total =
+        history.length;
+
+
+    const present =
+        history.filter(
+            status =>
+                status === "present"
+        ).length;
+
+
+    const percentage =
+        total === 0
+            ? 0
+            : Math.round(
+                (present / total) * 100
+            );
+
+
+    const percentElement =
+        attendanceBox.querySelector(
+            "strong"
+        );
+
+
+    const countElement =
+        attendanceBox.querySelector(
+            "small"
+        );
+
+
+    if(percentElement){
+
+        percentElement.textContent =
+            percentage + " %";
+
+    }
+
+
+    if(countElement){
+
+        countElement.textContent =
+            "(" +
+            present +
+            "/" +
+            total +
+            ")";
+
+    }
+
+}
+
+
+      
 
 /* =========================================
    ÎNCĂRCARE ISTORIC LA DESCHIDERE
@@ -2759,16 +2900,36 @@ function saveAttendance(){
            PĂSTRĂM DOAR ULTIMELE 6
         ================================= */
 
-        if(history.length > 6){
+/* =================================
+   ADAUGĂM ANTRENAMENTUL DE AZI
+================================= */
 
-            history =
-                history.slice(-6);
+if(
+    history.length >= 6
+){
 
-        }
+    /* Eliminăm cel mai vechi */
+
+    history.shift();
+
+}
 
 
-        attendanceHistory[id] =
-            history;
+/* Adăugăm rezultatul de azi */
+
+history.push(
+    todayStatus
+);
+
+
+/* Păstrăm maximum 6 */
+
+history =
+    history.slice(-6);
+
+
+attendanceHistory[id] =
+    history;
 
     });
 
