@@ -2983,7 +2983,9 @@ let attendanceHistory =
    ISTORIC COMPLET SEZON - MAXIM 130
 ========================================= */
 
-let seasonWasReset = false;
+let seasonWasReset =
+    localStorage.getItem("juniorstats_season_reset") === "1";
+      
 let seasonHistory =
     JSON.parse(
         localStorage.getItem(
@@ -3561,6 +3563,11 @@ function resetSeason(){
 
     seasonWasReset = true;  
 
+      localStorage.setItem(
+    "juniorstats_season_reset",
+    "1"
+);
+
     attendanceHistory = {};
 
     Object.keys(attendance).forEach(key => {
@@ -3701,6 +3708,12 @@ if(seasonCount >= 130){
        DATA ANTRENAMENTULUI
     ===================================== */
 
+seasonWasReset = false;
+
+localStorage.removeItem(
+    "juniorstats_season_reset"
+);  
+      
     const trainingDate =
         getTrainingDate();
 
