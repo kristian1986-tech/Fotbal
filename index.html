@@ -3539,6 +3539,123 @@ function closePlayerCard(event){
 }
       
       
+
+/* =========================================
+   RESETARE SEZON
+========================================= */
+
+function resetSeason(){
+
+    const confirmed = confirm(
+        "Opravdu chcete resetovat sezónu?\n\n" +
+        "Veškerá docházka za aktuální sezónu bude vymazána."
+    );
+
+    if(!confirmed){
+        return;
+    }
+
+
+    /* Ștergem istoricul complet al sezonului */
+
+    seasonHistory = {};
+
+
+    /* Ștergem și istoricul ultimelor 6 */
+
+    attendanceHistory = {};
+
+
+    /* Ștergem prezența antrenamentului curent */
+
+    Object.keys(attendance).forEach(key => {
+        delete attendance[key];
+    });
+
+
+    /* Ștergem datele salvate */
+
+    localStorage.removeItem(
+        "juniorstats_season_history"
+    );
+
+    localStorage.removeItem(
+        "juniorstats_history"
+    );
+
+    localStorage.removeItem(
+        "juniorstats_attendance"
+    );
+
+
+    /* Refacem cele 6 pătrățele */
+
+    document
+        .querySelectorAll(".player")
+        .forEach(player => {
+
+            const historyBox =
+                player.querySelector(
+                    ".player-history"
+                );
+
+            if(historyBox){
+
+                historyBox.innerHTML = "";
+
+            }
+
+            const attendanceBox =
+                player.querySelector(
+                    ".player-attendance"
+                );
+
+            if(attendanceBox){
+
+                const percent =
+                    attendanceBox.querySelector(
+                        "strong"
+                    );
+
+                const count =
+                    attendanceBox.querySelector(
+                        "small"
+                    );
+
+                if(percent){
+                    percent.textContent = "0 %";
+                }
+
+                if(count){
+                    count.textContent = "(0/0)";
+                }
+
+            }
+
+        });
+
+
+    /* Actualizăm cardul deschis */
+
+    const currentCard =
+        document.getElementById(
+            "playerCardOverlay"
+        );
+
+    if(currentCard){
+
+        currentCard.classList.remove(
+            "show"
+        );
+
+    }
+
+
+    showToast(
+        "Sezóna byla resetována ✓"
+    );
+
+}      
       
 
 /* =========================================
