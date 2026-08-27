@@ -2983,6 +2983,7 @@ let attendanceHistory =
    ISTORIC COMPLET SEZON - MAXIM 130
 ========================================= */
 
+let seasonWasReset = false;
 let seasonHistory =
     JSON.parse(
         localStorage.getItem(
@@ -3033,7 +3034,7 @@ function renderAttendanceHistory(){
             /* Dacă nu există istoric salvat,
                citim cele 6 valori puse inițial în HTML */
 
-            if(history.length === 0){
+            if(history.length === 0 && !seasonWasReset){
 
                 history = [];
 
@@ -3556,17 +3557,11 @@ function resetSeason(){
     }
 
 
-    /* Ștergem istoricul complet al sezonului */
-
     seasonHistory = {};
 
-
-    /* Ștergem și istoricul ultimelor 6 */
+    seasonWasReset = true;  
 
     attendanceHistory = {};
-
-
-    /* Ștergem prezența antrenamentului curent */
 
     Object.keys(attendance).forEach(key => {
         delete attendance[key];
