@@ -3333,6 +3333,7 @@ document
    DESCHIDE CARDUL JUCĂTORULUI
 ========================================= */
 
+
 function openPlayerCard(id){
 
     const player =
@@ -3344,16 +3345,188 @@ function openPlayerCard(id){
         return;
     }
 
+
+    /* =====================================
+       DATE JUCĂTOR
+    ===================================== */
+
     const name =
         player.querySelector(
             ".player-name"
-        ).textContent;
+        ).textContent.trim();
 
-    showToast(
-        "Ai selectat: " + name
+    const position =
+        player.querySelector(
+            ".player-position"
+        ).textContent.trim();
+
+
+    /* =====================================
+       COMPLETĂM CARDUL
+    ===================================== */
+
+    document
+        .getElementById("playerCardName")
+        .textContent = name;
+
+    document
+        .getElementById("playerCardPosition")
+        .textContent = position;
+
+    document
+        .getElementById("playerCardAvatar")
+        .textContent =
+        String(id).padStart(2,"0");
+
+
+    /* =====================================
+       ISTORICUL JUCĂTORULUI
+    ===================================== */
+
+    const history =
+        attendanceHistory[id] || [];
+
+
+    renderPlayerFullHistory(
+        history
     );
 
+
+    /* =====================================
+       DESCHIDEM CARDUL
+    ===================================== */
+
+    document
+        .getElementById(
+            "playerCardOverlay"
+        )
+        .classList.add("show");
+
+}    
+
+
+
+
+ function renderPlayerFullHistory(history){
+
+    const historyContainer =
+        document.getElementById(
+            "playerFullHistory"
+        );
+
+
+    historyContainer.innerHTML = "";
+
+
+    /* =====================================
+       STATISTICI
+    ===================================== */
+
+    const total =
+        history.length;
+
+    const present =
+        history.filter(
+            status =>
+                status === "present"
+        ).length;
+
+
+    const percentage =
+        total === 0
+            ? 0
+            : Math.round(
+                (present / total) * 100
+            );
+
+
+    document
+        .getElementById(
+            "playerSeasonPercent"
+        )
+        .textContent =
+        percentage + " %";
+
+
+    document
+        .getElementById(
+            "playerSeasonCount"
+        )
+        .textContent =
+        present +
+        " / " +
+        total +
+        " tréninků";
+
+
+    document
+        .getElementById(
+            "playerHistoryCount"
+        )
+        .textContent =
+        total +
+        " / 130";
+
+
+    /* =====================================
+       ISTORIC
+    ===================================== */
+
+    history.forEach(status => {
+
+        const box =
+            document.createElement(
+                "span"
+            );
+
+
+        box.className =
+            "full-history-box " +
+            (
+                status === "present"
+                    ? "present"
+                    : "absent"
+            );
+
+
+        box.textContent =
+            status === "present"
+                ? "✓"
+                : "×";
+
+
+        historyContainer
+            .appendChild(box);
+
+    });
+
+ }
+
+
+
+
+function closePlayerCard(event){
+
+    if(
+        event &&
+        event.target !==
+        document.getElementById(
+            "playerCardOverlay"
+        )
+    ){
+        return;
+    }
+
+
+    document
+        .getElementById(
+            "playerCardOverlay"
+        )
+        .classList.remove("show");
+
 }
+      
+      
       
 
 /* =========================================
