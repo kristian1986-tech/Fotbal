@@ -2822,6 +2822,63 @@ function updateAttendanceSummary(){
 }
 
 
+
+/* =========================================
+   NUMELE JUCĂTORILOR DEVIN CLICKABLE
+========================================= */
+
+document
+    .querySelectorAll(".player")
+    .forEach(player => {
+
+        const name =
+            player.querySelector(".player-name");
+
+        if(!name){
+            return;
+        }
+
+        const id =
+            player.dataset.id;
+
+        name.style.cursor = "pointer";
+
+        name.onclick = function(){
+
+            openPlayerCard(id);
+
+        };
+
+    });
+
+
+      /* =========================================
+   DESCHIDE CARDUL JUCĂTORULUI
+========================================= */
+
+function openPlayerCard(id){
+
+    const player =
+        document.querySelector(
+            `.player[data-id="${id}"]`
+        );
+
+    if(!player){
+        return;
+    }
+
+    const name =
+        player.querySelector(
+            ".player-name"
+        ).textContent;
+
+    showToast(
+        "Ai selectat: " + name
+    );
+
+}
+      
+
 /* =========================================
    SAVE
 ========================================= */
