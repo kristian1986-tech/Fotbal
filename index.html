@@ -3687,6 +3687,20 @@ function saveAttendance(){
         return;
     }
 
+      const seasonCount = Math.max(
+    ...Object.values(seasonHistory)
+        .map(history => history.length),
+    0
+);
+
+if(seasonCount >= 130){
+
+    showToast(
+        "Sezóna má již 130 tréninků. Resetujte sezónu."
+    );
+
+    return;
+}
 
     /* =====================================
        DATA ANTRENAMENTULUI
@@ -3733,26 +3747,15 @@ function saveAttendance(){
    ISTORIC COMPLET AL SEZONULUI
 ================================= */
 
-seasonHistoryPlayer.push(
-    todayStatus
-);
+if(seasonHistoryPlayer.length < 130){
 
-
-/* Maximum 130 antrenamente */
-
-if(
-    seasonHistoryPlayer.length > 130
-){
-
-    seasonHistoryPlayer =
-        seasonHistoryPlayer.slice(-130);
+    seasonHistoryPlayer.push(todayStatus);
 
 }
 
-
-seasonHistory[id] =
-    seasonHistoryPlayer;
-
+seasonHistory[id] = seasonHistoryPlayer;
+attendanceHistory[id] =
+    seasonHistoryPlayer.slice(-6);
 
 /* =================================
    ULTIMELE 6
