@@ -2978,6 +2978,19 @@ let attendanceHistory =
     ) || {};
 
 
+
+/* =========================================
+   ISTORIC COMPLET SEZON - MAXIM 130
+========================================= */
+
+let seasonHistory =
+    JSON.parse(
+        localStorage.getItem(
+            "juniorstats_season_history"
+        )
+    ) || {};      
+
+
 /* Data antrenamentului curent */
 
 function getTrainingDate(){
@@ -3384,8 +3397,7 @@ function openPlayerCard(id){
     ===================================== */
 
     const history =
-        attendanceHistory[id] || [];
-
+    seasonHistory[id] || [];
 
     renderPlayerFullHistory(
         history
@@ -3579,6 +3591,7 @@ function saveAttendance(){
         let history =
             attendanceHistory[id] || [];
 
+        let seasonHistoryPlayer = seasonHistory[id] || [];
 
         /* =================================
            PREZENȚA DE AZI
@@ -3599,32 +3612,38 @@ function saveAttendance(){
    ADAUGĂM ANTRENAMENTUL DE AZI
 ================================= */
 
-if(
-    history.length >= 6
-){
+/* =================================
+   ISTORIC COMPLET AL SEZONULUI
+================================= */
 
-    /* Eliminăm cel mai vechi */
-
-    history.shift();
-
-}
-
-
-/* Adăugăm rezultatul de azi */
-
-history.push(
+seasonHistoryPlayer.push(
     todayStatus
 );
 
 
-/* Păstrăm maximum 6 */
+/* Maximum 130 antrenamente */
 
-history =
-    history.slice(-6);
+if(
+    seasonHistoryPlayer.length > 130
+){
 
+    seasonHistoryPlayer =
+        seasonHistoryPlayer.slice(-130);
+
+}
+
+
+seasonHistory[id] =
+    seasonHistoryPlayer;
+
+
+/* =================================
+   ULTIMELE 6
+   le luăm din istoricul sezonului
+================================= */
 
 attendanceHistory[id] =
-    history;
+    seasonHistoryPlayer.slice(-6);
 
     });
 
@@ -3640,6 +3659,14 @@ attendanceHistory[id] =
         )
     );
 
+
+    localStorage.setItem(
+    "juniorstats_season_history",
+    JSON.stringify(
+        seasonHistory
+    )
+);
+      
 
     /* =====================================
        SALVĂM ȘI PREZENȚA CURENTĂ
