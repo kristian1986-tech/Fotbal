@@ -1369,6 +1369,85 @@ body{
 .player-menu-list .delete-player{
     color:#ff7180;
 }
+
+
+      
+.edit-player-modal{
+    position:fixed;
+    inset:0;
+    background:rgba(3,12,23,.78);
+    backdrop-filter:blur(8px);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    z-index:9999;
+}
+
+.edit-player-modal.show{
+    display:flex;
+}
+
+.edit-player-card{
+    width:100%;
+    max-width:420px;
+    background:#101f33;
+    border:1px solid #29445e;
+    border-radius:22px;
+    padding:24px;
+    position:relative;
+    box-shadow:0 20px 60px rgba(0,0,0,.45);
+}
+
+.edit-player-close{
+    position:absolute;
+    right:15px;
+    top:15px;
+    width:40px;
+    height:40px;
+    border:1px solid #29445e;
+    border-radius:12px;
+    background:#142a40;
+    color:#9db0c3;
+    font-size:24px;
+}
+
+.edit-player-title{
+    font-size:23px;
+    font-weight:800;
+    margin-bottom:24px;
+}
+
+.edit-player-card label{
+    display:block;
+    margin:14px 0 7px;
+    color:#91a5b9;
+    font-size:13px;
+}
+
+.edit-player-card input{
+    width:100%;
+    box-sizing:border-box;
+    padding:13px 14px;
+    border:1px solid #29445e;
+    border-radius:12px;
+    background:#0c1b2d;
+    color:#fff;
+    font-size:15px;
+    outline:none;
+}
+
+.edit-player-save{
+    width:100%;
+    margin-top:22px;
+    padding:14px;
+    border:0;
+    border-radius:13px;
+    background:#20c978;
+    color:#fff;
+    font-size:15px;
+    font-weight:800;
+}
       
 
 </style>
@@ -3971,14 +4050,112 @@ document.querySelectorAll(".player").forEach(player => {
     };
 });
 
+
 function editPlayer(id) {
-    showToast("Upravit hráče: " + id);
+    const player = document.querySelector(`.player[data-id="${id}"]`);
+    if (!player) return;
+
+    const name = player.querySelector(".player-name")?.textContent.trim() || "";
+    const position = player.querySelector(".player-position")?.textContent.trim() || "";
+
+    let modal = document.getElementById("editPlayerModal");
+
+    if (!modal) {
+        modal = document.createElement("div");
+        modal.id = "editPlayerModal";
+        modal.className = "edit-player-modal";
+
+        modal.innerHTML = `
+            <div class="edit-player-card">
+                <button class="edit-player-close" onclick="closeEditPlayer()">×</button>
+
+                <div class="edit-player-title">Upravit hráče</div>
+
+                <label>Jméno a příjmení</label>
+                <input id="editPlayerName" type="text">
+
+                <label>Pozice</label>
+                <input id="editPlayerPosition" type="text">
+
+                <button class="edit-player-save" onclick="saveEditedPlayer()">
+                    Uložit změny
+                </button>
+            </div>
+        `;
+
+        document.body.appendChild(modal);
+    }
+
+    modal.dataset.id = id;
+    document.getElementById("editPlayerName").value = name;
+    document.getElementById("editPlayerPosition").value = position;
+    modal.classList.add("show");
 }
+
+
+function closeEditPlayer() {
+    document.getElementById("editPlayerModal")?.classList.remove("show");
+}
+
+function saveEditedPlayer() {
+    const modal = document.getElementById("editPlayerModal");
+    const id = modal.dataset.id;
+
+    const name = document.getElementById("editPlayerName").value.trim();
+    const position = document.getElementById("editPlayerPosition").value.trim();
+
+    if (!name) {
+        showToast("Zadejte jméno hráče.");
+        return;
+    }
+
+    const player = document.querySelector(`.player[data-id="${id}"]`);
+    if (!player) return;
+
+    player.querySelector(".player-name").textContent = name;
+    player.querySelector(".player-position").textContent = position || "Hráč";
+
+    const edits = JSON.parse(
+        localStorage.getItem("juniorstats_player_edits") || "{}"
+    );
+
+    edits[id] = {
+        name: name,
+        position: position || "Hráč"
+    };
+
+    localStorage.setItem(
+        "juniorstats_player_edits",
+        JSON.stringify(edits)
+    );
+
+    closeEditPlayer();
+    showToast("Změny byly uloženy ✓");
+}
+      
 
 function deletePlayer(id) {
     showToast("Smazat hráče: " + id);
 }
+
+
+
+
       
+const savedPlayerEdits = JSON.parse(
+    localStorage.getItem("juniorstats_player_edits") || "{}"
+);
+
+Object.entries(savedPlayerEdits).forEach(([id, data]) => {
+    const player = document.querySelector(`.player[data-id="${id}"]`);
+    if (!player) return;
+
+    const name = player.querySelector(".player-name");
+    const position = player.querySelector(".player-position");
+
+    if (name) name.textContent = data.name;
+    if (position) position.textContent = data.position;
+});
 
 </script>
 
