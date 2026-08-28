@@ -3942,6 +3942,19 @@ function deletePlayer(id) {
         JSON.stringify(edits)
     );
 
+      const emptySlots = JSON.parse(
+    localStorage.getItem("juniorstats_empty_slots") || "[]"
+);
+
+if (!emptySlots.includes(id)) {
+    emptySlots.push(id);
+}
+
+localStorage.setItem(
+    "juniorstats_empty_slots",
+    JSON.stringify(emptySlots)
+);
+
     showToast("Místo bylo uvolněno ✓");
 }
       
@@ -3965,6 +3978,26 @@ Object.entries(savedPlayerEdits).forEach(([id, data]) => {
 
 
 
+
+const emptySlots = JSON.parse(
+    localStorage.getItem("juniorstats_empty_slots") || "[]"
+);
+
+emptySlots.forEach(id => {
+
+    const player = document.querySelector(
+        `.player[data-id="${id}"]`
+    );
+
+    if (!player) return;
+
+    player.querySelector(".player-name").textContent =
+        "Volné místo";
+
+    player.querySelector(".player-position").textContent = "";
+
+});
+      
 
       
 </script>
