@@ -656,6 +656,7 @@ body{
     gap:8px;
       
  width:calc(100% + 10px);
+ position:relative;     
       
 }
 
@@ -1316,8 +1317,11 @@ body{
 
 
 .player-menu{
-    position:relative;
-    flex-shrink:0;
+    position:absolute;
+    right:10px;
+    top:50%;
+    transform:translateY(-50%);
+    z-index:20;
 }
 
 .player-menu-btn{
