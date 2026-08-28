@@ -1314,6 +1314,60 @@ body{
 
 }
 
+
+.player-menu{
+    position:relative;
+    flex-shrink:0;
+}
+
+.player-menu-btn{
+    width:34px;
+    height:34px;
+    border:1px solid #29445e;
+    border-radius:10px;
+    background:#142a40;
+    color:#9db0c3;
+    font-size:19px;
+    cursor:pointer;
+}
+
+.player-menu-list{
+    position:absolute;
+    right:0;
+    top:40px;
+    width:125px;
+    padding:5px;
+    background:#12263b;
+    border:1px solid #29445e;
+    border-radius:12px;
+    box-shadow:0 12px 30px rgba(0,0,0,.35);
+    display:none;
+    z-index:100;
+}
+
+.player-menu-list.show{
+    display:block;
+}
+
+.player-menu-list button{
+    width:100%;
+    padding:9px 10px;
+    border:0;
+    border-radius:8px;
+    background:transparent;
+    color:#dce7f0;
+    text-align:left;
+    font-size:11px;
+    cursor:pointer;
+}
+
+.player-menu-list button:hover{
+    background:#1b344c;
+}
+
+.player-menu-list .delete-player{
+    color:#ff7180;
+}
       
 
 </style>
@@ -3887,6 +3941,57 @@ document
 
 
 updateAttendanceSummary();
+
+
+document.querySelectorAll(".player").forEach(player => {
+
+    if(player.querySelector(".player-menu")) return;
+
+    const id = player.dataset.id;
+
+    const menu = document.createElement("div");
+    menu.className = "player-menu";
+
+    menu.innerHTML = `
+        <button class="player-menu-btn" type="button">⋮</button>
+        <div class="player-menu-list">
+            <button type="button" onclick="editPlayer('${id}')">
+                ✎ Upravit
+            </button>
+            <button type="button"
+                    class="delete-player"
+                    onclick="deletePlayer('${id}')">
+                🗑 Smazat
+            </button>
+        </div>
+    `;
+
+    player.appendChild(menu);
+
+    const btn = menu.querySelector(".player-menu-btn");
+    const list = menu.querySelector(".player-menu-list");
+
+    btn.onclick = function(e) {
+        e.stopPropagation();
+
+        document
+            .querySelectorAll(".player-menu-list.show")
+            .forEach(x => {
+                if(x !== list) x.classList.remove("show");
+            });
+
+        list.classList.toggle("show");
+    };
+});
+
+function editPlayer(id) {
+    showToast("Upravit hráče: " + id);
+}
+
+function deletePlayer(id) {
+    showToast("Smazat hráče: " + id);
+}
+      
 
 </script>
 
