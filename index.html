@@ -1203,6 +1203,11 @@ body{
 }
       
 
+.player-menu-list .add-player-slot{
+    color:#61e39a;
+}
+      
+      
 </style>
 
       
@@ -3782,6 +3787,19 @@ document.querySelectorAll(".player").forEach(player => {
                     onclick="deletePlayer('${id}')">
                 🗑 Smazat
             </button>
+
+<button type="button"
+        class="delete-player"
+        onclick="deletePlayer('${id}')">
+    🗑 Smazat
+</button>
+
+<button type="button"
+        class="add-player-slot"
+        onclick="addPlayerToSlot('${id}')">
+    ＋ Přidat hráče
+</button>
+            
         </div>
     `;
 
@@ -3999,6 +4017,54 @@ emptySlots.forEach(id => {
 });
       
 
+function addPlayerToSlot(id) {
+    const player = document.querySelector(`.player[data-id="${id}"]`);
+    if (!player) return;
+
+    const name = prompt("Jméno a příjmení hráče:");
+    if (!name || !name.trim()) return;
+
+    const position = prompt("Pozice hráče:") || "Hráč";
+
+    const nameEl = player.querySelector(".player-name");
+    const positionEl = player.querySelector(".player-position");
+
+    nameEl.textContent = name.trim();
+    positionEl.textContent = position.trim();
+
+    const edits = JSON.parse(
+        localStorage.getItem("juniorstats_player_edits") || "{}"
+    );
+
+    edits[id] = {
+        name: name.trim(),
+        position: position.trim()
+    };
+
+    localStorage.setItem(
+        "juniorstats_player_edits",
+        JSON.stringify(edits)
+    );
+
+    const emptySlots = JSON.parse(
+        localStorage.getItem("juniorstats_empty_slots") || "[]"
+    );
+
+    const index = emptySlots.indexOf(id);
+
+    if (index !== -1) {
+        emptySlots.splice(index, 1);
+    }
+
+    localStorage.setItem(
+        "juniorstats_empty_slots",
+        JSON.stringify(emptySlots)
+    );
+
+    showToast("Hráč byl přidán ✓");
+}
+
+      
       
 </script>
 
