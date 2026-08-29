@@ -2992,7 +2992,13 @@ const isEmptySlot =
             /* Dacă nu există istoric salvat,
                citim cele 6 valori puse inițial în HTML */
 
-            if(history.length === 0 && !seasonWasReset){
+            if(
+    !Object.prototype.hasOwnProperty.call(
+        attendanceHistory,
+        id
+    ) &&
+    !seasonWasReset
+){
 
                 history = [];
 
@@ -3715,7 +3721,7 @@ function saveAttendance(){
       const seasonCount = Math.max(
     ...Object.values(seasonHistory)
         .map(history => history.length),
-    0
+    
 );
 
 if(seasonCount >= 130){
