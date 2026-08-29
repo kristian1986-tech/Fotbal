@@ -4370,6 +4370,20 @@ function saveNewPlayer() {
         emptySlots.splice(index, 1);
     }
 
+    attendanceHistory[id] = [];
+
+const historyBox =
+    player.querySelector(".player-history");
+
+if(historyBox){
+    historyBox.innerHTML = "";
+}
+
+localStorage.setItem(
+    "juniorstats_history",
+    JSON.stringify(attendanceHistory)
+);
+      
     localStorage.setItem(
         "juniorstats_empty_slots",
         JSON.stringify(emptySlots)
