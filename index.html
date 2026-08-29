@@ -3786,7 +3786,8 @@ function openGoals(){
 
             <div class="goal-counter">
                 <button onclick="changeGoals('${id}',-1)">−</button>
-                <strong id="goals-${id}">0</strong>
+                <strong id="goals-${id}">${(
+    JSON.parse(localStorage.getItem("juniorstats_goals") || "{}")[id] || 0)}</strong>
                 <button onclick="changeGoals('${id}',1)">+</button>
             </div>
         `;
@@ -3795,6 +3796,47 @@ function openGoals(){
     });
 
     panel.classList.add("show");
+}
+
+
+function changeGoals(id, amount){
+
+    let goals = JSON.parse(
+        localStorage.getItem("juniorstats_goals") || "{}"
+    );
+
+    goals[id] = Math.max(0, (goals[id] || 0) + amount);
+
+    localStorage.setItem(
+        "juniorstats_goals",
+        JSON.stringify(goals)
+    );
+
+    const counter = document.getElementById("goals-" + id);
+
+    if(counter){
+        counter.textContent = goals[id];
+    }
+
+    updateTotalGoals();
+}
+      
+
+function updateTotalGoals(){
+
+    const goals = JSON.parse(
+        localStorage.getItem("juniorstats_goals") || "{}"
+    );
+
+    const total = Object.values(goals)
+        .reduce((sum, value) => sum + Number(value || 0), 0);
+
+    const totalElement =
+        document.getElementById("totalGoals");
+
+    if(totalElement){
+        totalElement.textContent = total;
+    }
 }
       
       
