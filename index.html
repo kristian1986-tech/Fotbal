@@ -2942,8 +2942,9 @@ function renderAttendanceHistory(){
             const id =
                 player.dataset.id;
 
-            let history =
-                attendanceHistory[id] || [];
+            const name =
+                player.querySelector(".player-name")
+                    ?.textContent.trim();
 
 
             const historyBox =
@@ -2955,6 +2956,30 @@ function renderAttendanceHistory(){
             if(!historyBox){
                 return;
             }
+
+
+            /* =====================================
+               LOC LIBER
+               Nu are istoric și nu participă
+            ===================================== */
+
+            if(name === "Volné místo"){
+
+                attendanceHistory[id] = [];
+
+                historyBox.innerHTML = "";
+
+                updatePlayerAttendance(
+                    player,
+                    []
+                );
+
+                return;
+            }
+
+
+            let history =
+                attendanceHistory[id] || [];
 
 
             /* Dacă nu există istoric salvat,
@@ -3003,7 +3028,7 @@ function renderAttendanceHistory(){
             historyBox.innerHTML = "";
 
 
-            /* Afișăm cele 6 rezultate */
+            /* Afișăm rezultatele */
 
             history.forEach(status => {
 
@@ -3040,7 +3065,7 @@ function renderAttendanceHistory(){
         });
 
 
-    /* Salvăm istoricul inițial */
+    /* Salvăm istoricul */
 
     localStorage.setItem(
         "juniorstats_history",
@@ -3050,6 +3075,7 @@ function renderAttendanceHistory(){
     );
 
 }
+      
 
 
 
