@@ -3760,13 +3760,44 @@ function openFeature(name){
 function openGoals(){
 
     const panel = document.getElementById("goalsPanel");
+    const container = document.getElementById("goalsPlayers");
 
-    if(panel){
-        panel.classList.add("show");
-    }
+    if(!panel || !container) return;
+
+    container.innerHTML = "";
+
+    document.querySelectorAll(".player").forEach(player => {
+
+        const id = player.dataset.id;
+        const name =
+            player.querySelector(".player-name")?.textContent.trim() || "Volné místo";
+
+        const number =
+            player.querySelector(".number")?.textContent.trim() || "";
+
+        const card = document.createElement("div");
+        card.className = "goal-player";
+
+        card.innerHTML = `
+            <div class="goal-player-info">
+                <span class="goal-player-number">${number}</span>
+                <span class="goal-player-name">${name}</span>
+            </div>
+
+            <div class="goal-counter">
+                <button onclick="changeGoals('${id}',-1)">−</button>
+                <strong id="goals-${id}">0</strong>
+                <button onclick="changeGoals('${id}',1)">+</button>
+            </div>
+        `;
+
+        container.appendChild(card);
+    });
+
+    panel.classList.add("show");
 }
-
-
+      
+      
 function closeGoals(){
 
     const panel = document.getElementById("goalsPanel");
