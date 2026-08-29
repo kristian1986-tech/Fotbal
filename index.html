@@ -1206,6 +1206,18 @@ body{
 .player-menu-list .add-player-slot{
     color:#61e39a;
 }
+
+
+
+.goals-panel{display:none;position:fixed;inset:0;z-index:9999;background:#081525;padding:20px;overflow-y:auto}
+.goals-panel.show{display:block}
+.goals-header{display:flex;align-items:center;gap:15px;margin-bottom:20px}
+.goals-header button{width:48px;height:48px;border:1px solid #29435e;border-radius:14px;background:#101f33;color:white;font-size:25px}
+.goals-title{font-size:28px;font-weight:800;color:white}
+.goals-subtitle{color:#8da1b8;margin-top:3px}
+.goals-total{background:#101f33;border:1px solid #203852;border-radius:18px;padding:20px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center}
+.goals-total span{color:#8da1b8;font-size:16px}
+.goals-total strong{font-size:34px;color:#35d07f}
       
       
 </style>
@@ -2820,6 +2832,27 @@ body{
 
 </div>
       
+
+
+<div id="goalsPanel" class="goals-panel">
+
+    <div class="goals-header">
+        <button onclick="closeGoals()">←</button>
+
+        <div>
+            <div class="goals-title">⚽ Góly</div>
+            <div class="goals-subtitle">Statistiky hráčů</div>
+        </div>
+    </div>
+
+    <div class="goals-total">
+        <span>Celkem gólů</span>
+        <strong id="totalGoals">0</strong>
+    </div>
+
+    <div id="goalsPlayers"></div>
+
+</div>
       
 
 <!-- TOAST -->
@@ -3726,7 +3759,21 @@ function openFeature(name){
 
 function openGoals(){
 
-    showToast("Góly");
+    const panel = document.getElementById("goalsPanel");
+
+    if(panel){
+        panel.classList.add("show");
+    }
+}
+
+
+function closeGoals(){
+
+    const panel = document.getElementById("goalsPanel");
+
+    if(panel){
+        panel.classList.remove("show");
+    }
 }
 
       
