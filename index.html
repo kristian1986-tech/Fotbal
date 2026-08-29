@@ -4068,6 +4068,17 @@ function deletePlayer(id) {
     delete attendanceHistory[id];
     delete attendance[id];
 
+    const goals = JSON.parse(
+    localStorage.getItem("juniorstats_goals") || "{}"
+);
+
+delete goals[id];
+
+localStorage.setItem(
+    "juniorstats_goals",
+    JSON.stringify(goals)
+); 
+
     localStorage.setItem(
         "juniorstats_season_history",
         JSON.stringify(seasonHistory)
