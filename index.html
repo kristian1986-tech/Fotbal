@@ -3713,12 +3713,23 @@ attendanceHistory[id] =
 
 function openFeature(name){
 
+    if(name === "Góly"){
+        openGoals();
+        return;
+    }
+
     showToast(
         name + " připravíme v další části aplikace."
     );
-
 }
 
+
+function openGoals(){
+
+    showToast("Góly");
+}
+
+      
 
 /* =========================================
    TOAST
