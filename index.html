@@ -1311,8 +1311,10 @@ body{
 
         <div class="summary-card">
 
-            <div class="summary-number">
-                25
+            <div
+    class="summary-number"
+    id="dashboardPlayerCount">
+    0
             </div>
 
             <div class="summary-label">
@@ -3151,13 +3153,37 @@ function updatePlayerAttendance(
  }     
       
 
+function updateDashboardPlayerCount(){
+
+    let count = 0;
+
+    document.querySelectorAll(".player").forEach(player => {
+
+        const name =
+            player.querySelector(".player-name")?.textContent.trim();
+
+        if(name && name !== "Volné místo"){
+            count++;
+        }
+    });
+
+    const element =
+        document.getElementById("dashboardPlayerCount");
+
+    if(element){
+        element.textContent = count;
+    }
+}
+
+
+      
 /* =========================================
    ÎNCĂRCARE ISTORIC LA DESCHIDERE
 ========================================= */
 
 renderAttendanceHistory();
 updateDashboardAttendance();
-
+updateDashboardPlayerCount();
       
 
 
@@ -4165,6 +4191,8 @@ localStorage.setItem(
     JSON.stringify(emptySlots)
 );
 
+   updateDashboardPlayerCount();
+      
     showToast("Místo bylo uvolněno ✓");
 }
       
@@ -4303,7 +4331,7 @@ function saveNewPlayer() {
     );
 
     closeAddPlayer();
-
+    updateDashboardPlayerCount();
     showToast("Hráč byl přidán ✓");
 }
 
