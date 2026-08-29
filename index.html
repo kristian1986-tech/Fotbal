@@ -4199,9 +4199,12 @@ localStorage.setItem(
     JSON.stringify(emptySlots)
 );
 
-   updateDashboardPlayerCount();
+   renderAttendanceHistory();
+updateDashboardAttendance();
+updateDashboardPlayerCount();
+
+showToast("Místo bylo uvolněno ✓");
       
-    showToast("Místo bylo uvolněno ✓");
 }
       
 
