@@ -3698,11 +3698,22 @@ function saveAttendance(){
     const players =
         document.querySelectorAll(".player");
 
-    const total =
-        players.length;
+ const activePlayers =
+    [...players].filter(player => {
+        const name =
+            player.querySelector(".player-name")?.textContent.trim();
 
-    const marked =
-        Object.keys(attendance).length;
+        return name && name !== "Volné místo";
+    });
+
+const total =
+    activePlayers.length;
+
+const marked =
+    activePlayers.filter(player => {
+        const id = player.dataset.id;
+        return attendance[id];
+    }).length;
 
 
     /* =====================================
@@ -3756,6 +3767,13 @@ localStorage.removeItem(
         const id =
             player.dataset.id;
 
+            const name =
+        player.querySelector(".player-name")?.textContent.trim();
+
+    if(name === "Volné místo"){
+        return;
+      }
+          
         let history =
             attendanceHistory[id] || [];
 
