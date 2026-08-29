@@ -3155,16 +3155,24 @@ function updatePlayerAttendance(
 
 function updateDashboardPlayerCount(){
 
+    const players =
+        document.querySelectorAll(".player");
+
     let count = 0;
 
-    document.querySelectorAll(".player").forEach(player => {
+    players.forEach(player => {
 
         const name =
-            player.querySelector(".player-name")?.textContent.trim();
+            player.querySelector(".player-name");
 
-        if(name && name !== "Volné místo"){
+        if(
+            name &&
+            name.textContent.trim() !== "" &&
+            name.textContent.trim() !== "Volné místo"
+        ){
             count++;
         }
+
     });
 
     const element =
@@ -4235,7 +4243,8 @@ emptySlots.forEach(id => {
     player.querySelector(".player-position").textContent = "";
 
 });
-      
+
+updateDashboardPlayerCount();
 
 function addPlayerToSlot(id) {
     const player = document.querySelector(`.player[data-id="${id}"]`);
