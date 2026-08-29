@@ -1324,9 +1324,11 @@ body{
 
         <div class="summary-card">
 
-            <div class="summary-number">
-                92%
-            </div>
+<div
+    class="summary-number"
+    id="dashboardAttendance">
+    0%
+</div>
 
             <div class="summary-label">
                 Docházka
@@ -3118,6 +3120,35 @@ function updatePlayerAttendance(
 }
 
 
+ function updateDashboardAttendance(){
+
+    let present = 0;
+    let total = 0;
+
+    document.querySelectorAll(".player").forEach(player => {
+
+        const id = player.dataset.id;
+        const history = attendanceHistory[id] || [];
+
+        total += history.length;
+
+        present += history.filter(
+            status => status === "present"
+        ).length;
+    });
+
+    const percentage = total === 0
+        ? 0
+        : Math.round((present / total) * 100);
+
+    const dashboard =
+        document.getElementById("dashboardAttendance");
+
+    if(dashboard){
+        dashboard.textContent =
+            percentage + "%";
+    }
+ }     
       
 
 /* =========================================
@@ -3125,6 +3156,7 @@ function updatePlayerAttendance(
 ========================================= */
 
 renderAttendanceHistory();
+updateDashboardAttendance();
 
       
 
@@ -3737,7 +3769,7 @@ attendanceHistory[id] =
     ===================================== */
 
     renderAttendanceHistory();
-
+    updateDashboardAttendance();
 
     /* =====================================
        CONFIRMARE
