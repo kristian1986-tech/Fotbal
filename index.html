@@ -1337,8 +1337,10 @@ body{
 
         <div class="summary-card">
 
-            <div class="summary-number">
-                34
+            <div
+    class="summary-number"
+    id="dashboardTotalGoals">
+    0
             </div>
 
             <div class="summary-label">
@@ -3848,8 +3850,19 @@ function updateTotalGoals(){
     if(totalElement){
         totalElement.textContent = total;
     }
+
+const dashboard =
+    document.getElementById("dashboardTotalGoals");
+
+if(dashboard){
+    dashboard.textContent = total;
 }
       
+}
+      
+
+      updateTotalGoals();
+
       
 function closeGoals(){
 
