@@ -3787,7 +3787,8 @@ function openGoals(){
             <div class="goal-counter">
                 <button onclick="changeGoals('${id}',-1)">−</button>
                 <strong id="goals-${id}">${(
-    JSON.parse(localStorage.getItem("juniorstats_goals") || "{}")[id] || 0)}</strong>
+    JSON.parse(localStorage.getItem("juniorstats_goals") || "{}")[id] || 0 
+)}</strong>
                 <button onclick="changeGoals('${id}',1)">+</button>
             </div>
         `;
