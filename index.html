@@ -2946,7 +2946,14 @@ function renderAttendanceHistory(){
                 player.querySelector(".player-name")
                     ?.textContent.trim();
 
+             const emptySlots = JSON.parse(
+    localStorage.getItem("juniorstats_empty_slots") || "[]"
+);
 
+const isEmptySlot =
+    emptySlots.includes(id) ||
+    name === "Volné místo";
+              
             const historyBox =
                 player.querySelector(
                     ".player-history"
@@ -2962,8 +2969,8 @@ function renderAttendanceHistory(){
                LOC LIBER
                Nu are istoric și nu participă
             ===================================== */
-
-            if(name === "Volné místo"){
+              
+                if(isEmptySlot){
 
                 attendanceHistory[id] = [];
 
