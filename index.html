@@ -1426,6 +1426,42 @@ body{
 .match-menu-btn:active{
     transform:scale(.94);
 }
+
+
+
+/* =========================================
+   MENIU MECI
+========================================= */
+
+.match-menu{
+    position:fixed;
+    display:none;
+    z-index:9999;
+    min-width:170px;
+    padding:8px;
+    background:#142941;
+    border:1px solid #29435e;
+    border-radius:16px;
+    box-shadow:0 15px 35px rgba(0,0,0,.35);
+}
+
+.match-menu button{
+    display:block;
+    width:100%;
+    padding:12px 14px;
+    border:0;
+    border-radius:11px;
+    background:transparent;
+    color:#ffffff;
+    text-align:left;
+    font-size:15px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.match-menu button:active{
+    background:#1d3a57;
+}
       
       
 </style>
@@ -3181,6 +3217,22 @@ body{
 </div>
       
     <div id="matchesList"></div>
+
+</div>
+      
+
+
+<!-- MATCH MENU -->
+
+<div id="matchMenu" class="match-menu">
+
+    <button onclick="editSelectedMatch()">
+        ✏️ Upravit
+    </button>
+
+    <button onclick="deleteSelectedMatch()">
+        🗑️ Smazat
+    </button>
 
 </div>
       
@@ -5058,6 +5110,51 @@ function renderMatches(){
         });
 
                   }
+
+
+
+      
+let selectedMatchId = null;
+
+function openMatchMenu(matchId, event){
+
+    event.stopPropagation();
+
+    selectedMatchId = matchId;
+
+    const menu =
+        document.getElementById("matchMenu");
+
+    if(!menu) return;
+
+    const button =
+        event.currentTarget;
+
+    const rect =
+        button.getBoundingClientRect();
+
+    menu.style.display = "block";
+
+    menu.style.top =
+        (rect.bottom + 8) + "px";
+
+    menu.style.left =
+        (rect.left - 120) + "px";
+}
+
+
+
+      
+      document.addEventListener("click", function(){
+
+    const menu =
+        document.getElementById("matchMenu");
+
+    if(menu){
+        menu.style.display = "none";
+    }
+
+});
       
       
 </script>
