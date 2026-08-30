@@ -4556,10 +4556,14 @@ function openMatches(){
         document.getElementById("matchesPanel");
 
     if(panel){
+
         panel.classList.add("show");
+
+        renderMatches();
     }
 }
 
+      
 function closeMatches(){
 
     const panel =
@@ -4600,6 +4604,200 @@ function closeAddMatch(){
     if(modal){
         modal.style.display = "none";
     }
+}
+      
+
+function saveMatch(){
+
+    const opponent =
+        document.getElementById("matchOpponent").value.trim();
+
+    const date =
+        document.getElementById("matchDate").value;
+
+    const venue =
+        document.getElementById("matchVenue").value;
+
+    const ourGoals =
+        Number(
+            document.getElementById("matchOurGoals").value
+        );
+
+    const opponentGoals =
+        Number(
+            document.getElementById("matchOpponentGoals").value
+        );
+
+    const note =
+        document.getElementById("matchNote").value.trim();
+
+
+    if(!opponent){
+
+        showToast("Zadejte soupeře.");
+
+        return;
+    }
+
+
+    if(!date){
+
+        showToast("Vyberte datum.");
+
+        return;
+    }
+
+
+    const matches =
+        JSON.parse(
+            localStorage.getItem("juniorstats_matches") || "[]"
+        );
+
+
+    matches.push({
+
+        id: Date.now(),
+
+        opponent: opponent,
+
+        date: date,
+
+        venue: venue,
+
+        ourGoals: ourGoals,
+
+        opponentGoals: opponentGoals,
+
+        note: note
+
+    });
+
+
+    localStorage.setItem(
+        "juniorstats_matches",
+        JSON.stringify(matches)
+    );
+
+
+    closeAddMatch();
+
+    renderMatches();
+
+    showToast("Zápas byl uložen ✓");
+}
+
+
+function renderMatches(){
+
+    const list =
+        document.getElementById("matchesList");
+
+    if(!list) return;
+
+    const matches =
+        JSON.parse(
+            localStorage.getItem("juniorstats_matches") || "[]"
+        );
+
+    const played =
+        matches.length;
+
+    const wins =
+        matches.filter(
+            match => match.ourGoals > match.opponentGoals
+        ).length;
+
+    const draws =
+        matches.filter(
+            match => match.ourGoals === match.opponentGoals
+        ).length;
+
+    const losses =
+        matches.filter(
+            match => match.ourGoals < match.opponentGoals
+        ).length;
+
+
+    document.getElementById("matchesPlayed").textContent =
+        played;
+
+    document.getElementById("matchesWins").textContent =
+        wins;
+
+    document.getElementById("matchesDraws").textContent =
+        draws;
+
+    document.getElementById("matchesLosses").textContent =
+        losses;
+
+
+    list.innerHTML = "";
+
+
+    if(matches.length === 0){
+
+        list.innerHTML = `
+            <div class="match-empty">
+                Zatím nebyly přidány žádné zápasy.
+            </div>
+        `;
+
+        return;
+    }
+
+
+    matches
+        .slice()
+        .reverse()
+        .forEach(match => {
+
+            const result =
+                match.ourGoals > match.opponentGoals
+                    ? "Výhra"
+                    : match.ourGoals < match.opponentGoals
+                        ? "Prohra"
+                        : "Remíza";
+
+
+            const card =
+                document.createElement("div");
+
+            card.className = "match-card";
+
+            card.innerHTML = `
+
+                <div class="match-info">
+
+                    <div class="match-opponent">
+                        ⚽ ${match.opponent}
+                    </div>
+
+                    <div class="match-details">
+                        ${match.date}
+                        ·
+                        ${
+                            match.venue === "home"
+                                ? "Domácí"
+                                : "Venku"
+                        }
+                    </div>
+
+                </div>
+
+                <div class="match-score">
+                    ${match.ourGoals} : ${match.opponentGoals}
+                </div>
+
+                <div class="match-result">
+                    ${result}
+                </div>
+
+            `;
+
+            list.appendChild(card);
+
+        });
+
 }
       
       
