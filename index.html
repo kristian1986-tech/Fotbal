@@ -5155,6 +5155,45 @@ function openMatchMenu(matchId, event){
     }
 
 });
+
+
+
+ function deleteSelectedMatch(){
+
+    if(!selectedMatchId) return;
+
+    const confirmed = confirm(
+        "Opravdu chcete tento zápas smazat?"
+    );
+
+    if(!confirmed) return;
+
+    let matches = JSON.parse(
+        localStorage.getItem("juniorstats_matches") || "[]"
+    );
+
+    matches = matches.filter(
+        match => String(match.id) !== String(selectedMatchId)
+    );
+
+    localStorage.setItem(
+        "juniorstats_matches",
+        JSON.stringify(matches)
+    );
+
+    selectedMatchId = null;
+
+    const menu =
+        document.getElementById("matchMenu");
+
+    if(menu){
+        menu.style.display = "none";
+    }
+
+    renderMatches();
+
+    showToast("Zápas byl smazán ✓");
+      }
       
       
 </script>
