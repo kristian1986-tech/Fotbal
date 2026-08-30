@@ -2924,6 +2924,75 @@ body{
         + Přidat zápas
     </button>
 
+<div id="addMatchModal" class="edit-player-modal">
+
+    <div class="edit-player-card">
+
+        <button
+            class="edit-player-close"
+            onclick="closeAddMatch()">
+            ×
+        </button>
+
+        <div class="edit-player-title">
+            Přidat zápas
+        </div>
+
+        <label>Soupeř</label>
+        <input
+            id="matchOpponent"
+            type="text"
+            placeholder="Např. FC Viktoria">
+
+        <label>Datum</label>
+        <input
+            id="matchDate"
+            type="date">
+
+        <label>Hřiště</label>
+        <select id="matchVenue">
+            <option value="home">Domácí</option>
+            <option value="away">Venku</option>
+        </select>
+
+        <div style="display:flex;gap:10px">
+
+            <div style="flex:1">
+                <label>Naše góly</label>
+                <input
+                    id="matchOurGoals"
+                    type="number"
+                    min="0"
+                    value="0">
+            </div>
+
+            <div style="flex:1">
+                <label>Góly soupeře</label>
+                <input
+                    id="matchOpponentGoals"
+                    type="number"
+                    min="0"
+                    value="0">
+            </div>
+
+        </div>
+
+        <label>Poznámka</label>
+        <input
+            id="matchNote"
+            type="text"
+            placeholder="Volitelně">
+
+        <button
+            class="edit-player-save"
+            onclick="saveMatch()">
+            Uložit zápas
+        </button>
+
+    </div>
+
+</div>
+      
     <div id="matchesList"></div>
 
 </div>
@@ -4501,6 +4570,37 @@ function closeMatches(){
     }
 }
 
+
+function openAddMatch(){
+
+    const modal =
+        document.getElementById("addMatchModal");
+
+    if(!modal) return;
+
+    modal.style.display = "flex";
+
+    const date =
+        document.getElementById("matchDate");
+
+    if(date && !date.value){
+
+        date.value =
+            new Date().toISOString().split("T")[0];
+
+    }
+}
+
+
+function closeAddMatch(){
+
+    const modal =
+        document.getElementById("addMatchModal");
+
+    if(modal){
+        modal.style.display = "none";
+    }
+}
       
       
 </script>
