@@ -1240,6 +1240,171 @@ body{
 .matches-summary span{display:block;margin-top:4px;color:#8da1b8;font-size:10px}
 .add-match-btn{width:100%;padding:14px;border:1px solid #29445e;border-radius:14px;background:#142a40;color:#61e39a;font-size:14px;font-weight:800;margin-bottom:16px}      
 
+
+      
+/* =========================================
+   CARDURI MECIURI
+========================================= */
+
+.match-card{
+    position:relative;
+    margin-top:18px;
+    padding:20px;
+    border-radius:24px;
+    background:linear-gradient(
+        145deg,
+        #12243a,
+        #0e2034
+    );
+    border:1px solid #29435e;
+    box-shadow:0 12px 30px rgba(0,0,0,.20);
+    overflow:hidden;
+}
+
+.match-card::before{
+    content:"";
+    position:absolute;
+    left:0;
+    top:0;
+    bottom:0;
+    width:4px;
+    background:#35d07f;
+    border-radius:4px;
+}
+
+
+/* =========================================
+   PARTEA DE SUS
+========================================= */
+
+.match-card-top{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:12px;
+}
+
+.match-opponent{
+    color:#ffffff;
+    font-size:20px;
+    font-weight:800;
+    line-height:1.2;
+}
+
+.match-details{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    margin-top:7px;
+    color:#8fa3b8;
+    font-size:14px;
+    font-weight:600;
+}
+
+
+/* =========================================
+   REZULTAT
+========================================= */
+
+.match-result{
+    flex-shrink:0;
+    padding:8px 13px;
+    border-radius:12px;
+    font-size:13px;
+    font-weight:800;
+}
+
+.match-result.win{
+    background:#123d2c;
+    color:#55e89a;
+    border:1px solid #35d07f;
+}
+
+.match-result.draw{
+    background:#1b3555;
+    color:#8fc0ff;
+    border:1px solid #355d88;
+}
+
+.match-result.loss{
+    background:#43232b;
+    color:#ff7d8c;
+    border:1px solid #783844;
+}
+
+
+/* =========================================
+   SCOR
+========================================= */
+
+.match-score-box{
+    margin-top:18px;
+    padding:14px;
+    border-radius:18px;
+    background:#102a43;
+    border:1px solid #29435e;
+}
+
+.match-score{
+    text-align:center;
+    color:#ffffff;
+    font-size:34px;
+    font-weight:900;
+    letter-spacing:4px;
+}
+
+.match-score span{
+    margin:0 5px;
+    color:#6f849b;
+}
+
+
+/* =========================================
+   NOTĂ
+========================================= */
+
+.match-note{
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    margin-top:14px;
+    padding:14px;
+    border-radius:16px;
+    background:rgba(16,42,67,.55);
+    border:1px solid #223d58;
+}
+
+.match-note-icon{
+    font-size:20px;
+}
+
+.match-note-title{
+    color:#9bb0c4;
+    font-size:13px;
+    font-weight:800;
+}
+
+.match-note-text{
+    margin-top:3px;
+    color:#ffffff;
+    font-size:14px;
+}
+
+
+/* =========================================
+   FĂRĂ MECIURI
+========================================= */
+
+.match-empty{
+    margin-top:18px;
+    padding:24px;
+    border:1px dashed #29435e;
+    border-radius:20px;
+    color:#8fa3b8;
+    text-align:center;
+    font-weight:600;
+}
+
       
 </style>
 
@@ -4699,8 +4864,12 @@ function renderMatches(){
             localStorage.getItem("juniorstats_matches") || "[]"
         );
 
-    const played =
-        matches.length;
+
+    /* =========================================
+       STATISTIKY
+    ========================================= */
+
+    const played = matches.length;
 
     const wins =
         matches.filter(
@@ -4734,6 +4903,10 @@ function renderMatches(){
     list.innerHTML = "";
 
 
+    /* =========================================
+       NICIUN MECI
+    ========================================= */
+
     if(matches.length === 0){
 
         list.innerHTML = `
@@ -4746,59 +4919,117 @@ function renderMatches(){
     }
 
 
+    /* =========================================
+       CARDURI MECIURI
+    ========================================= */
+
     matches
         .slice()
         .reverse()
         .forEach(match => {
 
-            const result =
-                match.ourGoals > match.opponentGoals
-                    ? "Výhra"
-                    : match.ourGoals < match.opponentGoals
-                        ? "Prohra"
-                        : "Remíza";
+            let result;
+            let resultClass;
+
+            if(match.ourGoals > match.opponentGoals){
+
+                result = "Výhra";
+                resultClass = "win";
+
+            }else if(match.ourGoals < match.opponentGoals){
+
+                result = "Prohra";
+                resultClass = "loss";
+
+            }else{
+
+                result = "Remíza";
+                resultClass = "draw";
+
+            }
+
+
+            const venue =
+                match.venue === "home"
+                    ? "Domácí"
+                    : "Venku";
 
 
             const card =
                 document.createElement("div");
 
-            card.className = "match-card";
+            card.className =
+                "match-card";
+
 
             card.innerHTML = `
 
-                <div class="match-info">
+                <div class="match-card-top">
 
-                    <div class="match-opponent">
-                        ⚽ ${match.opponent}
+                    <div>
+
+                        <div class="match-opponent">
+                            ⚽ ${match.opponent}
+                        </div>
+
+                        <div class="match-details">
+                            📅 ${match.date}
+                            <span>•</span>
+                            ${venue}
+                        </div>
+
                     </div>
 
-                    <div class="match-details">
-                        ${match.date}
-                        ·
-                        ${
-                            match.venue === "home"
-                                ? "Domácí"
-                                : "Venku"
-                        }
+                    <div class="match-result ${resultClass}">
+                        ${result}
                     </div>
 
                 </div>
 
-                <div class="match-score">
-                    ${match.ourGoals} : ${match.opponentGoals}
+
+                <div class="match-score-box">
+
+                    <div class="match-score">
+                        ${match.ourGoals}
+                        <span>:</span>
+                        ${match.opponentGoals}
+                    </div>
+
                 </div>
 
-                <div class="match-result">
-                    ${result}
+
+                <div class="match-note">
+
+                    <span class="match-note-icon">
+                        📝
+                    </span>
+
+                    <div>
+
+                        <div class="match-note-title">
+                            Poznámka
+                        </div>
+
+                        <div class="match-note-text">
+                            ${
+                                match.note
+                                    ? match.note
+                                    : "Bez poznámky"
+                            }
+                        </div>
+
+                    </div>
+
                 </div>
 
             `;
+
 
             list.appendChild(card);
 
         });
 
-}
+                  }
       
       
 </script>
