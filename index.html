@@ -1227,6 +1227,19 @@ body{
 .goal-counter button{width:38px;height:38px;border:1px solid #29435e;border-radius:12px;background:#142941;color:#dce8f5;font-size:22px;font-weight:700}
 .goal-counter button:active{transform:scale(.94)}
       
+
+.matches-panel{display:none;position:fixed;inset:0;z-index:9999;background:#081525;padding:20px;overflow-y:auto}
+.matches-panel.show{display:block}
+.matches-header{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.matches-header button{width:50px;height:50px;border:1px solid #29435e;border-radius:15px;background:#101f33;color:#dce8f5;font-size:25px}
+.matches-title{font-size:30px;font-weight:800;color:#fff}
+.matches-subtitle{font-size:15px;color:#8da1b8;margin-top:3px}
+.matches-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px}
+.matches-summary div{background:#101f33;border:1px solid #203852;border-radius:15px;padding:13px 5px;text-align:center}
+.matches-summary strong{display:block;font-size:23px;color:#35d07f}
+.matches-summary span{display:block;margin-top:4px;color:#8da1b8;font-size:10px}
+.add-match-btn{width:100%;padding:14px;border:1px solid #29445e;border-radius:14px;background:#142a40;color:#61e39a;font-size:14px;font-weight:800;margin-bottom:16px}      
+
       
 </style>
 
@@ -1431,7 +1444,7 @@ body{
 
         <div
             class="feature-card"
-            onclick="openFeature('Zápasy')">
+            onclick="openMatches()">
 
             <div class="feature-icon orange">
                 ⚽
@@ -2867,6 +2880,54 @@ body{
     <div id="goalsPlayers"></div>
 
 </div>
+
+
+
+<div id="matchesPanel" class="matches-panel">
+
+    <div class="matches-header">
+        <button onclick="closeMatches()">←</button>
+
+        <div>
+            <div class="matches-title">⚽ Zápasy</div>
+            <div class="matches-subtitle">
+                Výsledky a statistiky zápasů
+            </div>
+        </div>
+    </div>
+
+    <div class="matches-summary">
+
+        <div>
+            <strong id="matchesPlayed">0</strong>
+            <span>Odehráno</span>
+        </div>
+
+        <div>
+            <strong id="matchesWins">0</strong>
+            <span>Výhry</span>
+        </div>
+
+        <div>
+            <strong id="matchesDraws">0</strong>
+            <span>Remízy</span>
+        </div>
+
+        <div>
+            <strong id="matchesLosses">0</strong>
+            <span>Prohry</span>
+        </div>
+
+    </div>
+
+    <button class="add-match-btn" onclick="openAddMatch()">
+        + Přidat zápas
+    </button>
+
+    <div id="matchesList"></div>
+
+</div>
+      
       
 
 <!-- TOAST -->
@@ -4416,6 +4477,28 @@ localStorage.setItem(
     closeAddPlayer();
     updateDashboardPlayerCount();
     showToast("Hráč byl přidán ✓");
+}
+
+      
+
+function openMatches(){
+
+    const panel =
+        document.getElementById("matchesPanel");
+
+    if(panel){
+        panel.classList.add("show");
+    }
+}
+
+function closeMatches(){
+
+    const panel =
+        document.getElementById("matchesPanel");
+
+    if(panel){
+        panel.classList.remove("show");
+    }
 }
 
       
