@@ -1549,6 +1549,21 @@ body{
     transform:scale(.97);
 }
 
+
+.statistics-panel{
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:9999;
+    background:#081525;
+    padding:20px;
+    overflow-y:auto;
+}
+
+.statistics-panel.show{
+    display:block;
+}
+      
       
 </style>
 
@@ -3362,9 +3377,9 @@ body{
 
 <!-- STATISTIKY SECTION -->
 
-<div
+    <div
     id="statisticsSection"
-    style="display:none;">
+    class="statistics-panel">
 
     <div class="section-header">
 
@@ -5468,8 +5483,7 @@ function openStatistics(){
 
     if(!section) return;
 
-    section.style.display = "block";
-
+    section.classList.add("show");
 }
 
 
@@ -5480,8 +5494,7 @@ function closeStatistics(){
 
     if(!section) return;
 
-    section.style.display = "none";
-
+    section.classList.remove("show");
 }
       
       
