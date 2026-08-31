@@ -1609,39 +1609,47 @@ body{
 
 .statistics-overview{
     display:grid;
-    grid-template-columns:repeat(2,1fr);
+    grid-template-columns:repeat(3,1fr);
     gap:10px;
     margin-top:18px;
+}
+
+/* Titlul Přehled sezóny pe toată lățimea */
+.statistics-overview > div:first-child{
+    grid-column:1 / -1;
 }
 
 .statistics-card{
     background:#101f33;
     border:1px solid #203852;
     border-radius:16px;
-    padding:15px 13px;
-    min-height:105px;
+    padding:12px;
+    min-height:88px;
+
     display:flex;
     flex-direction:column;
     justify-content:center;
 }
 
 .statistics-icon{
-    font-size:20px;
-    margin-bottom:8px;
+    font-size:18px;
+    line-height:1;
+    margin-bottom:7px;
 }
 
 .statistics-card strong{
-    font-size:25px;
+    font-size:23px;
     font-weight:800;
     color:#35d07f;
     line-height:1;
 }
 
 .statistics-card small{
-    margin-top:7px;
+    margin-top:6px;
     color:#8fa3b8;
-    font-size:11px;
+    font-size:10px;
     font-weight:600;
+    line-height:1.2;
 }
       
       
