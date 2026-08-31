@@ -1604,52 +1604,223 @@ body{
 
 
 /* =========================================
-   STATISTIKY - PŘEHLED
+   STATISTIKY - PŘEHLED SEZÓNY
 ========================================= */
 
-.statistics-overview{
+.statistics-panel{
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:9999;
+    background:#071525;
+    padding:20px 16px 40px;
+    overflow-y:auto;
+}
+
+.statistics-panel.show{
+    display:block;
+}
+
+/* HEADER */
+
+.statistics-header{
+    display:flex;
+    align-items:center;
+    gap:22px;
+    margin-bottom:28px;
+}
+
+.statistics-header button{
+    width:90px;
+    height:90px;
+    flex-shrink:0;
+
+    border:1px solid #29435e;
+    border-radius:28px;
+
+    background:#122940;
+    color:#dce8f5;
+
+    font-size:34px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    cursor:pointer;
+}
+
+.statistics-title{
+    color:#ffffff;
+    font-size:32px;
+    font-weight:800;
+    line-height:1.1;
+}
+
+.statistics-subtitle{
+    margin-top:5px;
+    color:#8fa3b8;
+    font-size:16px;
+}
+
+/* SECTION TITLE */
+
+.statistics-section-title{
+    margin:0 2px 14px;
+
+    color:#ffffff;
+    font-size:18px;
+    font-weight:800;
+}
+
+/* GRID */
+
+.statistics-grid{
     display:grid;
     grid-template-columns:repeat(3,1fr);
     gap:10px;
-    margin-top:18px;
 }
 
-/* Titlul Přehled sezóny pe toată lățimea */
-.statistics-overview > div:first-child{
-    grid-column:1 / -1;
-}
+/* SMALL CARDS */
 
 .statistics-card{
-    background:#101f33;
+    min-height:105px;
+
+    padding:13px 12px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #12253b,
+            #0e1d30
+        );
+
     border:1px solid #203852;
-    border-radius:16px;
-    padding:12px;
-    min-height:88px;
+    border-radius:18px;
 
     display:flex;
     flex-direction:column;
     justify-content:center;
+
+    overflow:hidden;
 }
 
-.statistics-icon{
-    font-size:18px;
+.statistics-card-icon{
+    display:block;
+    font-size:22px;
     line-height:1;
-    margin-bottom:7px;
+    margin-bottom:5px;
 }
 
 .statistics-card strong{
-    font-size:23px;
-    font-weight:800;
+    display:block;
+
     color:#35d07f;
+    font-size:28px;
     line-height:1;
+    font-weight:800;
 }
 
-.statistics-card small{
+.statistics-card > span:last-child{
+    display:block;
+
     margin-top:6px;
-    color:#8fa3b8;
-    font-size:10px;
-    font-weight:600;
+
+    color:#dce8f5;
+    font-size:12px;
     line-height:1.2;
+}
+
+/* GOAL DIFFERENCE - FULL WIDTH */
+
+.statistics-difference{
+    grid-column:1 / -1;
+
+    min-height:76px;
+
+    display:grid;
+    grid-template-columns:48px 1fr auto;
+    align-items:center;
+    gap:10px;
+
+    padding:12px 16px;
+}
+
+.statistics-difference .statistics-card-icon{
+    margin:0;
+    font-size:25px;
+}
+
+.statistics-difference strong{
+    font-size:28px;
+}
+
+.statistics-difference > span:last-child{
+    margin:0;
+    font-size:13px;
+}
+
+/* MOBILE */
+
+@media(max-width:500px){
+
+    .statistics-panel{
+        padding:18px 16px 35px;
+    }
+
+    .statistics-header{
+        gap:18px;
+        margin-bottom:26px;
+    }
+
+    .statistics-header button{
+        width:90px;
+        height:90px;
+        border-radius:27px;
+        font-size:32px;
+    }
+
+    .statistics-title{
+        font-size:30px;
+    }
+
+    .statistics-subtitle{
+        font-size:15px;
+    }
+
+    .statistics-section-title{
+        font-size:18px;
+        margin-bottom:13px;
+    }
+
+    .statistics-grid{
+        grid-template-columns:repeat(3,1fr);
+        gap:8px;
+    }
+
+    .statistics-card{
+        min-height:104px;
+        padding:11px 9px;
+        border-radius:17px;
+    }
+
+    .statistics-card-icon{
+        font-size:20px;
+        margin-bottom:5px;
+    }
+
+    .statistics-card strong{
+        font-size:26px;
+    }
+
+    .statistics-card > span:last-child{
+        font-size:11px;
+    }
+
+    .statistics-difference{
+        min-height:70px;
+        padding:11px 14px;
+    }
+
 }
       
       
