@@ -1604,7 +1604,7 @@ body{
 
 
 /* =========================================
-   STATISTIKY - PŘEHLED SEZÓNY
+   STATISTIKY - KOMPLETNÍ STRÁNKA
 ========================================= */
 
 .statistics-panel{
@@ -1613,7 +1613,7 @@ body{
     inset:0;
     z-index:9999;
     background:#071525;
-    padding:20px 16px 40px;
+    padding:18px 16px 40px;
     overflow-y:auto;
 }
 
@@ -1626,32 +1626,27 @@ body{
 .statistics-header{
     display:flex;
     align-items:center;
-    gap:22px;
+    gap:20px;
     margin-bottom:28px;
 }
 
 .statistics-header button{
-    width:90px;
-    height:90px;
+    width:76px;
+    height:76px;
     flex-shrink:0;
-
     border:1px solid #29435e;
-    border-radius:28px;
-
+    border-radius:24px;
     background:#122940;
     color:#dce8f5;
-
-    font-size:34px;
+    font-size:30px;
     display:flex;
     align-items:center;
     justify-content:center;
-
-    cursor:pointer;
 }
 
 .statistics-title{
-    color:#ffffff;
-    font-size:32px;
+    color:#fff;
+    font-size:30px;
     font-weight:800;
     line-height:1.1;
 }
@@ -1659,20 +1654,35 @@ body{
 .statistics-subtitle{
     margin-top:5px;
     color:#8fa3b8;
-    font-size:16px;
+    font-size:15px;
 }
 
-/* SECTION TITLE */
+/* SECTION TITLE + FILTER */
+
+.statistics-section-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:14px;
+}
 
 .statistics-section-title{
-    margin:0 2px 14px;
-
-    color:#ffffff;
+    color:#fff;
     font-size:18px;
     font-weight:800;
 }
 
-/* GRID */
+.statistics-filter{
+    padding:10px 13px;
+    border-radius:20px;
+    border:1px solid #29435e;
+    background:#10263c;
+    color:#dce8f5;
+    font-size:12px;
+}
+
+/* SEASON CARDS */
 
 .statistics-grid{
     display:grid;
@@ -1680,65 +1690,53 @@ body{
     gap:10px;
 }
 
-/* SMALL CARDS */
-
 .statistics-card{
-    min-height:105px;
-
+    min-height:106px;
     padding:13px 12px;
 
     background:
         linear-gradient(
             145deg,
-            #12253b,
-            #0e1d30
+            #12283f,
+            #0e2034
         );
 
-    border:1px solid #203852;
+    border:1px solid #203d58;
     border-radius:18px;
 
     display:flex;
     flex-direction:column;
     justify-content:center;
-
-    overflow:hidden;
 }
 
 .statistics-card-icon{
-    display:block;
-    font-size:22px;
+    font-size:21px;
     line-height:1;
-    margin-bottom:5px;
+    margin-bottom:6px;
 }
 
 .statistics-card strong{
-    display:block;
-
     color:#35d07f;
-    font-size:28px;
+    font-size:27px;
     line-height:1;
     font-weight:800;
 }
 
-.statistics-card > span:last-child{
-    display:block;
-
-    margin-top:6px;
-
+.statistics-card-label{
+    margin-top:7px;
     color:#dce8f5;
-    font-size:12px;
+    font-size:11px;
     line-height:1.2;
 }
 
-/* GOAL DIFFERENCE - FULL WIDTH */
+/* GOAL DIFFERENCE */
 
 .statistics-difference{
     grid-column:1 / -1;
-
-    min-height:76px;
+    min-height:78px;
 
     display:grid;
-    grid-template-columns:48px 1fr auto;
+    grid-template-columns:55px 1fr 25px;
     align-items:center;
     gap:10px;
 
@@ -1747,17 +1745,175 @@ body{
 
 .statistics-difference .statistics-card-icon{
     margin:0;
-    font-size:25px;
+    font-size:27px;
 }
 
 .statistics-difference strong{
-    font-size:28px;
+    font-size:29px;
 }
 
-.statistics-difference > span:last-child{
+.statistics-difference .statistics-card-label{
     margin:0;
-    font-size:13px;
 }
+
+.statistics-difference-arrow{
+    color:#8fa3b8;
+    font-size:25px;
+}
+
+/* BIG SECTIONS */
+
+.statistics-box{
+    margin-top:18px;
+    padding:18px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #12283f,
+            #0e2034
+        );
+
+    border:1px solid #203d58;
+    border-radius:20px;
+}
+
+.statistics-box-title{
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    color:#fff;
+    font-size:18px;
+    font-weight:800;
+    margin-bottom:14px;
+}
+
+/* RESULT BAR */
+
+.statistics-result-bar{
+    width:100%;
+    height:19px;
+    display:flex;
+    overflow:hidden;
+    border-radius:12px;
+    background:#172b40;
+}
+
+.statistics-result-win{
+    background:#16d98a;
+}
+
+.statistics-result-draw{
+    background:#ffd22e;
+}
+
+.statistics-result-loss{
+    background:#ff3f55;
+}
+
+.statistics-result-values{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    margin-top:13px;
+    text-align:center;
+}
+
+.statistics-result-values strong{
+    display:block;
+    font-size:27px;
+}
+
+.statistics-result-values span{
+    display:block;
+    margin-top:3px;
+    color:#8fa3b8;
+    font-size:12px;
+}
+
+.statistics-result-values small{
+    display:block;
+    margin-top:2px;
+    color:#dce8f5;
+    font-size:11px;
+}
+
+/* AVERAGE */
+
+.statistics-average-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+}
+
+.statistics-average-card{
+    min-height:116px;
+    padding:13px 12px;
+
+    background:#10263c;
+    border:1px solid #203d58;
+    border-radius:17px;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+.statistics-average-icon{
+    font-size:21px;
+    margin-bottom:5px;
+}
+
+.statistics-average-card strong{
+    color:#35d07f;
+    font-size:26px;
+    line-height:1;
+}
+
+.statistics-average-card span{
+    margin-top:6px;
+    color:#dce8f5;
+    font-size:11px;
+}
+
+/* TOTAL GOALS */
+
+.statistics-total-goals{
+    display:grid;
+    grid-template-columns:1fr 1px 1fr;
+    align-items:center;
+
+    min-height:100px;
+    padding:15px;
+
+    background:#10263c;
+    border:1px solid #203d58;
+    border-radius:17px;
+}
+
+.statistics-total-side{
+    text-align:center;
+}
+
+.statistics-total-side strong{
+    display:block;
+    color:#35d07f;
+    font-size:32px;
+    line-height:1;
+}
+
+.statistics-total-side span{
+    display:block;
+    margin-top:7px;
+    color:#dce8f5;
+    font-size:12px;
+}
+
+.statistics-total-divider{
+    height:55px;
+    background:#29435e;
+}
+
 
 /* MOBILE */
 
@@ -1773,10 +1929,10 @@ body{
     }
 
     .statistics-header button{
-        width:90px;
-        height:90px;
-        border-radius:27px;
-        font-size:32px;
+        width:76px;
+        height:76px;
+        border-radius:24px;
+        font-size:29px;
     }
 
     .statistics-title{
@@ -1787,38 +1943,33 @@ body{
         font-size:15px;
     }
 
-    .statistics-section-title{
-        font-size:18px;
-        margin-bottom:13px;
-    }
-
     .statistics-grid{
-        grid-template-columns:repeat(3,1fr);
         gap:8px;
     }
 
     .statistics-card{
-        min-height:104px;
-        padding:11px 9px;
-        border-radius:17px;
+        min-height:106px;
+        padding:12px 10px;
     }
 
     .statistics-card-icon{
         font-size:20px;
-        margin-bottom:5px;
     }
 
     .statistics-card strong{
         font-size:26px;
     }
 
-    .statistics-card > span:last-child{
-        font-size:11px;
+    .statistics-card-label{
+        font-size:10px;
     }
 
     .statistics-difference{
-        min-height:70px;
-        padding:11px 14px;
+        min-height:72px;
+    }
+
+    .statistics-box{
+        padding:16px;
     }
 
 }
@@ -3640,6 +3791,8 @@ body{
     id="statisticsSection"
     class="statistics-panel">
 
+    <!-- HEADER -->
+
     <div class="statistics-header">
 
         <button onclick="closeStatistics()">
@@ -3658,60 +3811,348 @@ body{
 
     </div>
 
-<div class="statistics-overview">
 
-    <div class="statistics-section-title">
-        📊 Přehled sezóny
+    <!-- PŘEHLED SEZÓNY -->
+
+    <div class="statistics-section-head">
+
+        <div class="statistics-section-title">
+            📊 Přehled sezóny
+        </div>
+
+        <div class="statistics-filter">
+            Všechna soutěž　⌄
+        </div>
+
     </div>
 
-<div class="statistics-grid">
 
-    <div class="statistics-card">
-        <span class="statistics-card-icon">⚽</span>
-        <strong id="statMatches">0</strong>
-        <span>Odehrané zápasy</span>
+    <div class="statistics-grid">
+
+        <!-- MĚČI -->
+
+        <div class="statistics-card">
+
+            <span class="statistics-card-icon">⚽</span>
+
+            <strong id="statMatches">0</strong>
+
+            <span class="statistics-card-label">
+                Odehrané zápasy
+            </span>
+
+        </div>
+
+
+        <!-- VÝHRY -->
+
+        <div class="statistics-card">
+
+            <span class="statistics-card-icon">🏆</span>
+
+            <strong id="statWins">0</strong>
+
+            <span class="statistics-card-label">
+                Výhry
+            </span>
+
+        </div>
+
+
+        <!-- REMÍZY -->
+
+        <div class="statistics-card">
+
+            <span class="statistics-card-icon">🤝</span>
+
+            <strong id="statDraws">0</strong>
+
+            <span class="statistics-card-label">
+                Remízy
+            </span>
+
+        </div>
+
+
+        <!-- PROHRY -->
+
+        <div class="statistics-card">
+
+            <span class="statistics-card-icon">🔴</span>
+
+            <strong id="statLosses">0</strong>
+
+            <span class="statistics-card-label">
+                Prohry
+            </span>
+
+        </div>
+
+
+        <!-- VSTŘELENÉ GÓLY -->
+
+        <div class="statistics-card">
+
+            <span class="statistics-card-icon">⚽</span>
+
+            <strong id="statGoalsFor">0</strong>
+
+            <span class="statistics-card-label">
+                Vstřelené góly
+            </span>
+
+        </div>
+
+
+        <!-- OBDRŽENÉ GÓLY -->
+
+        <div class="statistics-card">
+
+            <span class="statistics-card-icon">🥅</span>
+
+            <strong id="statGoalsAgainst">0</strong>
+
+            <span class="statistics-card-label">
+                Obdržené góly
+            </span>
+
+        </div>
+
+
+        <!-- SKÓRE ROZDÍL -->
+
+        <div class="statistics-card statistics-difference">
+
+            <span class="statistics-card-icon">
+                ➕
+            </span>
+
+            <strong id="statGoalDifference">
+                0
+            </strong>
+
+            <span class="statistics-card-label">
+                Skóre rozdíl
+            </span>
+
+            <span class="statistics-difference-arrow">
+                ›
+            </span>
+
+        </div>
+
     </div>
 
-    <div class="statistics-card">
-        <span class="statistics-card-icon">🏆</span>
-        <strong id="statWins">0</strong>
-        <span>Výhry</span>
+
+    <!-- BILANCE VÝSLEDKŮ -->
+
+    <div class="statistics-box">
+
+        <div class="statistics-box-title">
+            🎯 Bilance výsledků
+        </div>
+
+
+        <div class="statistics-result-bar">
+
+            <div
+                id="statWinBar"
+                class="statistics-result-win"
+                style="width:0%;">
+            </div>
+
+            <div
+                id="statDrawBar"
+                class="statistics-result-draw"
+                style="width:0%;">
+            </div>
+
+            <div
+                id="statLossBar"
+                class="statistics-result-loss"
+                style="width:0%;">
+            </div>
+
+        </div>
+
+
+        <div class="statistics-result-values">
+
+            <div>
+
+                <strong
+                    id="statBalanceWins">
+                    0
+                </strong>
+
+                <span>
+                    Výhry
+                </span>
+
+                <small
+                    id="statWinPercent">
+                    0%
+                </small>
+
+            </div>
+
+
+            <div>
+
+                <strong
+                    id="statBalanceDraws">
+                    0
+                </strong>
+
+                <span>
+                    Remízy
+                </span>
+
+                <small
+                    id="statDrawPercent">
+                    0%
+                </small>
+
+            </div>
+
+
+            <div>
+
+                <strong
+                    id="statBalanceLosses">
+                    0
+                </strong>
+
+                <span>
+                    Prohry
+                </span>
+
+                <small
+                    id="statLossPercent">
+                    0%
+                </small>
+
+            </div>
+
+        </div>
+
     </div>
 
-    <div class="statistics-card">
-        <span class="statistics-card-icon">🤝</span>
-        <strong id="statDraws">0</strong>
-        <span>Remízy</span>
+
+    <!-- PRŮMĚR NA ZÁPAS -->
+
+    <div class="statistics-box">
+
+        <div class="statistics-box-title">
+            📊 Průměr na zápas
+        </div>
+
+
+        <div class="statistics-average-grid">
+
+            <div class="statistics-average-card">
+
+                <span class="statistics-average-icon">
+                    ⚽
+                </span>
+
+                <strong
+                    id="statAverageGoalsFor">
+                    0.0
+                </strong>
+
+                <span>
+                    Vstřelené góly
+                </span>
+
+            </div>
+
+
+            <div class="statistics-average-card">
+
+                <span class="statistics-average-icon">
+                    🥅
+                </span>
+
+                <strong
+                    id="statAverageGoalsAgainst">
+                    0.0
+                </strong>
+
+                <span>
+                    Obdržené góly
+                </span>
+
+            </div>
+
+
+            <div class="statistics-average-card">
+
+                <span class="statistics-average-icon">
+                    👟
+                </span>
+
+                <strong
+                    id="statAverageDifference">
+                    0.0
+                </strong>
+
+                <span>
+                    Skóre rozdíl
+                </span>
+
+            </div>
+
+        </div>
+
     </div>
 
-    <div class="statistics-card">
-        <span class="statistics-card-icon">🔴</span>
-        <strong id="statLosses">0</strong>
-        <span>Prohry</span>
+
+    <!-- CELKEM GÓLŮ -->
+
+    <div class="statistics-box">
+
+        <div class="statistics-box-title">
+            👥 Celkem gólů
+        </div>
+
+
+        <div class="statistics-total-goals">
+
+            <div class="statistics-total-side">
+
+                <strong
+                    id="statTotalGoalsFor">
+                    0
+                </strong>
+
+                <span>
+                    Vstřeleno
+                </span>
+
+            </div>
+
+
+            <div class="statistics-total-divider"></div>
+
+
+            <div class="statistics-total-side">
+
+                <strong
+                    id="statTotalGoalsAgainst">
+                    0
+                </strong>
+
+                <span>
+                    Obdrženo
+                </span>
+
+            </div>
+
+        </div>
+
     </div>
 
-    <div class="statistics-card">
-        <span class="statistics-card-icon">⚽</span>
-        <strong id="statGoalsFor">0</strong>
-        <span>Vstřelené góly</span>
-    </div>
-
-    <div class="statistics-card">
-        <span class="statistics-card-icon">🥅</span>
-        <strong id="statGoalsAgainst">0</strong>
-        <span>Obdržené góly</span>
-    </div>
-
-    <div class="statistics-card statistics-difference">
-        <span class="statistics-card-icon">➕</span>
-        <strong id="statGoalDifference">0</strong>
-        <span>Skóre rozdíl</span>
-    </div>
-
-</div>
-
-</div>
-      
 </div>
                   
       
