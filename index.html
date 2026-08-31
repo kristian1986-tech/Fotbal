@@ -1613,7 +1613,7 @@ body{
     inset:0;
     z-index:9999;
     background:#071525;
-    padding:18px 16px 40px;
+    padding:14px 16px 25px;
     overflow-y:auto;
 }
 
@@ -1621,27 +1621,36 @@ body{
     display:block;
 }
 
-/* HEADER */
+
+/* =========================================
+   HEADER
+========================================= */
 
 .statistics-header{
     display:flex;
     align-items:center;
-    gap:20px;
-    margin-bottom:28px;
+    gap:14px;
+    margin-bottom:18px;
 }
 
 .statistics-header button{
-    width:76px;
-    height:76px;
+    width:82px;
+    height:82px;
     flex-shrink:0;
+
     border:1px solid #29435e;
-    border-radius:24px;
+    border-radius:25px;
+
     background:#122940;
     color:#dce8f5;
-    font-size:30px;
+
+    font-size:29px;
+
     display:flex;
     align-items:center;
     justify-content:center;
+
+    cursor:pointer;
 }
 
 .statistics-title{
@@ -1652,47 +1661,55 @@ body{
 }
 
 .statistics-subtitle{
-    margin-top:5px;
+    margin-top:3px;
     color:#8fa3b8;
     font-size:15px;
 }
 
-/* SECTION TITLE + FILTER */
+
+/* =========================================
+   PŘEHLED SEZÓNY
+========================================= */
 
 .statistics-section-head{
     display:flex;
     align-items:center;
     justify-content:space-between;
-    gap:10px;
-    margin-bottom:14px;
+    gap:8px;
+    margin-bottom:9px;
 }
 
 .statistics-section-title{
     color:#fff;
-    font-size:18px;
+    font-size:17px;
     font-weight:800;
 }
 
 .statistics-filter{
-    padding:10px 13px;
+    padding:8px 11px;
     border-radius:20px;
     border:1px solid #29435e;
     background:#10263c;
     color:#dce8f5;
-    font-size:12px;
+    font-size:11px;
 }
 
-/* SEASON CARDS */
+
+/* =========================================
+   6 CARDURI PRINCIPALE
+========================================= */
 
 .statistics-grid{
     display:grid;
     grid-template-columns:repeat(3,1fr);
-    gap:10px;
+    gap:7px;
 }
 
 .statistics-card{
-    min-height:106px;
-    padding:13px 12px;
+    min-height:82px;
+    height:82px;
+
+    padding:9px;
 
     background:
         linear-gradient(
@@ -1702,70 +1719,81 @@ body{
         );
 
     border:1px solid #203d58;
-    border-radius:18px;
+    border-radius:16px;
 
     display:flex;
     flex-direction:column;
     justify-content:center;
+
+    overflow:hidden;
 }
 
 .statistics-card-icon{
-    font-size:21px;
+    font-size:18px;
     line-height:1;
-    margin-bottom:6px;
+    margin-bottom:3px;
 }
 
 .statistics-card strong{
     color:#35d07f;
-    font-size:27px;
+    font-size:24px;
     line-height:1;
     font-weight:800;
 }
 
 .statistics-card-label{
-    margin-top:7px;
+    margin-top:4px;
     color:#dce8f5;
-    font-size:11px;
-    line-height:1.2;
+    font-size:9px;
+    line-height:1.15;
 }
 
-/* GOAL DIFFERENCE */
+
+/* =========================================
+   SKÓRE ROZDÍL
+========================================= */
 
 .statistics-difference{
     grid-column:1 / -1;
-    min-height:78px;
+
+    min-height:60px;
+    height:60px;
 
     display:grid;
-    grid-template-columns:55px 1fr 25px;
+    grid-template-columns:42px 1fr 18px;
     align-items:center;
-    gap:10px;
+    gap:7px;
 
-    padding:12px 16px;
+    padding:9px 12px;
 }
 
 .statistics-difference .statistics-card-icon{
     margin:0;
-    font-size:27px;
+    font-size:23px;
 }
 
 .statistics-difference strong{
-    font-size:29px;
+    font-size:25px;
 }
 
 .statistics-difference .statistics-card-label{
     margin:0;
+    font-size:11px;
 }
 
 .statistics-difference-arrow{
     color:#8fa3b8;
-    font-size:25px;
+    font-size:21px;
 }
 
-/* BIG SECTIONS */
+
+/* =========================================
+   CARDURI MARI
+========================================= */
 
 .statistics-box{
-    margin-top:18px;
-    padding:18px;
+    margin-top:10px;
+    padding:13px;
 
     background:
         linear-gradient(
@@ -1775,27 +1803,33 @@ body{
         );
 
     border:1px solid #203d58;
-    border-radius:20px;
+    border-radius:17px;
 }
 
 .statistics-box-title{
     display:flex;
     align-items:center;
-    gap:10px;
+    gap:7px;
 
     color:#fff;
-    font-size:18px;
+    font-size:16px;
     font-weight:800;
-    margin-bottom:14px;
+
+    margin-bottom:9px;
 }
 
-/* RESULT BAR */
+
+/* =========================================
+   BILANCE VÝSLEDKŮ
+========================================= */
 
 .statistics-result-bar{
     width:100%;
-    height:19px;
+    height:12px;
+
     display:flex;
     overflow:hidden;
+
     border-radius:12px;
     background:#172b40;
 }
@@ -1815,44 +1849,50 @@ body{
 .statistics-result-values{
     display:grid;
     grid-template-columns:repeat(3,1fr);
-    margin-top:13px;
+
+    margin-top:8px;
     text-align:center;
 }
 
 .statistics-result-values strong{
     display:block;
-    font-size:27px;
+    font-size:23px;
 }
 
 .statistics-result-values span{
     display:block;
-    margin-top:3px;
+    margin-top:2px;
     color:#8fa3b8;
-    font-size:12px;
+    font-size:10px;
 }
 
 .statistics-result-values small{
     display:block;
     margin-top:2px;
     color:#dce8f5;
-    font-size:11px;
+    font-size:9px;
 }
 
-/* AVERAGE */
+
+/* =========================================
+   PRŮMĚR NA ZÁPAS
+========================================= */
 
 .statistics-average-grid{
     display:grid;
     grid-template-columns:repeat(3,1fr);
-    gap:10px;
+    gap:7px;
 }
 
 .statistics-average-card{
-    min-height:116px;
-    padding:13px 12px;
+    min-height:72px;
+    height:72px;
+
+    padding:8px 9px;
 
     background:#10263c;
     border:1px solid #203d58;
-    border-radius:17px;
+    border-radius:14px;
 
     display:flex;
     flex-direction:column;
@@ -1860,35 +1900,40 @@ body{
 }
 
 .statistics-average-icon{
-    font-size:21px;
-    margin-bottom:5px;
+    font-size:17px;
+    margin-bottom:2px;
 }
 
 .statistics-average-card strong{
     color:#35d07f;
-    font-size:26px;
+    font-size:22px;
     line-height:1;
 }
 
 .statistics-average-card span{
-    margin-top:6px;
+    margin-top:3px;
     color:#dce8f5;
-    font-size:11px;
+    font-size:9px;
 }
 
-/* TOTAL GOALS */
+
+/* =========================================
+   CELKEM GÓLŮ
+========================================= */
 
 .statistics-total-goals{
     display:grid;
     grid-template-columns:1fr 1px 1fr;
     align-items:center;
 
-    min-height:100px;
-    padding:15px;
+    min-height:68px;
+    height:68px;
+
+    padding:8px;
 
     background:#10263c;
     border:1px solid #203d58;
-    border-radius:17px;
+    border-radius:14px;
 }
 
 .statistics-total-side{
@@ -1898,78 +1943,60 @@ body{
 .statistics-total-side strong{
     display:block;
     color:#35d07f;
-    font-size:32px;
+    font-size:26px;
     line-height:1;
 }
 
 .statistics-total-side span{
     display:block;
-    margin-top:7px;
+    margin-top:3px;
     color:#dce8f5;
-    font-size:12px;
+    font-size:10px;
 }
 
 .statistics-total-divider{
-    height:55px;
+    height:40px;
     background:#29435e;
 }
 
 
-/* MOBILE */
+/* =========================================
+   TELEFON
+========================================= */
 
 @media(max-width:500px){
 
     .statistics-panel{
-        padding:18px 16px 35px;
+        padding:12px 16px 20px;
     }
 
     .statistics-header{
-        gap:18px;
-        margin-bottom:26px;
+        gap:14px;
+        margin-bottom:18px;
     }
 
     .statistics-header button{
-        width:76px;
-        height:76px;
-        border-radius:24px;
-        font-size:29px;
+        width:82px;
+        height:82px;
+        border-radius:25px;
+        font-size:28px;
     }
 
     .statistics-title{
-        font-size:30px;
+        font-size:29px;
     }
 
     .statistics-subtitle{
-        font-size:15px;
+        font-size:14px;
     }
 
-    .statistics-grid{
-        gap:8px;
+    .statistics-section-title{
+        font-size:17px;
     }
 
-    .statistics-card{
-        min-height:106px;
-        padding:12px 10px;
-    }
-
-    .statistics-card-icon{
-        font-size:20px;
-    }
-
-    .statistics-card strong{
-        font-size:26px;
-    }
-
-    .statistics-card-label{
-        font-size:10px;
-    }
-
-    .statistics-difference{
-        min-height:72px;
-    }
-
-    .statistics-box{
-        padding:16px;
+    .statistics-filter{
+        font-size:11px;
+        padding:8px 11px;
     }
 
 }
