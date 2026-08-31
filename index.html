@@ -4957,6 +4957,54 @@ function openAddMatch(){
 }
 
 
+function editSelectedMatch(){
+
+    if(!selectedMatchId) return;
+
+    const matches = JSON.parse(
+        localStorage.getItem("juniorstats_matches") || "[]"
+    );
+
+    const match = matches.find(
+        m => String(m.id) === String(selectedMatchId)
+    );
+
+    if(!match) return;
+
+    document.getElementById("matchOpponent").value =
+        match.opponent || "";
+
+    document.getElementById("matchDate").value =
+        match.date || "";
+
+    document.getElementById("matchVenue").value =
+        match.venue || "home";
+
+    document.getElementById("matchOurGoals").value =
+        match.ourGoals ?? 0;
+
+    document.getElementById("matchOpponentGoals").value =
+        match.opponentGoals ?? 0;
+
+    document.getElementById("matchNote").value =
+        match.note || "";
+
+    const menu =
+        document.getElementById("matchMenu");
+
+    if(menu){
+        menu.style.display = "none";
+    }
+
+    const modal =
+        document.getElementById("addMatchModal");
+
+    if(modal){
+        modal.style.display = "flex";
+    }
+}
+      
+
 function closeAddMatch(){
 
     const modal =
