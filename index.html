@@ -1552,6 +1552,13 @@ body{
 
       
 
+
+  
+/* =========================================
+   STATISTIKY
+   HEADER IDENTIC CU ZÁPASY
+========================================= */
+
 .statistics-panel{
     display:none;
     position:fixed;
@@ -1565,64 +1572,34 @@ body{
 .statistics-panel.show{
     display:block;
 }
-  
-/* =========================================
-   STATISTIKY
-   HEADER IDENTIC CU ZÁPASY
-========================================= */
 
-#statisticsSection {
-    padding: 40px 36px 60px;
+.statistics-header{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:20px;
 }
 
-#statisticsSection .section-header {
-    display: flex;
-    align-items: flex-start;
-    gap: 24px;
-    margin-bottom: 35px;
+.statistics-header button{
+    width:50px;
+    height:50px;
+    border:1px solid #29435e;
+    border-radius:15px;
+    background:#101f33;
+    color:#dce8f5;
+    font-size:25px;
 }
 
-#statisticsSection .back-btn {
-    width: 90px;
-    height: 90px;
-    min-width: 90px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 28px;
-
-    background: #10243a;
-    border: 1px solid #29435e;
-
-    color: #a8bed3;
-    font-size: 34px;
+.statistics-title{
+    font-size:30px;
+    font-weight:800;
+    color:#fff;
 }
 
-#statisticsSection .section-header > div {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-#statisticsSection .section-header h1 {
-    margin: 0;
-
-    font-size: 48px;
-    line-height: 1.1;
-    font-weight: 800;
-
-    color: #ffffff;
-}
-
-#statisticsSection .section-header p {
-    margin: 8px 0 0;
-
-    font-size: 24px;
-    line-height: 1.3;
-
-    color: #91a5b9;
+.statistics-subtitle{
+    font-size:15px;
+    color:#8da1b8;
+    margin-top:3px;
 }
       
       
@@ -3442,24 +3419,20 @@ body{
     id="statisticsSection"
     class="statistics-panel">
 
-    <div class="section-header">
+    <div class="statistics-header">
 
-        <button
-            class="back-btn"
-            onclick="closeStatistics()">
+        <button onclick="closeStatistics()">
             ←
         </button>
 
-        <div class="section-title">
-
-            <div class="section-title-main">
+        <div>
+            <div class="statistics-title">
                 📊 Statistiky
             </div>
 
-            <div class="section-title-sub">
+            <div class="statistics-subtitle">
                 Výkon týmu a hráčů
             </div>
-
         </div>
 
     </div>
