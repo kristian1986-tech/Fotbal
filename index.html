@@ -1948,6 +1948,85 @@ body{
     background:#29435e;
 }
       
+.statistics-menu-card{
+    position:relative;
+
+    min-height:120px;
+    padding:18px;
+
+    display:flex;
+    align-items:center;
+    gap:14px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #12283f,
+            #0e2034
+        );
+
+    border:1px solid #203d58;
+    border-radius:18px;
+
+    cursor:pointer;
+}
+
+.statistics-menu-icon{
+    width:48px;
+    height:48px;
+
+    flex-shrink:0;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:14px;
+
+    background:#322748;
+    color:#c49aff;
+
+    font-size:21px;
+}
+
+.statistics-menu-content{
+    min-width:0;
+}
+
+.statistics-menu-title{
+    color:#fff;
+    font-size:16px;
+    font-weight:800;
+}
+
+.statistics-menu-subtitle{
+    margin-top:5px;
+    color:#7f94aa;
+    font-size:11px;
+    line-height:1.4;
+}
+
+.statistics-menu-arrow{
+    position:absolute;
+    right:15px;
+    bottom:15px;
+
+    width:29px;
+    height:29px;
+
+    border-radius:9px;
+
+    background:#172b42;
+    color:#7890a7;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:12px;
+}
+
+      
       
 </style>
 
@@ -3765,247 +3844,55 @@ body{
     id="statisticsSection"
     class="statistics-panel">
 
-    <!-- HEADER -->
+    <!-- PAGINA PRINCIPALĂ STATISTIKY -->
 
-    <div class="statistics-header">
+    <div id="statisticsHome">
 
-        <button onclick="closeStatistics()">
-            ←
-        </button>
+        <div class="statistics-header">
 
-        <div>
-            <div class="statistics-title">
-                📊 Statistiky
-            </div>
-
-            <div class="statistics-subtitle">
-                Výkon týmu a hráčů
-            </div>
-        </div>
-
-    </div>
-
-
-    <!-- PŘEHLED SEZÓNY -->
-
-    <div class="statistics-section-head">
-
-        <div class="statistics-section-title">
-            📊 Přehled sezóny
-        </div>
-
-        <div class="statistics-filter">
-            Všechna soutěž　⌄
-        </div>
-
-    </div>
-
-
-    <div class="statistics-grid">
-
-        <!-- MĚČI -->
-
-        <div class="statistics-card">
-
-            <span class="statistics-card-icon">⚽</span>
-
-            <strong id="statMatches">0</strong>
-
-            <span class="statistics-card-label">
-                Odehrané zápasy
-            </span>
-
-        </div>
-
-
-        <!-- VÝHRY -->
-
-        <div class="statistics-card">
-
-            <span class="statistics-card-icon">🏆</span>
-
-            <strong id="statWins">0</strong>
-
-            <span class="statistics-card-label">
-                Výhry
-            </span>
-
-        </div>
-
-
-        <!-- REMÍZY -->
-
-        <div class="statistics-card">
-
-            <span class="statistics-card-icon">🤝</span>
-
-            <strong id="statDraws">0</strong>
-
-            <span class="statistics-card-label">
-                Remízy
-            </span>
-
-        </div>
-
-
-        <!-- PROHRY -->
-
-        <div class="statistics-card">
-
-            <span class="statistics-card-icon">🔴</span>
-
-            <strong id="statLosses">0</strong>
-
-            <span class="statistics-card-label">
-                Prohry
-            </span>
-
-        </div>
-
-
-        <!-- VSTŘELENÉ GÓLY -->
-
-        <div class="statistics-card">
-
-            <span class="statistics-card-icon">⚽</span>
-
-            <strong id="statGoalsFor">0</strong>
-
-            <span class="statistics-card-label">
-                Vstřelené góly
-            </span>
-
-        </div>
-
-
-        <!-- OBDRŽENÉ GÓLY -->
-
-        <div class="statistics-card">
-
-            <span class="statistics-card-icon">🥅</span>
-
-            <strong id="statGoalsAgainst">0</strong>
-
-            <span class="statistics-card-label">
-                Obdržené góly
-            </span>
-
-        </div>
-
-
-        <!-- SKÓRE ROZDÍL -->
-
-        <div class="statistics-card statistics-difference">
-
-            <span class="statistics-card-icon">
-                ➕
-            </span>
-
-            <strong id="statGoalDifference">
-                0
-            </strong>
-
-            <span class="statistics-card-label">
-                Skóre rozdíl
-            </span>
-
-            <span class="statistics-difference-arrow">
-                ›
-            </span>
-
-        </div>
-
-    </div>
-
-
-    <!-- BILANCE VÝSLEDKŮ -->
-
-    <div class="statistics-box">
-
-        <div class="statistics-box-title">
-            🎯 Bilance výsledků
-        </div>
-
-
-        <div class="statistics-result-bar">
-
-            <div
-                id="statWinBar"
-                class="statistics-result-win"
-                style="width:0%;">
-            </div>
-
-            <div
-                id="statDrawBar"
-                class="statistics-result-draw"
-                style="width:0%;">
-            </div>
-
-            <div
-                id="statLossBar"
-                class="statistics-result-loss"
-                style="width:0%;">
-            </div>
-
-        </div>
-
-
-        <div class="statistics-result-values">
+            <button onclick="closeStatistics()">
+                ←
+            </button>
 
             <div>
 
-                <strong
-                    id="statBalanceWins">
-                    0
-                </strong>
+                <div class="statistics-title">
+                    📊 Statistiky
+                </div>
 
-                <span>
-                    Výhry
-                </span>
-
-                <small
-                    id="statWinPercent">
-                    0%
-                </small>
+                <div class="statistics-subtitle">
+                    Výkon týmu a hráčů
+                </div>
 
             </div>
 
+        </div>
 
-            <div>
 
-                <strong
-                    id="statBalanceDraws">
-                    0
-                </strong>
+        <!-- CARD PŘEHLED SEZÓNY -->
 
-                <span>
-                    Remízy
-                </span>
+        <div
+            class="statistics-menu-card"
+            onclick="openSeasonOverview()">
 
-                <small
-                    id="statDrawPercent">
-                    0%
-                </small>
+            <div class="statistics-menu-icon">
+                📊
+            </div>
+
+            <div class="statistics-menu-content">
+
+                <div class="statistics-menu-title">
+                    Přehled sezóny
+                </div>
+
+                <div class="statistics-menu-subtitle">
+                    Výsledky a statistiky týmu
+                </div>
 
             </div>
 
-
-            <div>
-
-                <strong
-                    id="statBalanceLosses">
-                    0
-                </strong>
-
-                <span>
-                    Prohry
-                </span>
-
-                <small
-                    id="statLossPercent">
-                    0%
-                </small>
-
+            <div class="statistics-menu-arrow">
+                →
             </div>
 
         </div>
@@ -4013,62 +3900,96 @@ body{
     </div>
 
 
-    <!-- PRŮMĚR NA ZÁPAS -->
+    <!-- =====================================
+         PŘEHLED SEZÓNY
+    ====================================== -->
 
-    <div class="statistics-box">
+    <div
+        id="seasonOverview"
+        style="display:none;">
 
-        <div class="statistics-box-title">
-            📊 Průměr na zápas
+        <div class="statistics-header">
+
+            <button onclick="closeSeasonOverview()">
+                ←
+            </button>
+
+            <div>
+
+                <div class="statistics-title">
+                    📊 Přehled sezóny
+                </div>
+
+                <div class="statistics-subtitle">
+                    Výsledky a statistiky týmu
+                </div>
+
+            </div>
+
         </div>
 
 
-        <div class="statistics-average-grid">
+        <!-- STATISTICILE EXISTENTE -->
 
-            <div class="statistics-average-card">
+        <div class="statistics-section-head">
 
-                <span class="statistics-average-icon">
-                    ⚽
-                </span>
-
-                <strong
-                    id="statAverageGoalsFor">
-                    0.0
-                </strong>
-
-                <span>
-                    Vstřelené góly
-                </span>
-
+            <div class="statistics-section-title">
+                📊 Přehled sezóny
             </div>
 
-
-            <div class="statistics-average-card">
-
-                <span class="statistics-average-icon">
-                    🥅
-                </span>
-
-                <strong
-                    id="statAverageGoalsAgainst">
-                    0.0
-                </strong>
-
-                <span>
-                    Obdržené góly
-                </span>
-
+            <div class="statistics-filter">
+                Všechna soutěž
             </div>
 
+        </div>
 
-            <div class="statistics-average-card">
 
-                <span class="statistics-average-icon">
-                    👟
+        <div class="statistics-grid">
+
+            <div class="statistics-card">
+                <span class="statistics-card-icon">⚽</span>
+                <strong id="statMatches">0</strong>
+                <span>Odehrané zápasy</span>
+            </div>
+
+            <div class="statistics-card">
+                <span class="statistics-card-icon">🏆</span>
+                <strong id="statWins">0</strong>
+                <span>Výhry</span>
+            </div>
+
+            <div class="statistics-card">
+                <span class="statistics-card-icon">🤝</span>
+                <strong id="statDraws">0</strong>
+                <span>Remízy</span>
+            </div>
+
+            <div class="statistics-card">
+                <span class="statistics-card-icon">🔴</span>
+                <strong id="statLosses">0</strong>
+                <span>Prohry</span>
+            </div>
+
+            <div class="statistics-card">
+                <span class="statistics-card-icon">⚽</span>
+                <strong id="statGoalsFor">0</strong>
+                <span>Vstřelené góly</span>
+            </div>
+
+            <div class="statistics-card">
+                <span class="statistics-card-icon">🥅</span>
+                <strong id="statGoalsAgainst">0</strong>
+                <span>Obdržené góly</span>
+            </div>
+
+            <div class="statistics-card statistics-difference">
+
+                <span class="statistics-card-icon">
+                    ➕
                 </span>
 
-                <strong
-                    id="statAverageDifference">
-                    0.0
+                <strong id="statGoalDifference">
+                    0
                 </strong>
 
                 <span>
@@ -4079,47 +4000,110 @@ body{
 
         </div>
 
-    </div>
 
+        <div class="statistics-box">
 
-    <!-- CELKEM GÓLŮ -->
+            <div class="statistics-box-title">
+                🎯 Bilance výsledků
+            </div>
 
-    <div class="statistics-box">
+            <div class="statistics-result-bar">
 
-        <div class="statistics-box-title">
-            👥 Celkem gólů
-        </div>
+                <div
+                    id="statisticsWinBar"
+                    class="statistics-result-win"
+                    style="width:0%;">
+                </div>
 
+                <div
+                    id="statisticsDrawBar"
+                    class="statistics-result-draw"
+                    style="width:0%;">
+                </div>
 
-        <div class="statistics-total-goals">
-
-            <div class="statistics-total-side">
-
-                <strong
-                    id="statTotalGoalsFor">
-                    0
-                </strong>
-
-                <span>
-                    Vstřeleno
-                </span>
+                <div
+                    id="statisticsLossBar"
+                    class="statistics-result-loss"
+                    style="width:0%;">
+                </div>
 
             </div>
 
+            <div class="statistics-result-values">
 
-            <div class="statistics-total-divider"></div>
+                <div>
+                    <strong id="statBalanceWins">0</strong>
+                    <span>Výhry</span>
+                    <small id="statWinPercent">0%</small>
+                </div>
+
+                <div>
+                    <strong id="statBalanceDraws">0</strong>
+                    <span>Remízy</span>
+                    <small id="statDrawPercent">0%</small>
+                </div>
+
+                <div>
+                    <strong id="statBalanceLosses">0</strong>
+                    <span>Prohry</span>
+                    <small id="statLossPercent">0%</small>
+                </div>
+
+            </div>
+
+        </div>
 
 
-            <div class="statistics-total-side">
+        <div class="statistics-box">
 
-                <strong
-                    id="statTotalGoalsAgainst">
-                    0
-                </strong>
+            <div class="statistics-box-title">
+                📊 Průměr na zápas
+            </div>
 
-                <span>
-                    Obdrženo
-                </span>
+            <div class="statistics-average-grid">
+
+                <div class="statistics-average-card">
+                    <span class="statistics-average-icon">⚽</span>
+                    <strong id="statAverageGoalsFor">0.0</strong>
+                    <span>Vstřelené góly</span>
+                </div>
+
+                <div class="statistics-average-card">
+                    <span class="statistics-average-icon">🥅</span>
+                    <strong id="statAverageGoalsAgainst">0.0</strong>
+                    <span>Obdržené góly</span>
+                </div>
+
+                <div class="statistics-average-card">
+                    <span class="statistics-average-icon">👟</span>
+                    <strong id="statAverageDifference">0.0</strong>
+                    <span>Skóre rozdíl</span>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="statistics-box">
+
+            <div class="statistics-box-title">
+                👥 Celkem gólů
+            </div>
+
+            <div class="statistics-total-goals">
+
+                <div class="statistics-total-side">
+                    <strong id="statTotalGoalsFor">0</strong>
+                    <span>Vstřeleno</span>
+                </div>
+
+                <div class="statistics-total-divider"></div>
+
+                <div class="statistics-total-side">
+                    <strong id="statTotalGoalsAgainst">0</strong>
+                    <span>Obdrženo</span>
+                </div>
 
             </div>
 
@@ -6227,6 +6211,41 @@ function closeStatistics(){
 
     section.classList.remove("show");
 }
+
+
+function openSeasonOverview(){
+
+    const home =
+        document.getElementById("statisticsHome");
+
+    const overview =
+        document.getElementById("seasonOverview");
+
+    if(!home || !overview) return;
+
+    home.style.display = "none";
+    overview.style.display = "block";
+
+    if(typeof updateStatistics === "function"){
+        updateStatistics();
+    }
+}
+
+
+function closeSeasonOverview(){
+
+    const home =
+        document.getElementById("statisticsHome");
+
+    const overview =
+        document.getElementById("seasonOverview");
+
+    if(!home || !overview) return;
+
+    overview.style.display = "none";
+    home.style.display = "block";
+}
+
       
       
 </script>
