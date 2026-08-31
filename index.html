@@ -1778,8 +1778,8 @@ body{
         <!-- STATISTIKY -->
 
         <div
-            class="feature-card"
-            onclick="openFeature('Statistiky')">
+    class="feature-card"
+    onclick="openStatistics()">
 
             <div class="feature-icon purple">
                 📊
@@ -3358,6 +3358,31 @@ body{
     </div>
 
 </div>
+
+
+<!-- STATISTIKY SECTION -->
+
+<div
+    id="statisticsSection"
+    style="display:none;">
+
+    <div class="section-header">
+
+        <button
+            class="back-btn"
+            onclick="closeStatistics()">
+            ←
+        </button>
+
+        <div>
+            <h1>📊 Statistiky</h1>
+            <p>Výkon týmu a hráčů</p>
+        </div>
+
+    </div>
+
+</div>
+                  
       
 
 <!-- TOAST -->
@@ -4379,7 +4404,7 @@ function openFeature(name){
         name + " připravíme v další části aplikace."
     );
 }
-
+      
 
 function openGoals(){
 
@@ -5435,6 +5460,30 @@ function confirmDeleteMatch(){
     showToast("Zápas byl smazán ✓");
 }      
 
+
+function openStatistics(){
+
+    const section =
+        document.getElementById("statisticsSection");
+
+    if(!section) return;
+
+    section.style.display = "block";
+
+}
+
+
+function closeStatistics(){
+
+    const section =
+        document.getElementById("statisticsSection");
+
+    if(!section) return;
+
+    section.style.display = "none";
+
+}
+      
       
 </script>
 
