@@ -1463,6 +1463,92 @@ body{
     background:#1d3a57;
 }
       
+
+
+/* =========================================
+   DELETE MATCH MODAL
+========================================= */
+
+.delete-match-modal{
+    position:fixed;
+    inset:0;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    background:rgba(3,12,24,.72);
+    backdrop-filter:blur(8px);
+    z-index:10000;
+}
+
+.delete-match-box{
+    width:100%;
+    max-width:380px;
+    padding:26px;
+    border-radius:24px;
+    background:#10233a;
+    border:1px solid #29435e;
+    box-shadow:0 25px 60px rgba(0,0,0,.45);
+    text-align:center;
+}
+
+.delete-match-icon{
+    width:58px;
+    height:58px;
+    margin:0 auto 16px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:18px;
+    background:#43232b;
+    border:1px solid #783844;
+    font-size:25px;
+}
+
+.delete-match-box h3{
+    margin:0;
+    color:#ffffff;
+    font-size:21px;
+    font-weight:800;
+}
+
+.delete-match-box p{
+    margin:10px 0 22px;
+    color:#8fa3b8;
+    font-size:14px;
+    line-height:1.5;
+}
+
+.delete-match-actions{
+    display:flex;
+    gap:10px;
+}
+
+.delete-match-actions button{
+    flex:1;
+    min-height:48px;
+    border-radius:14px;
+    font-size:15px;
+    font-weight:800;
+    cursor:pointer;
+}
+
+.delete-cancel-btn{
+    background:#142941;
+    border:1px solid #29435e;
+    color:#dce8f5;
+}
+
+.delete-confirm-btn{
+    background:#43232b;
+    border:1px solid #783844;
+    color:#ff8491;
+}
+
+.delete-match-actions button:active{
+    transform:scale(.97);
+}
+
       
 </style>
 
@@ -3236,6 +3322,42 @@ body{
 
 </div>
       
+
+<!-- DELETE MATCH MODAL -->
+
+<div id="deleteMatchModal" class="delete-match-modal">
+
+    <div class="delete-match-box">
+
+        <div class="delete-match-icon">
+            🗑️
+        </div>
+
+        <h3>Opravdu smazat zápas?</h3>
+
+        <p>
+            Tento zápas bude trvale odstraněn.
+        </p>
+
+        <div class="delete-match-actions">
+
+            <button
+                class="delete-cancel-btn"
+                onclick="closeDeleteMatchModal()">
+                Zrušit
+            </button>
+
+            <button
+                class="delete-confirm-btn"
+                onclick="confirmDeleteMatch()">
+                Smazat
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
       
 
 <!-- TOAST -->
@@ -5157,31 +5279,9 @@ function openMatchMenu(matchId, event){
 });
 
 
-
  function deleteSelectedMatch(){
 
     if(!selectedMatchId) return;
-
-    const confirmed = confirm(
-        "Opravdu chcete tento zápas smazat?"
-    );
-
-    if(!confirmed) return;
-
-    let matches = JSON.parse(
-        localStorage.getItem("juniorstats_matches") || "[]"
-    );
-
-    matches = matches.filter(
-        match => String(match.id) !== String(selectedMatchId)
-    );
-
-    localStorage.setItem(
-        "juniorstats_matches",
-        JSON.stringify(matches)
-    );
-
-    selectedMatchId = null;
 
     const menu =
         document.getElementById("matchMenu");
@@ -5190,11 +5290,61 @@ function openMatchMenu(matchId, event){
         menu.style.display = "none";
     }
 
+    const modal =
+        document.getElementById("deleteMatchModal");
+
+    if(modal){
+        modal.style.display = "flex";
+    }
+ }
+      
+
+function closeDeleteMatchModal(){
+
+    const modal =
+        document.getElementById("deleteMatchModal");
+
+    if(modal){
+        modal.style.display = "none";
+    }
+
+    selectedMatchId = null;
+}
+
+
+function confirmDeleteMatch(){
+
+    if(!selectedMatchId) return;
+
+    let matches = JSON.parse(
+        localStorage.getItem("juniorstats_matches") || "[]"
+    );
+
+    matches = matches.filter(
+        match =>
+            String(match.id) !==
+            String(selectedMatchId)
+    );
+
+    localStorage.setItem(
+        "juniorstats_matches",
+        JSON.stringify(matches)
+    );
+
+    const modal =
+        document.getElementById("deleteMatchModal");
+
+    if(modal){
+        modal.style.display = "none";
+    }
+
+    selectedMatchId = null;
+
     renderMatches();
 
     showToast("Zápas byl smazán ✓");
-      }
-      
+}      
+
       
 </script>
 
