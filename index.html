@@ -1613,7 +1613,7 @@ body{
     inset:0;
     z-index:9999;
     background:#071525;
-    padding:14px 16px 25px;
+    padding:14px 16px 20px;
     overflow-y:auto;
 }
 
@@ -1629,22 +1629,22 @@ body{
 .statistics-header{
     display:flex;
     align-items:center;
-    gap:14px;
+    gap:12px;
     margin-bottom:18px;
 }
 
 .statistics-header button{
-    width:82px;
-    height:82px;
+    width:50px;
+    height:50px;
     flex-shrink:0;
 
     border:1px solid #29435e;
-    border-radius:25px;
+    border-radius:15px;
 
     background:#122940;
     color:#dce8f5;
 
-    font-size:29px;
+    font-size:23px;
 
     display:flex;
     align-items:center;
@@ -1655,20 +1655,20 @@ body{
 
 .statistics-title{
     color:#fff;
-    font-size:30px;
+    font-size:29px;
     font-weight:800;
-    line-height:1.1;
+    line-height:1.05;
 }
 
 .statistics-subtitle{
     margin-top:3px;
     color:#8fa3b8;
-    font-size:15px;
+    font-size:14px;
 }
 
 
 /* =========================================
-   PŘEHLED SEZÓNY
+   TITLU PŘEHLED
 ========================================= */
 
 .statistics-section-head{
@@ -1676,7 +1676,7 @@ body{
     align-items:center;
     justify-content:space-between;
     gap:8px;
-    margin-bottom:9px;
+    margin-bottom:8px;
 }
 
 .statistics-section-title{
@@ -1685,18 +1685,9 @@ body{
     font-weight:800;
 }
 
-.statistics-filter{
-    padding:8px 11px;
-    border-radius:20px;
-    border:1px solid #29435e;
-    background:#10263c;
-    color:#dce8f5;
-    font-size:11px;
-}
-
 
 /* =========================================
-   6 CARDURI PRINCIPALE
+   CARDURI
 ========================================= */
 
 .statistics-grid{
@@ -1706,10 +1697,10 @@ body{
 }
 
 .statistics-card{
-    min-height:82px;
-    height:82px;
+    min-height:72px;
+    height:72px;
 
-    padding:9px;
+    padding:8px 9px;
 
     background:
         linear-gradient(
@@ -1719,7 +1710,7 @@ body{
         );
 
     border:1px solid #203d58;
-    border-radius:16px;
+    border-radius:15px;
 
     display:flex;
     flex-direction:column;
@@ -1729,23 +1720,23 @@ body{
 }
 
 .statistics-card-icon{
-    font-size:18px;
+    font-size:17px;
     line-height:1;
     margin-bottom:3px;
 }
 
 .statistics-card strong{
     color:#35d07f;
-    font-size:24px;
+    font-size:22px;
     line-height:1;
     font-weight:800;
 }
 
-.statistics-card-label{
+.statistics-card span:last-child{
     margin-top:4px;
     color:#dce8f5;
     font-size:9px;
-    line-height:1.15;
+    line-height:1.1;
 }
 
 
@@ -1756,44 +1747,43 @@ body{
 .statistics-difference{
     grid-column:1 / -1;
 
-    min-height:60px;
-    height:60px;
+    height:58px;
+    min-height:58px;
 
-    display:grid;
-    grid-template-columns:42px 1fr 18px;
+    padding:7px 12px;
+
+    display:flex;
+    flex-direction:row;
     align-items:center;
-    gap:7px;
+    justify-content:flex-start;
 
-    padding:9px 12px;
+    gap:10px;
 }
 
 .statistics-difference .statistics-card-icon{
+    font-size:25px;
     margin:0;
-    font-size:23px;
 }
 
 .statistics-difference strong{
     font-size:25px;
+    line-height:1;
 }
 
-.statistics-difference .statistics-card-label{
+.statistics-difference span:last-child{
     margin:0;
     font-size:11px;
-}
-
-.statistics-difference-arrow{
-    color:#8fa3b8;
-    font-size:21px;
+    color:#dce8f5;
 }
 
 
 /* =========================================
-   CARDURI MARI
+   CARDURI SECUNDARE
 ========================================= */
 
 .statistics-box{
     margin-top:10px;
-    padding:13px;
+    padding:12px;
 
     background:
         linear-gradient(
@@ -1815,7 +1805,7 @@ body{
     font-size:16px;
     font-weight:800;
 
-    margin-bottom:9px;
+    margin-bottom:8px;
 }
 
 
@@ -1825,12 +1815,11 @@ body{
 
 .statistics-result-bar{
     width:100%;
-    height:12px;
+    height:10px;
 
     display:flex;
     overflow:hidden;
-
-    border-radius:12px;
+    border-radius:10px;
     background:#172b40;
 }
 
@@ -1850,13 +1839,13 @@ body{
     display:grid;
     grid-template-columns:repeat(3,1fr);
 
-    margin-top:8px;
+    margin-top:7px;
     text-align:center;
 }
 
 .statistics-result-values strong{
     display:block;
-    font-size:23px;
+    font-size:22px;
 }
 
 .statistics-result-values span{
@@ -1881,18 +1870,18 @@ body{
 .statistics-average-grid{
     display:grid;
     grid-template-columns:repeat(3,1fr);
-    gap:7px;
+    gap:6px;
 }
 
 .statistics-average-card{
-    min-height:72px;
-    height:72px;
+    min-height:66px;
+    height:66px;
 
-    padding:8px 9px;
+    padding:7px 8px;
 
     background:#10263c;
     border:1px solid #203d58;
-    border-radius:14px;
+    border-radius:13px;
 
     display:flex;
     flex-direction:column;
@@ -1900,13 +1889,13 @@ body{
 }
 
 .statistics-average-icon{
-    font-size:17px;
+    font-size:15px;
     margin-bottom:2px;
 }
 
 .statistics-average-card strong{
     color:#35d07f;
-    font-size:22px;
+    font-size:20px;
     line-height:1;
 }
 
@@ -1926,14 +1915,14 @@ body{
     grid-template-columns:1fr 1px 1fr;
     align-items:center;
 
-    min-height:68px;
-    height:68px;
+    min-height:62px;
+    height:62px;
 
-    padding:8px;
+    padding:7px;
 
     background:#10263c;
     border:1px solid #203d58;
-    border-radius:14px;
+    border-radius:13px;
 }
 
 .statistics-total-side{
@@ -1943,7 +1932,7 @@ body{
 .statistics-total-side strong{
     display:block;
     color:#35d07f;
-    font-size:26px;
+    font-size:24px;
     line-height:1;
 }
 
@@ -1951,54 +1940,12 @@ body{
     display:block;
     margin-top:3px;
     color:#dce8f5;
-    font-size:10px;
+    font-size:9px;
 }
 
 .statistics-total-divider{
-    height:40px;
+    height:36px;
     background:#29435e;
-}
-
-
-/* =========================================
-   TELEFON
-========================================= */
-
-@media(max-width:500px){
-
-    .statistics-panel{
-        padding:12px 16px 20px;
-    }
-
-    .statistics-header{
-        gap:14px;
-        margin-bottom:18px;
-    }
-
-    .statistics-header button{
-        width:82px;
-        height:82px;
-        border-radius:25px;
-        font-size:28px;
-    }
-
-    .statistics-title{
-        font-size:29px;
-    }
-
-    .statistics-subtitle{
-        font-size:14px;
-    }
-
-    .statistics-section-title{
-        font-size:17px;
-    }
-
-    .statistics-filter{
-        font-size:11px;
-        padding:8px 11px;
-    }
-
 }
       
       
