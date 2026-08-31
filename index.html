@@ -6246,6 +6246,281 @@ function closeSeasonOverview(){
     home.style.display = "block";
 }
 
+
+      
+function updateStatistics(){
+
+    const matches =
+        JSON.parse(
+            localStorage.getItem("juniorstats_matches") || "[]"
+        );
+
+
+    /* =====================================
+       CALCULĂM REZULTATELE
+    ===================================== */
+
+    const played =
+        matches.length;
+
+    let wins = 0;
+    let draws = 0;
+    let losses = 0;
+
+    let goalsFor = 0;
+    let goalsAgainst = 0;
+
+
+    matches.forEach(match => {
+
+        const our =
+            Number(match.ourGoals) || 0;
+
+        const opponent =
+            Number(match.opponentGoals) || 0;
+
+
+        goalsFor += our;
+        goalsAgainst += opponent;
+
+
+        if(our > opponent){
+
+            wins++;
+
+        }else if(our === opponent){
+
+            draws++;
+
+        }else{
+
+            losses++;
+
+        }
+
+    });
+
+
+    /* =====================================
+       DIFERENȚA DE GOLURI
+    ===================================== */
+
+    const goalDifference =
+        goalsFor - goalsAgainst;
+
+
+    /* =====================================
+       FUNCȚIE PENTRU ACTUALIZAREA TEXTULUI
+    ===================================== */
+
+      
+    function setText(id,value){
+
+        const element =
+            document.getElementById(id);
+
+        if(element){
+            element.textContent = value;
+        }
+
+    }
+
+
+    /* =====================================
+       PŘEHLED SEZÓNY
+    ===================================== */
+
+    setText(
+        "statMatches",
+        played
+    );
+
+    setText(
+        "statWins",
+        wins
+    );
+
+    setText(
+        "statDraws",
+        draws
+    );
+
+    setText(
+        "statLosses",
+        losses
+    );
+
+    setText(
+        "statGoalsFor",
+        goalsFor
+    );
+
+    setText(
+        "statGoalsAgainst",
+        goalsAgainst
+    );
+
+    setText(
+        "statGoalDifference",
+        goalDifference > 0
+            ? "+" + goalDifference
+            : goalDifference
+    );
+
+    /* =====================================
+       PROCENTE REZULTATE
+    ===================================== */
+
+    let winPercent = 0;
+    let drawPercent = 0;
+    let lossPercent = 0;
+
+
+    if(played > 0){
+
+        winPercent =
+            (wins / played) * 100;
+
+        drawPercent =
+            (draws / played) * 100;
+
+        lossPercent =
+            (losses / played) * 100;
+
+    }
+
+
+    /* =====================================
+       BARA REZULTATELOR
+    ===================================== */
+
+    const winBar =
+        document.getElementById(
+            "statisticsWinBar"
+        );
+
+    const drawBar =
+        document.getElementById(
+            "statisticsDrawBar"
+        );
+
+    const lossBar =
+        document.getElementById(
+            "statisticsLossBar"
+        );
+
+
+    if(winBar){
+
+        winBar.style.width =
+            winPercent + "%";
+
+    }
+
+    if(drawBar){
+
+        drawBar.style.width =
+            drawPercent + "%";
+
+    }
+
+    if(lossBar){
+
+        lossBar.style.width =
+            lossPercent + "%";
+
+    }
+
+
+    /* =====================================
+       VALORI BILANCE
+    ===================================== */
+
+    setText(
+        "statBalanceWins",
+        wins
+    );
+
+    setText(
+        "statBalanceDraws",
+        draws
+    );
+
+    setText(
+        "statBalanceLosses",
+        losses
+    );
+
+
+    setText(
+        "statWinPercent",
+        Math.round(winPercent) + "%"
+    );
+
+    setText(
+        "statDrawPercent",
+        Math.round(drawPercent) + "%"
+    );
+
+    setText(
+        "statLossPercent",
+        Math.round(lossPercent) + "%"
+    );
+
+
+    /* =====================================
+       PRŮMĚR NA ZÁPAS
+    ===================================== */
+
+    const averageGoalsFor =
+        played > 0
+            ? goalsFor / played
+            : 0;
+
+    const averageGoalsAgainst =
+        played > 0
+            ? goalsAgainst / played
+            : 0;
+
+    const averageDifference =
+        played > 0
+            ? goalDifference / played
+            : 0;
+
+
+    setText(
+        "statAverageGoalsFor",
+        averageGoalsFor.toFixed(1)
+    );
+
+    setText(
+        "statAverageGoalsAgainst",
+        averageGoalsAgainst.toFixed(1)
+    );
+
+    setText(
+        "statAverageDifference",
+        averageDifference > 0
+            ? "+" + averageDifference.toFixed(1)
+            : averageDifference.toFixed(1)
+    );
+
+
+    /* =====================================
+       CELKEM GÓLŮ
+    ===================================== */
+
+    setText(
+        "statTotalGoalsFor",
+        goalsFor
+    );
+
+    setText(
+        "statTotalGoalsAgainst",
+        goalsAgainst
+    );
+
+}
       
       
 </script>
