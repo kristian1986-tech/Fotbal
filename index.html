@@ -4943,17 +4943,26 @@ function openAddMatch(){
 
     if(!modal) return;
 
+    /* Ne asigurăm că este un meci NOU */
+    selectedMatchId = null;
+
+    /* Golim formularul */
+
+    document.getElementById("matchOpponent").value = "";
+
+    document.getElementById("matchDate").value = "";
+
+    document.getElementById("matchVenue").value = "home";
+
+    document.getElementById("matchOurGoals").value = "";
+
+    document.getElementById("matchOpponentGoals").value = "";
+
+    document.getElementById("matchNote").value = "";
+
+    /* Deschidem modalul */
+
     modal.style.display = "flex";
-
-    const date =
-        document.getElementById("matchDate");
-
-    if(date && !date.value){
-
-        date.value =
-            new Date().toISOString().split("T")[0];
-
-    }
 }
 
 
