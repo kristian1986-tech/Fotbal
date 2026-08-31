@@ -5057,29 +5057,60 @@ function saveMatch(){
     }
 
 
-    const matches =
+    let matches =
         JSON.parse(
             localStorage.getItem("juniorstats_matches") || "[]"
         );
 
 
-    matches.push({
+    /* EDITARE */
 
-        id: Date.now(),
+    if(selectedMatchId){
 
-        opponent: opponent,
+        const index =
+            matches.findIndex(
+                match =>
+                    String(match.id) ===
+                    String(selectedMatchId)
+            );
 
-        date: date,
+        if(index !== -1){
 
-        venue: venue,
+            matches[index] = {
 
-        ourGoals: ourGoals,
+                ...matches[index],
 
-        opponentGoals: opponentGoals,
+                opponent: opponent,
+                date: date,
+                venue: venue,
+                ourGoals: ourGoals,
+                opponentGoals: opponentGoals,
+                note: note
 
-        note: note
+            };
 
-    });
+        }
+
+    }
+
+    /* MECI NOU */
+
+    else{
+
+        matches.push({
+
+            id: Date.now(),
+
+            opponent: opponent,
+            date: date,
+            venue: venue,
+            ourGoals: ourGoals,
+            opponentGoals: opponentGoals,
+            note: note
+
+        });
+
+    }
 
 
     localStorage.setItem(
@@ -5087,6 +5118,8 @@ function saveMatch(){
         JSON.stringify(matches)
     );
 
+
+    selectedMatchId = null;
 
     closeAddMatch();
 
