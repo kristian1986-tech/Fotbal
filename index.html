@@ -7127,50 +7127,28 @@ function closeRatings(){
 
 function getRatingPlayers(){
 
-    const elements =
-        document.querySelectorAll(".player");
-
     const players = [];
 
-    elements.forEach((element, index) => {
+    document.querySelectorAll(".player").forEach(player => {
 
-        const text =
-            element.textContent.trim();
+        const id = player.dataset.id;
 
-        if(!text) return;
+        const name =
+            player.querySelector(".player-name")?.textContent.trim()
+            || "Volné místo";
+
+        const number =
+            player.querySelector(".number")?.textContent.trim()
+            || "";
+
+        /* Ignorăm locurile libere */
 
         if(
-            text.toLowerCase().includes("volné místo")
+            !id ||
+            name === "Volné místo"
         ){
             return;
         }
-
-        const nameElement =
-            element.querySelector(
-                ".player-name, .name"
-            );
-
-        const name =
-            nameElement
-                ? nameElement.textContent.trim()
-                : text.split("\n")[0].trim();
-
-        if(!name) return;
-
-        const id =
-            element.dataset.id ||
-            element.dataset.playerId ||
-            "player_" + index;
-
-        const numberElement =
-            element.querySelector(
-                ".player-number, .number"
-            );
-
-        const number =
-            numberElement
-                ? numberElement.textContent.trim()
-                : "";
 
         players.push({
             id: id,
