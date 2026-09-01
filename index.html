@@ -2406,51 +2406,98 @@ body{
 /* TOTAL */
 
 .rating-total{
-    margin-top:10px;
+    margin-top:0;
+    margin-bottom:10px;
     padding:16px;
 
-    background:#10263c;
-    border:1px solid #29435e;
-    border-radius:15px;
+    background:linear-gradient(
+        145deg,
+        #12283f,
+        #0e2034
+    );
+
+    border:1px solid #203d58;
+    border-radius:17px;
 
     text-align:center;
+}
+
+.rating-total-label{
+    color:#dce8f5;
+    font-size:14px;
+    font-weight:700;
+}
+
+.rating-total-value{
+    margin-top:5px;
+    color:#35d07f;
+    font-size:34px;
+    font-weight:800;
+    line-height:1;
+}
+
+.rating-total-value span{
+    font-size:17px;
+    color:#8fa3b8;
+    font-weight:700;
 }
 
 .rating-total-bar{
     width:100%;
     height:9px;
-    margin-top:10px;
+    margin-top:12px;
+
     background:#172b40;
+
     border:1px solid #29435e;
     border-radius:10px;
+
     overflow:hidden;
 }
 
 .rating-total-bar-fill{
     height:100%;
+
     background:#35d07f;
+
     border-radius:10px;
+
     transition:width .25s ease;
+          }
+
+      
+      .behavior-row{
+    min-height:58px;
 }
 
-.rating-total-value span{
-    font-size:16px;
-    color:#8fa3b8;
-    font-weight:700;
-}      
-
-.rating-total-label{
-    color:#8fa3b8;
-    font-size:11px;
+.behavior-stars{
+    display:flex;
+    align-items:center;
+    gap:2px;
+    flex-shrink:0;
 }
 
-.rating-total-value{
-    margin-top:4px;
-    color:#35d07f;
-    font-size:30px;
-    font-weight:800;
+.behavior-star{
+    padding:0 1px;
+
+    border:none;
+    background:transparent;
+
+    color:#34495e;
+
+    font-size:22px;
+    line-height:1;
+
+    cursor:pointer;
 }
 
+.behavior-star.active{
+    color:#ffd34d;
+}
+
+.behavior-star:active{
+    transform:scale(.9);
+}
 
 /* NOTE */
 
@@ -7451,6 +7498,37 @@ function renderPlayerRatingForm(
         </div>
 
 
+        <!-- CELKOVÉ HODNOCENÍ -->
+
+        <div class="rating-total">
+
+            <div class="rating-total-label">
+                ⭐ Celkové hodnocení
+            </div>
+
+            <div
+                id="currentRatingTotal"
+                class="rating-total-value"
+            >
+                ${calculatePlayerRating(rating)}
+                <span>/10</span>
+            </div>
+
+            <div class="rating-total-bar">
+
+                <div
+                    id="ratingTotalBar"
+                    class="rating-total-bar-fill"
+                    style="width:${getRatingPercentage(rating)}%"
+                ></div>
+
+            </div>
+
+        </div>
+
+
+        <!-- SPORTOVNÍ HODNOCENÍ -->
+
         <div class="rating-box">
 
             <div class="rating-box-title">
@@ -7495,60 +7573,36 @@ function renderPlayerRatingForm(
         </div>
 
 
+        <!-- CHOVÁNÍ -->
+
         <div class="rating-box">
 
             <div class="rating-box-title">
                 🧑‍🏫 Chování
             </div>
 
-            ${ratingRow(
+            ${behaviorRatingRow(
                 "Chování na tréninku",
                 "chovani",
-                rating.chovani,
-                5
+                rating.chovani
             )}
 
-            ${ratingRow(
+            ${behaviorRatingRow(
                 "Přístup k tréninku",
                 "pristup",
-                rating.pristup,
-                5
+                rating.pristup
             )}
 
-            ${ratingRow(
+            ${behaviorRatingRow(
                 "Respekt a spolupráce",
                 "respekt",
-                rating.respekt,
-                5
+                rating.respekt
             )}
 
         </div>
 
 
-        <div class="rating-total">
-
-    <div class="rating-total-label">
-        ⭐ Celkové hodnocení
-    </div>
-
-    <div
-        id="currentRatingTotal"
-        class="rating-total-value"
-    >
-        ${calculatePlayerRating(rating)}
-        <span>/10</span>
-    </div>
-
-    <div class="rating-total-bar">
-        <div
-            id="ratingTotalBar"
-            class="rating-total-bar-fill"
-            style="width:${getRatingPercentage(rating)}%"
-        ></div>
-    </div>
-
-</div>
-
+        <!-- POZNÁMKA -->
 
         <div class="rating-box">
 
@@ -7620,10 +7674,12 @@ function ratingRow(
                 </div>
 
                 <div class="rating-progress">
+
                     <div
                         class="rating-progress-fill"
                         style="width:${percentage}%"
                     ></div>
+
                 </div>
 
             </div>
@@ -7641,6 +7697,100 @@ function ratingRow(
 
 }
 
+
+ function behaviorRatingRow(
+    label,
+    key,
+    value
+){
+
+    const current =
+        Number(value) || 0;
+
+    let stars = "";
+
+    for(let i = 1; i <= 5; i++){
+
+        stars += `
+            <button
+                type="button"
+                class="behavior-star ${i <= current ? "active" : ""}"
+                onclick="setBehaviorRating('${key}',${i})"
+            >
+                ★
+            </button>
+        `;
+
+    }
+
+    return `
+
+        <div class="rating-row behavior-row">
+
+            <div class="rating-row-info">
+
+                <div class="rating-row-name">
+                    ${label}
+                </div>
+
+            </div>
+
+            <div
+                class="behavior-stars"
+                id="stars_${key}"
+            >
+
+                ${stars}
+
+            </div>
+
+            <input
+                type="hidden"
+                id="rating_${key}"
+                value="${current || ""}"
+            >
+
+        </div>
+
+    `;
+
+ }     
+
+      
+
+function setBehaviorRating(
+    key,
+    value
+){
+
+    const input =
+        document.getElementById(
+            "rating_" + key
+        );
+
+    const container =
+        document.getElementById(
+            "stars_" + key
+        );
+
+    if(!input || !container) return;
+
+    input.value = value;
+
+    container
+        .querySelectorAll(".behavior-star")
+        .forEach((star, index) => {
+
+            star.classList.toggle(
+                "active",
+                index < value
+            );
+
+        });
+
+}
+
+      
 
 function closePlayerRating(){
 
