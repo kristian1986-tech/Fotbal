@@ -2127,6 +2127,331 @@ body{
     font-size:10px;
 }
       
+
+/* =========================
+   HODNOCENÍ
+========================= */
+
+.ratings-panel{
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:9999;
+    background:#071525;
+    padding:14px 16px 25px;
+    overflow-y:auto;
+}
+
+.ratings-panel.show{
+    display:block;
+}
+
+.ratings-header{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:18px;
+}
+
+.ratings-header button{
+    width:50px;
+    height:50px;
+    flex-shrink:0;
+    border:1px solid #29435e;
+    border-radius:15px;
+    background:#122940;
+    color:#dce8f5;
+    font-size:23px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+}
+
+.ratings-title{
+    color:#fff;
+    font-size:29px;
+    font-weight:800;
+    line-height:1.05;
+}
+
+.ratings-subtitle{
+    margin-top:3px;
+    color:#8fa3b8;
+    font-size:14px;
+}
+
+
+/* PLAYER CARD */
+
+.rating-player-card{
+    position:relative;
+    min-height:82px;
+    margin-bottom:9px;
+    padding:14px 48px 14px 16px;
+
+    background:linear-gradient(
+        145deg,
+        #12283f,
+        #0e2034
+    );
+
+    border:1px solid #203d58;
+    border-radius:17px;
+
+    display:flex;
+    align-items:center;
+    gap:13px;
+
+    cursor:pointer;
+}
+
+.rating-player-card:active{
+    transform:scale(.99);
+}
+
+.rating-player-number{
+    width:42px;
+    height:42px;
+    flex-shrink:0;
+
+    border-radius:13px;
+
+    background:#19334d;
+    color:#8fa3b8;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:14px;
+    font-weight:800;
+}
+
+.rating-player-info{
+    min-width:0;
+}
+
+.rating-player-name{
+    color:#fff;
+    font-size:16px;
+    font-weight:800;
+
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.rating-player-score{
+    margin-top:5px;
+    color:#8fa3b8;
+    font-size:11px;
+}
+
+.rating-player-score strong{
+    color:#35d07f;
+    font-size:14px;
+}
+
+.rating-player-arrow{
+    position:absolute;
+    right:13px;
+
+    width:30px;
+    height:30px;
+
+    border-radius:9px;
+
+    background:#172b42;
+    color:#7890a7;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:13px;
+}
+
+
+/* DETAIL */
+
+.rating-detail{
+    display:none;
+}
+
+.rating-detail.show{
+    display:block;
+}
+
+.rating-detail-header{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:18px;
+}
+
+.rating-detail-back{
+    width:50px;
+    height:50px;
+
+    border:1px solid #29435e;
+    border-radius:15px;
+
+    background:#122940;
+    color:#dce8f5;
+
+    font-size:23px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.rating-detail-name{
+    color:#fff;
+    font-size:25px;
+    font-weight:800;
+}
+
+.rating-detail-subtitle{
+    margin-top:3px;
+    color:#8fa3b8;
+    font-size:13px;
+}
+
+
+/* SECTIONS */
+
+.rating-box{
+    margin-top:10px;
+    padding:14px;
+
+    background:linear-gradient(
+        145deg,
+        #12283f,
+        #0e2034
+    );
+
+    border:1px solid #203d58;
+    border-radius:17px;
+}
+
+.rating-box-title{
+    color:#fff;
+    font-size:16px;
+    font-weight:800;
+    margin-bottom:10px;
+}
+
+
+/* RATING ROW */
+
+.rating-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+
+    min-height:48px;
+
+    border-bottom:1px solid #1d354d;
+}
+
+.rating-row:last-child{
+    border-bottom:none;
+}
+
+.rating-row-name{
+    color:#dce8f5;
+    font-size:12px;
+}
+
+.rating-select{
+    width:62px;
+    padding:7px 5px;
+
+    border:1px solid #29435e;
+    border-radius:10px;
+
+    background:#10263c;
+    color:#35d07f;
+
+    font-size:13px;
+    font-weight:800;
+    text-align:center;
+}
+
+
+/* TOTAL */
+
+.rating-total{
+    margin-top:10px;
+    padding:16px;
+
+    background:#10263c;
+    border:1px solid #29435e;
+    border-radius:15px;
+
+    text-align:center;
+}
+
+.rating-total-label{
+    color:#8fa3b8;
+    font-size:11px;
+}
+
+.rating-total-value{
+    margin-top:4px;
+    color:#35d07f;
+    font-size:30px;
+    font-weight:800;
+}
+
+
+/* NOTE */
+
+.rating-note{
+    width:100%;
+    min-height:90px;
+
+    padding:11px;
+
+    resize:vertical;
+
+    border:1px solid #29435e;
+    border-radius:12px;
+
+    background:#10263c;
+    color:#dce8f5;
+
+    font-family:inherit;
+    font-size:12px;
+
+    outline:none;
+}
+
+.rating-note::placeholder{
+    color:#71869d;
+}
+
+
+/* SAVE */
+
+.rating-save-btn{
+    width:100%;
+    margin-top:12px;
+    padding:14px;
+
+    border:1px solid #245d45;
+    border-radius:14px;
+
+    background:#163d2d;
+    color:#35d07f;
+
+    font-size:14px;
+    font-weight:800;
+}
+
       
 </style>
 
@@ -4209,6 +4534,27 @@ body{
       
 </div>
 
+
+
+ <!-- HODNOCENÍ -->
+<div id="ratingsSection" class="ratings-panel">
+
+    <div class="ratings-header">
+
+        <button onclick="closeRatings()">←</button>
+
+        <div>
+            <div class="ratings-title">⭐ Hodnocení</div>
+            <div class="ratings-subtitle">
+                Hodnocení a výkon hráčů
+            </div>
+        </div>
+
+    </div>
+
+    <div id="ratingsPlayersList"></div>
+
+</div>     
       
 
 <!-- TOAST -->
@@ -6753,6 +7099,578 @@ function updateTeamForm(){
 }     
 
 
+function openRatings(){
+
+    const panel =
+        document.getElementById("ratingsSection");
+
+    if(!panel) return;
+
+    panel.classList.add("show");
+
+    renderRatingPlayers();
+
+}
+
+
+function closeRatings(){
+
+    const panel =
+        document.getElementById("ratingsSection");
+
+    if(!panel) return;
+
+    panel.classList.remove("show");
+
+}
+      
+
+function getRatingPlayers(){
+
+    const elements =
+        document.querySelectorAll(".player");
+
+    const players = [];
+
+    elements.forEach((element, index) => {
+
+        const text =
+            element.textContent.trim();
+
+        if(!text) return;
+
+        if(
+            text.toLowerCase().includes("volné místo")
+        ){
+            return;
+        }
+
+        const nameElement =
+            element.querySelector(
+                ".player-name, .name"
+            );
+
+        const name =
+            nameElement
+                ? nameElement.textContent.trim()
+                : text.split("\n")[0].trim();
+
+        if(!name) return;
+
+        const id =
+            element.dataset.id ||
+            element.dataset.playerId ||
+            "player_" + index;
+
+        const numberElement =
+            element.querySelector(
+                ".player-number, .number"
+            );
+
+        const number =
+            numberElement
+                ? numberElement.textContent.trim()
+                : "";
+
+        players.push({
+            id: id,
+            name: name,
+            number: number
+        });
+
+    });
+
+    return players;
+
+}
+
+
+function renderRatingPlayers(){
+
+    const container =
+        document.getElementById(
+            "ratingsPlayersList"
+        );
+
+    if(!container) return;
+
+    const players =
+        getRatingPlayers();
+
+    const ratings =
+        JSON.parse(
+            localStorage.getItem(
+                "juniorstats_ratings"
+            ) || "{}"
+        );
+
+    container.innerHTML = "";
+
+    players.forEach(player => {
+
+        const rating =
+            ratings[player.id] || {};
+
+        const total =
+            calculatePlayerRating(rating);
+
+        const card =
+            document.createElement("div");
+
+        card.className =
+            "rating-player-card";
+
+        card.onclick = function(){
+
+            openPlayerRating(
+                player.id,
+                player.name,
+                player.number
+            );
+
+        };
+
+        card.innerHTML = `
+
+            <div class="rating-player-number">
+                ${player.number || "•"}
+            </div>
+
+            <div class="rating-player-info">
+
+                <div class="rating-player-name">
+                    ${player.name}
+                </div>
+
+                <div class="rating-player-score">
+                    Celkové hodnocení:
+                    <strong>${total}/10</strong>
+                </div>
+
+            </div>
+
+            <div class="rating-player-arrow">
+                →
+            </div>
+
+        `;
+
+        container.appendChild(card);
+
+    });
+
+}
+      
+
+function calculatePlayerRating(rating){
+
+    const values = [
+        Number(rating.technika) || 0,
+        Number(rating.herniMysleni) || 0,
+        Number(rating.rychlost) || 0,
+        Number(rating.kondice) || 0,
+        Number(rating.spoluprace) || 0
+    ];
+
+    const validValues =
+        values.filter(value => value > 0);
+
+    if(validValues.length === 0){
+        return "—";
+    }
+
+    const sum =
+        validValues.reduce(
+            (total, value) => total + value,
+            0
+        );
+
+    return (
+        sum / validValues.length
+    ).toFixed(1);
+
+}
+
+
+   function openPlayerRating(
+    playerId,
+    playerName,
+    playerNumber
+){
+
+    const list =
+        document.getElementById(
+            "ratingsPlayersList"
+        );
+
+    const header =
+        document.querySelector(
+            ".ratings-header"
+        );
+
+    if(list) list.style.display = "none";
+
+    if(header) header.style.display = "none";
+
+    let detail =
+        document.getElementById(
+            "ratingPlayerDetail"
+        );
+
+    if(!detail){
+
+        detail =
+            document.createElement("div");
+
+        detail.id =
+            "ratingPlayerDetail";
+
+        detail.className =
+            "rating-detail";
+
+        document.getElementById(
+            "ratingsSection"
+        ).appendChild(detail);
+
+    }
+
+    detail.classList.add("show");
+
+    renderPlayerRatingForm(
+        playerId,
+        playerName,
+        playerNumber
+    );
+
+   }   
+
+
+function renderPlayerRatingForm(
+    playerId,
+    playerName,
+    playerNumber
+){
+
+    const detail =
+        document.getElementById(
+            "ratingPlayerDetail"
+        );
+
+    if(!detail) return;
+
+    const ratings =
+        JSON.parse(
+            localStorage.getItem(
+                "juniorstats_ratings"
+            ) || "{}"
+        );
+
+    const rating =
+        ratings[playerId] || {};
+
+    detail.innerHTML = `
+
+        <div class="rating-detail-header">
+
+            <button
+                class="rating-detail-back"
+                onclick="closePlayerRating()"
+            >
+                ←
+            </button>
+
+            <div>
+
+                <div class="rating-detail-name">
+                    ${playerNumber ? "#" + playerNumber + " " : ""}
+                    ${playerName}
+                </div>
+
+                <div class="rating-detail-subtitle">
+                    Hodnocení hráče
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="rating-box">
+
+            <div class="rating-box-title">
+                ⚽ Sportovní hodnocení
+            </div>
+
+            ${ratingRow(
+                "Technika",
+                "technika",
+                rating.technika,
+                10
+            )}
+
+            ${ratingRow(
+                "Herní myšlení",
+                "herniMysleni",
+                rating.herniMysleni,
+                10
+            )}
+
+            ${ratingRow(
+                "Rychlost",
+                "rychlost",
+                rating.rychlost,
+                10
+            )}
+
+            ${ratingRow(
+                "Fyzická kondice",
+                "kondice",
+                rating.kondice,
+                10
+            )}
+
+            ${ratingRow(
+                "Týmová spolupráce",
+                "spoluprace",
+                rating.spoluprace,
+                10
+            )}
+
+        </div>
+
+
+        <div class="rating-box">
+
+            <div class="rating-box-title">
+                🧑‍🏫 Chování
+            </div>
+
+            ${ratingRow(
+                "Chování na tréninku",
+                "chovani",
+                rating.chovani,
+                5
+            )}
+
+            ${ratingRow(
+                "Přístup k tréninku",
+                "pristup",
+                rating.pristup,
+                5
+            )}
+
+            ${ratingRow(
+                "Respekt a spolupráce",
+                "respekt",
+                rating.respekt,
+                5
+            )}
+
+        </div>
+
+
+        <div class="rating-total">
+
+            <div class="rating-total-label">
+                ⭐ Celkové hodnocení
+            </div>
+
+            <div
+                id="currentRatingTotal"
+                class="rating-total-value"
+            >
+                ${calculatePlayerRating(rating)}
+            </div>
+
+        </div>
+
+
+        <div class="rating-box">
+
+            <div class="rating-box-title">
+                📝 Poznámka trenéra
+            </div>
+
+            <textarea
+                id="ratingNote"
+                class="rating-note"
+                placeholder="Napište poznámku trenéra..."
+            >${rating.note || ""}</textarea>
+
+        </div>
+
+
+        <button
+            class="rating-save-btn"
+            onclick="savePlayerRating(
+                '${playerId}',
+                '${playerName.replace(/'/g, "\\'")}',
+                '${playerNumber || ""}'
+            )"
+        >
+            💾 Uložit hodnocení
+        </button>
+
+    `;
+
+}
+
+
+function ratingRow(
+    label,
+    key,
+    value,
+    max
+){
+
+    let options =
+        `<option value="">–</option>`;
+
+    for(let i = 1; i <= max; i++){
+
+        options += `
+            <option
+                value="${i}"
+                ${Number(value) === i ? "selected" : ""}
+            >
+                ${i}
+            </option>
+        `;
+
+    }
+
+    return `
+
+        <div class="rating-row">
+
+            <div class="rating-row-name">
+                ${label}
+            </div>
+
+            <select
+                id="rating_${key}"
+                class="rating-select"
+            >
+                ${options}
+            </select>
+
+        </div>
+
+    `;
+
+}
+
+
+function closePlayerRating(){
+
+    const detail =
+        document.getElementById(
+            "ratingPlayerDetail"
+        );
+
+    const list =
+        document.getElementById(
+            "ratingsPlayersList"
+        );
+
+    const header =
+        document.querySelector(
+            ".ratings-header"
+        );
+
+    if(detail){
+
+        detail.classList.remove("show");
+        detail.innerHTML = "";
+
+    }
+
+    if(list){
+        list.style.display = "block";
+    }
+
+    if(header){
+        header.style.display = "flex";
+    }
+
+}
+
+
+function savePlayerRating(
+    playerId,
+    playerName,
+    playerNumber
+){
+
+    const ratings =
+        JSON.parse(
+            localStorage.getItem(
+                "juniorstats_ratings"
+            ) || "{}"
+        );
+
+    ratings[playerId] = {
+
+        technika:
+            document.getElementById(
+                "rating_technika"
+            ).value,
+
+        herniMysleni:
+            document.getElementById(
+                "rating_herniMysleni"
+            ).value,
+
+        rychlost:
+            document.getElementById(
+                "rating_rychlost"
+            ).value,
+
+        kondice:
+            document.getElementById(
+                "rating_kondice"
+            ).value,
+
+        spoluprace:
+            document.getElementById(
+                "rating_spoluprace"
+            ).value,
+
+        chovani:
+            document.getElementById(
+                "rating_chovani"
+            ).value,
+
+        pristup:
+            document.getElementById(
+                "rating_pristup"
+            ).value,
+
+        respekt:
+            document.getElementById(
+                "rating_respekt"
+            ).value,
+
+        note:
+            document.getElementById(
+                "ratingNote"
+            ).value.trim()
+
+    };
+
+    localStorage.setItem(
+        "juniorstats_ratings",
+        JSON.stringify(ratings)
+    );
+
+    showToast("Hodnocení bylo uloženo ✓");
+
+    closePlayerRating();
+
+    renderRatingPlayers();
+
+}
+      
       
 </script>
 
