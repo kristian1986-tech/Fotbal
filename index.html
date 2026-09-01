@@ -2543,6 +2543,105 @@ body{
     font-weight:800;
 }
 
+
+      
+.login-screen{
+    position:fixed;
+    inset:0;
+    z-index:99999;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:20px;
+
+    background:#071525;
+}
+
+.login-card{
+    width:100%;
+    max-width:360px;
+
+    padding:28px 22px;
+
+    background:linear-gradient(
+        145deg,
+        #12283f,
+        #0e2034
+    );
+
+    border:1px solid #203d58;
+    border-radius:20px;
+
+    text-align:center;
+}
+
+.login-logo{
+    font-size:42px;
+    margin-bottom:8px;
+}
+
+.login-title{
+    color:#fff;
+    font-size:27px;
+    font-weight:800;
+}
+
+.login-subtitle{
+    margin-top:5px;
+    margin-bottom:22px;
+
+    color:#8fa3b8;
+    font-size:14px;
+}
+
+.login-card input{
+    width:100%;
+    box-sizing:border-box;
+
+    margin-bottom:12px;
+    padding:14px;
+
+    border:1px solid #29435e;
+    border-radius:12px;
+
+    background:#091a2c;
+    color:#fff;
+
+    font-size:14px;
+    outline:none;
+}
+
+.login-card input:focus{
+    border-color:#35d07f;
+}
+
+.login-card button{
+    width:100%;
+    padding:14px;
+
+    border:none;
+    border-radius:12px;
+
+    background:#35d07f;
+    color:#06131f;
+
+    font-size:15px;
+    font-weight:800;
+
+    cursor:pointer;
+}
+
+.login-error{
+    min-height:18px;
+    margin-top:12px;
+
+    color:#ff5368;
+    font-size:12px;
+}
+
+      
       
 </style>
 
@@ -2551,6 +2650,49 @@ body{
 
 
 <body>
+
+      
+
+<div id="loginScreen" class="login-screen">
+
+    <div class="login-card">
+
+        <div class="login-logo">⚽</div>
+
+        <div class="login-title">
+            JuniorStats
+        </div>
+
+        <div class="login-subtitle">
+            Přihlášení trenéra
+        </div>
+
+        <input
+            type="text"
+            id="loginUsername"
+            placeholder="Uživatel"
+            autocomplete="username"
+        >
+
+        <input
+            type="password"
+            id="loginPassword"
+            placeholder="Heslo"
+            autocomplete="current-password"
+        >
+
+        <button onclick="login()">
+            Přihlásit se
+        </button>
+
+        <div id="loginError" class="login-error"></div>
+
+    </div>
+
+</div>
+
+      
+      
 
 
 <div class="app">
@@ -7901,6 +8043,82 @@ function savePlayerRating(
     renderRatingPlayers();
 
 }
+      
+
+
+      
+
+  const LOGIN_USERNAME = "trener";
+const LOGIN_PASSWORD = "12345";
+
+
+function login(){
+
+    const username =
+        document.getElementById("loginUsername").value.trim();
+
+    const password =
+        document.getElementById("loginPassword").value;
+
+    const error =
+        document.getElementById("loginError");
+
+
+    if(
+        username === LOGIN_USERNAME &&
+        password === LOGIN_PASSWORD
+    ){
+
+        sessionStorage.setItem(
+            "juniorstats_logged_in",
+            "true"
+        );
+
+        document.getElementById(
+            "loginScreen"
+        ).style.display = "none";
+
+    }else{
+
+        error.textContent =
+            "Nesprávné přihlašovací údaje.";
+
+    }
+
+}
+
+
+function checkLogin(){
+
+    const loggedIn =
+        sessionStorage.getItem(
+            "juniorstats_logged_in"
+        );
+
+    const loginScreen =
+        document.getElementById("loginScreen");
+
+    if(!loginScreen) return;
+
+    if(loggedIn === "true"){
+
+        loginScreen.style.display = "none";
+
+    }else{
+
+        loginScreen.style.display = "flex";
+
+    }
+
+}
+
+
+document.addEventListener(
+    "DOMContentLoaded",
+    checkLogin
+);   
+
+
       
       
 </script>
