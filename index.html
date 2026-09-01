@@ -2026,6 +2026,106 @@ body{
     font-size:12px;
 }
 
+
+/* =========================================
+   FORMA TÝMU
+========================================= */
+
+.team-form-box{
+    margin-top:18px;
+    padding:16px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #12283f,
+            #0e2034
+        );
+
+    border:1px solid #203d58;
+    border-radius:18px;
+}
+
+.team-form-title{
+    color:#fff;
+    font-size:16px;
+    font-weight:800;
+    margin-bottom:14px;
+}
+
+.team-form-results{
+    display:flex;
+    gap:9px;
+    flex-wrap:wrap;
+}
+
+.team-form-result{
+    width:48px;
+    height:48px;
+
+    border-radius:15px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:20px;
+    font-weight:800;
+}
+
+.team-form-result.win{
+    background:#163d2d;
+    border:1px solid #245d45;
+    color:#35d07f;
+}
+
+.team-form-result.draw{
+    background:#443919;
+    border:1px solid #6b5a24;
+    color:#ffd34d;
+}
+
+.team-form-result.loss{
+    background:#43252d;
+    border:1px solid #713641;
+    color:#ff7180;
+}
+
+.team-form-empty{
+    color:#8fa3b8;
+    font-size:12px;
+}
+
+.team-form-summary{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:8px;
+    margin-top:10px;
+}
+
+.team-form-summary > div{
+    min-height:72px;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+
+    background:#101f33;
+    border:1px solid #203852;
+    border-radius:15px;
+}
+
+.team-form-summary strong{
+    font-size:24px;
+    color:#35d07f;
+}
+
+.team-form-summary span{
+    margin-top:4px;
+    color:#8fa3b8;
+    font-size:10px;
+}
       
       
 </style>
@@ -4140,6 +4240,71 @@ body{
 
     </div>
 
+
+<!-- =====================================
+     FORMA TÝMU
+====================================== -->
+
+<div
+    id="teamForm"
+    style="display:none;">
+
+    <div class="statistics-header">
+
+        <button onclick="closeTeamForm()">
+            ←
+        </button>
+
+        <div>
+
+            <div class="statistics-title">
+                📈 Forma týmu
+            </div>
+
+            <div class="statistics-subtitle">
+                Poslední výsledky týmu
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="team-form-box">
+
+        <div class="team-form-title">
+            📊 Poslední zápasy
+        </div>
+
+        <div
+            id="teamFormResults"
+            class="team-form-results">
+        </div>
+
+    </div>
+
+
+    <div class="team-form-summary">
+
+        <div>
+            <strong id="formWins">0</strong>
+            <span>Výhry</span>
+        </div>
+
+        <div>
+            <strong id="formDraws">0</strong>
+            <span>Remízy</span>
+        </div>
+
+        <div>
+            <strong id="formLosses">0</strong>
+            <span>Prohry</span>
+        </div>
+
+    </div>
+
+</div>
+      
 </div>
 
       
@@ -6551,6 +6716,141 @@ function updateStatistics(){
 
 }
       
+
+ function openTeamForm(){
+
+    const home =
+        document.getElementById("statisticsHome");
+
+    const form =
+        document.getElementById("teamForm");
+
+    if(!home || !form) return;
+
+    home.style.display = "none";
+    form.style.display = "block";
+
+    updateTeamForm();
+}
+
+
+function closeTeamForm(){
+
+    const home =
+        document.getElementById("statisticsHome");
+
+    const form =
+        document.getElementById("teamForm");
+
+    if(!home || !form) return;
+
+    form.style.display = "none";
+    home.style.display = "block";
+}
+
+
+function updateTeamForm(){
+
+    const container =
+        document.getElementById("teamFormResults");
+
+    if(!container) return;
+
+    const matches =
+        JSON.parse(
+            localStorage.getItem(
+                "juniorstats_matches"
+            ) || "[]"
+        );
+
+    container.innerHTML = "";
+
+    if(matches.length === 0){
+
+        container.innerHTML = `
+            <div class="team-form-empty">
+                Zatím nebyly odehrány žádné zápasy.
+            </div>
+        `;
+
+        document.getElementById("formWins").textContent = 0;
+        document.getElementById("formDraws").textContent = 0;
+        document.getElementById("formLosses").textContent = 0;
+
+        return;
+    }
+
+
+    let wins = 0;
+    let draws = 0;
+    let losses = 0;
+
+
+    matches
+        .slice(-5)
+        .forEach(match => {
+
+            const our =
+                Number(match.ourGoals) || 0;
+
+            const opponent =
+                Number(match.opponentGoals) || 0;
+
+
+            const result =
+                document.createElement("div");
+
+
+            if(our > opponent){
+
+                result.className =
+                    "team-form-result win";
+
+                result.textContent = "✓";
+
+                wins++;
+
+            }else if(our === opponent){
+
+                result.className =
+                    "team-form-result draw";
+
+                result.textContent = "＝";
+
+                draws++;
+
+            }else{
+
+                result.className =
+                    "team-form-result loss";
+
+                result.textContent = "×";
+
+                losses++;
+
+            }
+
+
+            result.title =
+                `${match.opponent} ${our}:${opponent}`;
+
+            container.appendChild(result);
+
+        });
+
+
+    document.getElementById("formWins").textContent =
+        wins;
+
+    document.getElementById("formDraws").textContent =
+        draws;
+
+    document.getElementById("formLosses").textContent =
+        losses;
+
+}     
+
+
       
 </script>
 
