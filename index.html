@@ -2395,6 +2395,29 @@ body{
     text-align:center;
 }
 
+.rating-total-bar{
+    width:100%;
+    height:9px;
+    margin-top:10px;
+    background:#172b40;
+    border:1px solid #29435e;
+    border-radius:10px;
+    overflow:hidden;
+}
+
+.rating-total-bar-fill{
+    height:100%;
+    background:#35d07f;
+    border-radius:10px;
+    transition:width .25s ease;
+}
+
+.rating-total-value span{
+    font-size:16px;
+    color:#8fa3b8;
+    font-weight:700;
+}      
+
 .rating-total-label{
     color:#8fa3b8;
     font-size:11px;
@@ -7270,6 +7293,40 @@ function calculatePlayerRating(rating){
 }
 
 
+function getRatingPercentage(rating){
+
+    const values = [
+        Number(rating.technika) || 0,
+        Number(rating.herniMysleni) || 0,
+        Number(rating.rychlost) || 0,
+        Number(rating.kondice) || 0,
+        Number(rating.spoluprace) || 0
+    ];
+
+    const validValues =
+        values.filter(value => value > 0);
+
+    if(validValues.length === 0){
+        return 0;
+    }
+
+    const sum =
+        validValues.reduce(
+            (total, value) => total + value,
+            0
+        );
+
+    const average =
+        sum / validValues.length;
+
+    return Math.round(
+        (average / 10) * 100
+    );
+
+}
+
+      
+
    function openPlayerRating(
     playerId,
     playerName,
@@ -7449,18 +7506,27 @@ function renderPlayerRatingForm(
 
         <div class="rating-total">
 
-            <div class="rating-total-label">
-                ⭐ Celkové hodnocení
-            </div>
+    <div class="rating-total-label">
+        ⭐ Celkové hodnocení
+    </div>
 
-            <div
-                id="currentRatingTotal"
-                class="rating-total-value"
-            >
-                ${calculatePlayerRating(rating)}
-            </div>
+    <div
+        id="currentRatingTotal"
+        class="rating-total-value"
+    >
+        ${calculatePlayerRating(rating)}
+        <span>/10</span>
+    </div>
 
-        </div>
+    <div class="rating-total-bar">
+        <div
+            id="ratingTotalBar"
+            class="rating-total-bar-fill"
+            style="width:${getRatingPercentage(rating)}%"
+        ></div>
+    </div>
+
+</div>
 
 
         <div class="rating-box">
