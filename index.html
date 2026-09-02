@@ -2932,11 +2932,14 @@ body{
     border-radius:15px;
 }
 
-.nominace-player-check{
-    width:20px;
-    height:20px;
-    flex-shrink:0;
-    accent-color:#35d07f;
+.nominace-player{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:13px 14px;
+    background:linear-gradient(145deg,#12283f,#0e2034);
+    border:1px solid #203d58;
+    border-radius:15px;
 }
 
 .nominace-player-number{
@@ -2948,23 +2951,58 @@ body{
 }
 
 .nominace-player-name{
+    flex:1;
+    min-width:0;
     color:#fff;
     font-size:14px;
     font-weight:700;
 }
 
-.save-nominace-btn{
-    width:100%;
-    margin-top:14px;
-    padding:14px;
-    border:none;
-    border-radius:13px;
-    background:#35d07f;
-    color:#06131f;
-    font-size:14px;
-    font-weight:800;
-    cursor:pointer;
+.nominace-switch{
+    position:relative;
+    width:46px;
+    height:26px;
+    flex-shrink:0;
 }
+
+.nominace-switch input{
+    position:absolute;
+    opacity:0;
+    width:0;
+    height:0;
+}
+
+.nominace-switch-slider{
+    position:absolute;
+    inset:0;
+    background:#1b3046;
+    border:1px solid #29435e;
+    border-radius:30px;
+    cursor:pointer;
+    transition:.2s ease;
+}
+
+.nominace-switch-slider::before{
+    content:"";
+    position:absolute;
+    width:20px;
+    height:20px;
+    left:2px;
+    top:2px;
+    border-radius:50%;
+    background:#8fa3b8;
+    transition:.2s ease;
+}
+
+.nominace-switch input:checked + .nominace-switch-slider{
+    background:#35d07f;
+    border-color:#35d07f;
+}
+
+.nominace-switch input:checked + .nominace-switch-slider::before{
+    transform:translateX(20px);
+    background:#06131f;
+      }
       
       
 </style>
@@ -9060,9 +9098,34 @@ document.addEventListener(
 
     renderNominacePlayers();
 
+    const savedMatch =
+        localStorage.getItem(
+            "juniorstats_nominace_match"
+        );
+
+    const select =
+        document.getElementById(
+            "nominaceMatchSelect"
+        );
+
+    if(
+        select &&
+        savedMatch &&
+        [...select.options].some(
+            option =>
+                option.value === savedMatch
+        )
+    ){
+
+        select.value = savedMatch;
+
+        loadSavedNominace();
+
+    }
+
     panel.classList.add("show");
 
-}
+  }
 
 function closeNominace(){
 
@@ -9156,12 +9219,6 @@ function closeNominace(){
 
         card.innerHTML = `
 
-            <input
-                type="checkbox"
-                class="nominace-player-check"
-                data-player-id="${id}"
-            >
-
             <div class="nominace-player-number">
                 ${number}
             </div>
@@ -9169,6 +9226,18 @@ function closeNominace(){
             <div class="nominace-player-name">
                 ${name}
             </div>
+
+            <label class="nominace-switch">
+
+                <input
+                    type="checkbox"
+                    class="nominace-player-check"
+                    data-player-id="${id}"
+                >
+
+                <span class="nominace-switch-slider"></span>
+
+            </label>
 
         `;
 
@@ -9265,7 +9334,9 @@ function saveNominace(){
             if(checkbox.checked){
 
                 nominated.push(
-                    checkbox.dataset.playerId
+                    String(
+                        checkbox.dataset.playerId
+                    )
                 );
 
             }
@@ -9287,11 +9358,16 @@ function saveNominace(){
         JSON.stringify(allNominace)
     );
 
+    localStorage.setItem(
+        "juniorstats_nominace_match",
+        matchId
+    );
+
     showToast(
         "Nominace byla uložena ✓"
     );
 
-}   
+}
 
 
       
