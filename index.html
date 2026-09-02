@@ -9249,7 +9249,7 @@ function closeNominace(){
 
 
       
-      document.addEventListener(
+document.addEventListener(
     "change",
     function(event){
 
@@ -9257,6 +9257,18 @@ function closeNominace(){
             event.target.id ===
             "nominaceMatchSelect"
         ){
+
+            const matchId =
+                event.target.value;
+
+            if(matchId){
+
+                localStorage.setItem(
+                    "juniorstats_nominace_match",
+                    matchId
+                );
+
+            }
 
             loadSavedNominace();
 
@@ -9279,6 +9291,8 @@ function loadSavedNominace(){
     const matchId =
         select.value;
 
+    if(!matchId) return;
+
     const saved =
         JSON.parse(
             localStorage.getItem(
@@ -9287,7 +9301,8 @@ function loadSavedNominace(){
         );
 
     const nominated =
-        saved[matchId] || [];
+        (saved[matchId] || [])
+            .map(id => String(id));
 
     document
         .querySelectorAll(
@@ -9296,7 +9311,9 @@ function loadSavedNominace(){
         .forEach(checkbox => {
 
             const playerId =
-                checkbox.dataset.playerId;
+                String(
+                    checkbox.dataset.playerId
+                );
 
             checkbox.checked =
                 nominated.includes(playerId);
