@@ -3055,10 +3055,6 @@ body{
             JuniorStats
         </div>
 
-        <div class="login-subtitle">
-            Přihlášení trenéra
-        </div>
-
         <input
             type="text"
             id="loginUsername"
@@ -3074,17 +3070,17 @@ body{
         >
 
         <button onclick="login()">
-            Přihlásit se
+            Přihlášení trenéra
         </button>
 
       
 <button
     type="button"
-    onclick="openParentLogin()"
+    onclick="login('parent')"
     class="parent-login-btn"
 >
     👨‍👩‍👧 Přihlášení rodiče
-          </button>
+</button>
 
           
         <div id="loginError" class="login-error"></div>
@@ -8768,12 +8764,14 @@ function savePlayerRating(
 
 
       
-
-  const LOGIN_USERNAME = "trener";
+const LOGIN_USERNAME = "trener";
 const LOGIN_PASSWORD = "12345";
 
+const PARENT_USERNAME = "parinte";
+const PARENT_PASSWORD = "1234";
 
-function login(){
+
+function login(role = "trainer"){
 
     const username =
         document.getElementById("loginUsername").value.trim();
@@ -8785,14 +8783,42 @@ function login(){
         document.getElementById("loginError");
 
 
+    let correctUsername;
+    let correctPassword;
+
+
+    if(role === "parent"){
+
+        correctUsername =
+            PARENT_USERNAME;
+
+        correctPassword =
+            PARENT_PASSWORD;
+
+    }else{
+
+        correctUsername =
+            LOGIN_USERNAME;
+
+        correctPassword =
+            LOGIN_PASSWORD;
+
+    }
+
+
     if(
-        username === LOGIN_USERNAME &&
-        password === LOGIN_PASSWORD
+        username === correctUsername &&
+        password === correctPassword
     ){
 
         sessionStorage.setItem(
             "juniorstats_logged_in",
             "true"
+        );
+
+        sessionStorage.setItem(
+            "juniorstats_user_role",
+            role
         );
 
         document.getElementById(
@@ -8807,6 +8833,7 @@ function login(){
     }
 
 }
+  
 
 
 function checkLogin(){
@@ -8840,14 +8867,6 @@ document.addEventListener(
     checkLogin
 );   
 
-
-function openParentLogin(){
-
-    showToast(
-        "Přihlášení rodiče bude brzy dostupné."
-    );
-
-}
 
       
 function openNextTraining(){
