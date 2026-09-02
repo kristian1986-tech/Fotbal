@@ -8538,6 +8538,7 @@ function closeNextTraining(){
  function saveTrainingSettings(){
 
     const settings = {
+
         name:
             document.getElementById("trainingName").value.trim(),
 
@@ -8551,6 +8552,13 @@ function closeNextTraining(){
                 document.getElementById("trainingMonday").value
         },
 
+        tuesday: {
+            enabled:
+                document.getElementById("trainingTuesdayEnabled").checked,
+            time:
+                document.getElementById("trainingTuesday").value
+        },
+
         wednesday: {
             enabled:
                 document.getElementById("trainingWednesdayEnabled").checked,
@@ -8558,11 +8566,32 @@ function closeNextTraining(){
                 document.getElementById("trainingWednesday").value
         },
 
+        thursday: {
+            enabled:
+                document.getElementById("trainingThursdayEnabled").checked,
+            time:
+                document.getElementById("trainingThursday").value
+        },
+
         friday: {
             enabled:
                 document.getElementById("trainingFridayEnabled").checked,
             time:
                 document.getElementById("trainingFriday").value
+        },
+
+        saturday: {
+            enabled:
+                document.getElementById("trainingSaturdayEnabled").checked,
+            time:
+                document.getElementById("trainingSaturday").value
+        },
+
+        sunday: {
+            enabled:
+                document.getElementById("trainingSundayEnabled").checked,
+            time:
+                document.getElementById("trainingSunday").value
         }
 
     };
@@ -8573,11 +8602,14 @@ function closeNextTraining(){
         JSON.stringify(settings)
     );
 
+
     updateNextTraining();
+
     closeNextTraining();
+
     showToast("Nastavení tréninků bylo uloženo ✓");
 
- }    
+ } 
 
 
 function loadTrainingSettings(){
@@ -8587,11 +8619,12 @@ function loadTrainingSettings(){
             "juniorstats_training"
         );
 
+
     if(!saved) return;
+
 
     const settings =
         JSON.parse(saved);
-
 
     document.getElementById("trainingName").value =
         settings.name || "";
@@ -8605,11 +8638,23 @@ function loadTrainingSettings(){
     document.getElementById("trainingMondayEnabled").checked =
         settings.monday?.enabled || false;
 
+    document.getElementById("trainingTuesday").value =
+        settings.tuesday?.time || "";
+
+    document.getElementById("trainingTuesdayEnabled").checked =
+        settings.tuesday?.enabled || false;
+
     document.getElementById("trainingWednesday").value =
         settings.wednesday?.time || "";
 
     document.getElementById("trainingWednesdayEnabled").checked =
         settings.wednesday?.enabled || false;
+
+    document.getElementById("trainingThursday").value =
+        settings.thursday?.time || "";
+
+    document.getElementById("trainingThursdayEnabled").checked =
+        settings.thursday?.enabled || false;
 
     document.getElementById("trainingFriday").value =
         settings.friday?.time || "";
@@ -8617,7 +8662,19 @@ function loadTrainingSettings(){
     document.getElementById("trainingFridayEnabled").checked =
         settings.friday?.enabled || false;
 
-}     
+    document.getElementById("trainingSaturday").value =
+        settings.saturday?.time || "";
+
+    document.getElementById("trainingSaturdayEnabled").checked =
+        settings.saturday?.enabled || false;
+
+    document.getElementById("trainingSunday").value =
+        settings.sunday?.time || "";
+
+    document.getElementById("trainingSundayEnabled").checked =
+        settings.sunday?.enabled || false;
+
+}   
 
 
 function updateNextTraining(){
