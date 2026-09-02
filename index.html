@@ -3018,6 +3018,21 @@ body{
     cursor:pointer;
     box-sizing:border-box;
 }
+
+
+
+.parent-login-btn{
+    width:100%;
+    margin-top:10px;
+    padding:14px;
+    border:1px solid #29435e;
+    border-radius:12px;
+    background:#122940;
+    color:#dce8f5;
+    font-size:14px;
+    font-weight:700;
+    cursor:pointer;
+      }
       
       
 </style>
@@ -3062,6 +3077,16 @@ body{
             Přihlásit se
         </button>
 
+      
+<button
+    type="button"
+    onclick="openParentLogin()"
+    class="parent-login-btn"
+>
+    👨‍👩‍👧 Přihlášení rodiče
+          </button>
+
+          
         <div id="loginError" class="login-error"></div>
 
     </div>
@@ -8809,12 +8834,22 @@ function checkLogin(){
 }
 
 
+      
 document.addEventListener(
     "DOMContentLoaded",
     checkLogin
 );   
 
 
+function openParentLogin(){
+
+    showToast(
+        "Přihlášení rodiče bude brzy dostupné."
+    );
+
+}
+
+      
 function openNextTraining(){
 
     const panel =
