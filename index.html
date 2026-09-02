@@ -3014,7 +3014,7 @@ body{
 
         <div
             class="feature-card"
-            onclick="openFeature('Hráči')">
+            onclick="openPlayers()">
 
             <div class="feature-icon blue">
                 👥
@@ -3035,6 +3035,29 @@ body{
         </div>
 
 
+
+<div id="playersPanel" class="players-panel">
+
+    <div class="players-header">
+
+        <button onclick="closePlayers()">
+            ←
+        </button>
+
+        <div>
+            <div class="players-title">
+                Hráči
+            </div>
+
+            <div class="players-subtitle">
+                Přehled hráčů týmu
+            </div>
+        </div>
+
+    </div>
+
+</div>
+          
 
         <!-- DOCHÁZKA -->
 
@@ -8872,6 +8895,30 @@ document.addEventListener(
     "DOMContentLoaded",
     updateNextTraining
 );
+
+
+function openPlayers(){
+
+    const panel =
+        document.getElementById("playersPanel");
+
+    if(!panel) return;
+
+    panel.classList.add("show");
+
+}
+
+      
+function closePlayers(){
+
+    const panel =
+        document.getElementById("playersPanel");
+
+    if(!panel) return;
+
+    panel.classList.remove("show");
+
+}      
       
       
 </script>
