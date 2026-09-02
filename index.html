@@ -9056,6 +9056,10 @@ document.addEventListener(
 
     if(!panel) return;
 
+    loadNominaceMatches();
+
+    renderNominacePlayers();
+
     panel.classList.add("show");
 
 }
@@ -9069,7 +9073,228 @@ function closeNominace(){
 
     panel.classList.remove("show");
 
-}  
+}
+
+
+      function loadNominaceMatches(){
+
+    const select =
+        document.getElementById("nominaceMatchSelect");
+
+    if(!select) return;
+
+    const matches =
+        JSON.parse(
+            localStorage.getItem(
+                "juniorstats_matches"
+            ) || "[]"
+        );
+
+    select.innerHTML = `
+        <option value="">
+            Vyberte zápas
+        </option>
+    `;
+
+    matches
+        .slice()
+        .reverse()
+        .forEach(match => {
+
+            const option =
+                document.createElement("option");
+
+            option.value = match.id;
+
+            option.textContent =
+                `${match.date} · ${match.opponent}`;
+
+            select.appendChild(option);
+
+        });
+
+      }
+
+
+ function renderNominacePlayers(){
+
+    const container =
+        document.getElementById("nominacePlayers");
+
+    if(!container) return;
+
+    container.innerHTML = "";
+
+    document.querySelectorAll(".player").forEach(player => {
+
+        const id =
+            player.dataset.id;
+
+        const name =
+            player.querySelector(".player-name")
+                ?.textContent
+                .trim() || "";
+
+        const number =
+            player.querySelector(".number")
+                ?.textContent
+                .trim() || "";
+
+        if(
+            !id ||
+            !name ||
+            name === "Volné místo"
+        ){
+            return;
+        }
+
+        const card =
+            document.createElement("div");
+
+        card.className =
+            "nominace-player";
+
+        card.innerHTML = `
+
+            <input
+                type="checkbox"
+                class="nominace-player-check"
+                data-player-id="${id}"
+            >
+
+            <div class="nominace-player-number">
+                ${number}
+            </div>
+
+            <div class="nominace-player-name">
+                ${name}
+            </div>
+
+        `;
+
+        container.appendChild(card);
+
+    });
+
+ }
+
+
+      
+      document.addEventListener(
+    "change",
+    function(event){
+
+        if(
+            event.target.id ===
+            "nominaceMatchSelect"
+        ){
+
+            loadSavedNominace();
+
+        }
+
+    }
+);
+
+
+
+function loadSavedNominace(){
+
+    const select =
+        document.getElementById(
+            "nominaceMatchSelect"
+        );
+
+    if(!select) return;
+
+    const matchId =
+        select.value;
+
+    const saved =
+        JSON.parse(
+            localStorage.getItem(
+                "juniorstats_nominace"
+            ) || "{}"
+        );
+
+    const nominated =
+        saved[matchId] || [];
+
+    document
+        .querySelectorAll(
+            ".nominace-player-check"
+        )
+        .forEach(checkbox => {
+
+            const playerId =
+                checkbox.dataset.playerId;
+
+            checkbox.checked =
+                nominated.includes(playerId);
+
+        });
+
+}
+
+
+function saveNominace(){
+
+    const select =
+        document.getElementById(
+            "nominaceMatchSelect"
+        );
+
+    if(!select || !select.value){
+
+        showToast("Vyberte zápas.");
+
+        return;
+    }
+
+    const matchId =
+        select.value;
+
+    const nominated = [];
+
+    document
+        .querySelectorAll(
+            ".nominace-player-check"
+        )
+        .forEach(checkbox => {
+
+            if(checkbox.checked){
+
+                nominated.push(
+                    checkbox.dataset.playerId
+                );
+
+            }
+
+        });
+
+    let allNominace =
+        JSON.parse(
+            localStorage.getItem(
+                "juniorstats_nominace"
+            ) || "{}"
+        );
+
+    allNominace[matchId] =
+        nominated;
+
+    localStorage.setItem(
+        "juniorstats_nominace",
+        JSON.stringify(allNominace)
+    );
+
+    showToast(
+        "Nominace byla uložena ✓"
+    );
+
+}   
+
+
+      
       
       
 </script>
