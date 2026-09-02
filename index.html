@@ -7957,14 +7957,21 @@ function updateTeamForm(){
 
 
     matches
+        .filter(
+            match =>
+                match.ourGoals !== null &&
+                match.ourGoals !== undefined &&
+                match.opponentGoals !== null &&
+                match.opponentGoals !== undefined
+        )
         .slice(-5)
         .forEach(match => {
 
             const our =
-                Number(match.ourGoals) || 0;
+                Number(match.ourGoals);
 
             const opponent =
-                Number(match.opponentGoals) || 0;
+                Number(match.opponentGoals);
 
 
             const result =
@@ -8018,7 +8025,7 @@ function updateTeamForm(){
     document.getElementById("formLosses").textContent =
         losses;
 
-}     
+} 
 
 
 function openRatings(){
