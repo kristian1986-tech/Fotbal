@@ -2701,6 +2701,123 @@ body{
     color:#8fa3b8;
     font-size:14px;
 }
+
+.next-training-settings{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.next-training-box{
+    padding:15px;
+
+    background:linear-gradient(
+        145deg,
+        #12283f,
+        #0e2034
+    );
+
+    border:1px solid #203d58;
+    border-radius:17px;
+}
+
+.next-training-box-title{
+    margin-bottom:10px;
+
+    color:#fff;
+    font-size:15px;
+    font-weight:800;
+}
+
+.next-training-box input[type="text"]{
+    width:100%;
+    box-sizing:border-box;
+
+    padding:13px;
+
+    border:1px solid #29435e;
+    border-radius:12px;
+
+    background:#091a2c;
+    color:#fff;
+
+    font-size:14px;
+    outline:none;
+}
+
+.next-training-box input[type="text"]:focus{
+    border-color:#35d07f;
+}
+
+.training-day-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+
+    min-height:52px;
+
+    border-bottom:1px solid #1c344c;
+}
+
+.training-day-row:last-child{
+    border-bottom:none;
+}
+
+.training-day-row strong{
+    flex:1;
+
+    color:#dce8f5;
+    font-size:14px;
+}
+
+.training-day-row input[type="time"]{
+    width:90px;
+
+    padding:9px 7px;
+
+    border:1px solid #29435e;
+    border-radius:10px;
+
+    background:#091a2c;
+    color:#fff;
+
+    font-size:13px;
+}
+
+.training-day-row label{
+    display:flex;
+    align-items:center;
+    gap:4px;
+
+    color:#8fa3b8;
+    font-size:11px;
+}
+
+.training-day-row input[type="checkbox"]{
+    width:17px;
+    height:17px;
+
+    accent-color:#35d07f;
+}
+
+.save-training-btn{
+    width:100%;
+
+    margin-top:2px;
+
+    padding:14px;
+
+    border:none;
+    border-radius:13px;
+
+    background:#35d07f;
+    color:#06131f;
+
+    font-size:14px;
+    font-weight:800;
+
+    cursor:pointer;
+}
       
       
 </style>
@@ -3049,42 +3166,55 @@ body{
     </div>
 
 
-    <section class="next-training">
+    <section
+    class="next-training"
+    onclick="openNextTraining()">
+
     <div class="next-left">
-            <div class="next-icon">
-                🏃
+
+        <div class="next-icon">
+            🏃
+        </div>
+
+        <div>
+
+            <div
+                class="next-label"
+                id="nextTrainingDay">
+                DNES
             </div>
-          
-            <div>
 
-                <div class="next-label">
-                    DNES
-                </div>
+            <div
+                class="next-title"
+                id="nextTrainingTitle">
+                Trénink U12
+            </div>
 
-                <div class="next-title">
-                    Trénink U12
-                </div>
-
-                <div class="next-info">
-                    17:30 · Sportovní areál
-                </div>
-
+            <div
+                class="next-info"
+                id="nextTrainingInfo">
+                17:30 · Sportovní areál
             </div>
 
         </div>
 
-<button
-    class="next-arrow"
-    onclick="openNextTraining()">
+    </div>
 
-    →
 
-</button>
+    <button
+        class="next-arrow"
+        onclick="event.stopPropagation(); openNextTraining()">
+
+        →
+
+    </button>
 
     </section>
 
 
-<div id="nextTrainingPanel" class="next-training-panel">
+<div
+    id="nextTrainingPanel"
+    class="next-training-panel">
 
     <div class="next-training-header">
 
@@ -3099,10 +3229,114 @@ body{
             </div>
 
             <div class="next-training-subtitle">
-                Trénink U12
+                Nastavení tréninků
             </div>
 
         </div>
+
+    </div>
+
+
+    <div class="next-training-settings">
+
+        <div class="next-training-box">
+
+            <div class="next-training-box-title">
+                ⚽ Název tréninku
+            </div>
+
+            <input
+                type="text"
+                id="trainingName"
+                value="Trénink U12"
+                placeholder="Např. Trénink U12">
+
+        </div>
+
+
+        <div class="next-training-box">
+
+            <div class="next-training-box-title">
+                📍 Místo
+            </div>
+
+            <input
+                type="text"
+                id="trainingLocation"
+                value="Sportovní areál"
+                placeholder="Místo tréninku">
+
+        </div>
+
+
+        <div class="next-training-box">
+
+            <div class="next-training-box-title">
+                📅 Týdenní program
+            </div>
+
+
+            <div class="training-day-row">
+
+                <strong>Pondělí</strong>
+
+                <input
+                    type="time"
+                    id="trainingMonday">
+
+                <label>
+                    <input
+                        type="checkbox"
+                        id="trainingMondayEnabled">
+                    Trénink
+                </label>
+
+            </div>
+
+
+            <div class="training-day-row">
+
+                <strong>Středa</strong>
+
+                <input
+                    type="time"
+                    id="trainingWednesday">
+
+                <label>
+                    <input
+                        type="checkbox"
+                        id="trainingWednesdayEnabled">
+                    Trénink
+                </label>
+
+            </div>
+
+
+            <div class="training-day-row">
+
+                <strong>Pátek</strong>
+
+                <input
+                    type="time"
+                    id="trainingFriday">
+
+                <label>
+                    <input
+                        type="checkbox"
+                        id="trainingFridayEnabled">
+                    Trénink
+                </label>
+
+            </div>
+
+        </div>
+
+        <button
+            class="save-training-btn"
+            onclick="saveTrainingSettings()">
+            💾 Uložit nastavení
+
+        </button>
 
     </div>
 
@@ -8210,11 +8444,13 @@ function openNextTraining(){
 
     if(!panel) return;
 
+    loadTrainingSettings();
+
     panel.classList.add("show");
 
 }
 
-      
+
 function closeNextTraining(){
 
     const panel =
@@ -8225,7 +8461,92 @@ function closeNextTraining(){
     panel.classList.remove("show");
 
 }
-      
+
+
+ function saveTrainingSettings(){
+
+    const settings = {
+        name:
+            document.getElementById("trainingName").value.trim(),
+
+        location:
+            document.getElementById("trainingLocation").value.trim(),
+
+        monday: {
+            enabled:
+                document.getElementById("trainingMondayEnabled").checked,
+            time:
+                document.getElementById("trainingMonday").value
+        },
+
+        wednesday: {
+            enabled:
+                document.getElementById("trainingWednesdayEnabled").checked,
+            time:
+                document.getElementById("trainingWednesday").value
+        },
+
+        friday: {
+            enabled:
+                document.getElementById("trainingFridayEnabled").checked,
+            time:
+                document.getElementById("trainingFriday").value
+        }
+
+    };
+
+
+    localStorage.setItem(
+        "juniorstats_training",
+        JSON.stringify(settings)
+    );
+
+    updateNextTraining();
+    closeNextTraining();
+    showToast("Nastavení tréninků bylo uloženo ✓");
+
+ }    
+
+
+function loadTrainingSettings(){
+
+    const saved =
+        localStorage.getItem(
+            "juniorstats_training"
+        );
+
+    if(!saved) return;
+
+    const settings =
+        JSON.parse(saved);
+
+
+    document.getElementById("trainingName").value =
+        settings.name || "";
+
+    document.getElementById("trainingLocation").value =
+        settings.location || "";
+
+    document.getElementById("trainingMonday").value =
+        settings.monday?.time || "";
+
+    document.getElementById("trainingMondayEnabled").checked =
+        settings.monday?.enabled || false;
+
+    document.getElementById("trainingWednesday").value =
+        settings.wednesday?.time || "";
+
+    document.getElementById("trainingWednesdayEnabled").checked =
+        settings.wednesday?.enabled || false;
+
+    document.getElementById("trainingFriday").value =
+        settings.friday?.time || "";
+
+    document.getElementById("trainingFridayEnabled").checked =
+        settings.friday?.enabled || false;
+
+}      
+
       
 </script>
 
