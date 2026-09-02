@@ -3013,14 +3013,7 @@ body{
 
         </div>
 
-
-        <button
-            class="next-arrow"
-            onclick="openFeature('Program')">
-
-            →
-
-        </button>
+<div class="next-training-card" onclick="openNextTraining()">
 
     </section>
 
@@ -4788,6 +4781,31 @@ body{
     <div id="ratingsPlayersList"></div>
 
 </div>     
+
+
+
+<div id="nextTrainingPanel" class="next-training-panel">
+
+    <div class="next-training-header">
+
+        <button onclick="closeNextTraining()">
+            ←
+        </button>
+
+        <div>
+            <div class="next-training-title">
+                Další trénink
+            </div>
+
+            <div class="next-training-subtitle">
+                Trénink U12
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
       
 
 <!-- TOAST -->
@@ -8119,6 +8137,16 @@ document.addEventListener(
 );   
 
 
+function closeNextTraining(){
+
+    const panel =
+        document.getElementById("nextTrainingPanel");
+
+    if(!panel) return;
+
+    panel.classList.remove("show");
+
+}
       
       
 </script>
