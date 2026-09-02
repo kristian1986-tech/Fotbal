@@ -3081,25 +3081,46 @@ body{
 
 
 
-<div id="playersPanel" class="players-panel">
-
+<div id="nominacePanel" class="players-panel">
     <div class="players-header">
-
-        <button onclick="closePlayers()">
+        <button onclick="closeNominace()">
             ←
         </button>
-
         <div>
             <div class="players-title">
-                Hráči
+                Nominace
             </div>
-
             <div class="players-subtitle">
-                Přehled hráčů týmu
+                Výběr hráčů na zápas
             </div>
         </div>
-
     </div>
+
+    <div class="nominace-match-box">
+        <div class="nominace-match-title">
+            ⚽ Zápas
+        </div>
+
+        <select id="nominaceMatchSelect">
+            <option value="">
+                Vyberte zápas
+            </option>
+        </select>
+    </div>
+
+    <div class="nominace-players-title">
+        Hráči
+    </div>
+
+    <div id="nominacePlayers">
+    </div>
+
+    <button
+        class="save-nominace-btn"
+        onclick="saveNominace()"
+    >
+        💾 Uložit nominaci
+    </button>
 
 </div>
           
@@ -8942,10 +8963,10 @@ document.addEventListener(
 );
 
 
-function openPlayers(){
+  function openNominace(){
 
     const panel =
-        document.getElementById("playersPanel");
+        document.getElementById("nominacePanel");
 
     if(!panel) return;
 
@@ -8953,17 +8974,16 @@ function openPlayers(){
 
 }
 
-      
-function closePlayers(){
+function closeNominace(){
 
     const panel =
-        document.getElementById("playersPanel");
+        document.getElementById("nominacePanel");
 
     if(!panel) return;
 
     panel.classList.remove("show");
 
-}      
+}  
       
       
 </script>
