@@ -7209,21 +7209,41 @@ function renderMatches(){
        STATISTIKY
     ========================================= */
 
-    const played = matches.length;
+    const playedMatches =
+        matches.filter(
+            match =>
+                match.ourGoals !== null &&
+                match.ourGoals !== undefined &&
+                match.opponentGoals !== null &&
+                match.opponentGoals !== undefined
+        );
+
+
+    const played =
+        playedMatches.length;
+
 
     const wins =
-        matches.filter(
-            match => match.ourGoals > match.opponentGoals
+        playedMatches.filter(
+            match =>
+                Number(match.ourGoals) >
+                Number(match.opponentGoals)
         ).length;
+
 
     const draws =
-        matches.filter(
-            match => match.ourGoals === match.opponentGoals
+        playedMatches.filter(
+            match =>
+                Number(match.ourGoals) ===
+                Number(match.opponentGoals)
         ).length;
 
+
     const losses =
-        matches.filter(
-            match => match.ourGoals < match.opponentGoals
+        playedMatches.filter(
+            match =>
+                Number(match.ourGoals) <
+                Number(match.opponentGoals)
         ).length;
 
 
@@ -7268,15 +7288,35 @@ function renderMatches(){
         .reverse()
         .forEach(match => {
 
+
+            const hasScore =
+                match.ourGoals !== null &&
+                match.ourGoals !== undefined &&
+                match.opponentGoals !== null &&
+                match.opponentGoals !== undefined;
+
+
             let result;
             let resultClass;
 
-            if(match.ourGoals > match.opponentGoals){
+
+            if(!hasScore){
+
+                result = "Nadcházející";
+                resultClass = "upcoming";
+
+            }else if(
+                Number(match.ourGoals) >
+                Number(match.opponentGoals)
+            ){
 
                 result = "Výhra";
                 resultClass = "win";
 
-            }else if(match.ourGoals < match.opponentGoals){
+            }else if(
+                Number(match.ourGoals) <
+                Number(match.opponentGoals)
+            ){
 
                 result = "Prohra";
                 resultClass = "loss";
@@ -7307,10 +7347,10 @@ function renderMatches(){
                 <div class="match-card-top">
 
                 <button
-    class="match-menu-btn"
-    onclick="openMatchMenu(${match.id},event)">
-    ⋮
-</button>
+                    class="match-menu-btn"
+                    onclick="openMatchMenu(${match.id},event)">
+                    ⋮
+                </button>
 
                     <div>
 
@@ -7336,9 +7376,21 @@ function renderMatches(){
                 <div class="match-score-box">
 
                     <div class="match-score">
-                        ${match.ourGoals}
+
+                        ${
+                            hasScore
+                                ? match.ourGoals
+                                : "–"
+                        }
+
                         <span>:</span>
-                        ${match.opponentGoals}
+
+                        ${
+                            hasScore
+                                ? match.opponentGoals
+                                : "–"
+                        }
+
                     </div>
 
                 </div>
@@ -7375,7 +7427,7 @@ function renderMatches(){
 
         });
 
-                  }
+                              }
 
 
       
