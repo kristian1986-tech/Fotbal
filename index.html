@@ -7612,7 +7612,13 @@ function updateStatistics(){
     ===================================== */
 
     const played =
-        matches.length;
+        matches.filter(
+            match =>
+                match.ourGoals !== null &&
+                match.ourGoals !== undefined &&
+                match.opponentGoals !== null &&
+                match.opponentGoals !== undefined
+        ).length;
 
     let wins = 0;
     let draws = 0;
@@ -7622,34 +7628,42 @@ function updateStatistics(){
     let goalsAgainst = 0;
 
 
-    matches.forEach(match => {
+    matches
+        .filter(
+            match =>
+                match.ourGoals !== null &&
+                match.ourGoals !== undefined &&
+                match.opponentGoals !== null &&
+                match.opponentGoals !== undefined
+        )
+        .forEach(match => {
 
-        const our =
-            Number(match.ourGoals) || 0;
+            const our =
+                Number(match.ourGoals);
 
-        const opponent =
-            Number(match.opponentGoals) || 0;
-
-
-        goalsFor += our;
-        goalsAgainst += opponent;
+            const opponent =
+                Number(match.opponentGoals);
 
 
-        if(our > opponent){
+            goalsFor += our;
+            goalsAgainst += opponent;
 
-            wins++;
 
-        }else if(our === opponent){
+            if(our > opponent){
 
-            draws++;
+                wins++;
 
-        }else{
+            }else if(our === opponent){
 
-            losses++;
+                draws++;
 
-        }
+            }else{
 
-    });
+                losses++;
+
+            }
+
+        });
 
 
     /* =====================================
@@ -7664,7 +7678,6 @@ function updateStatistics(){
        FUNCȚIE PENTRU ACTUALIZAREA TEXTULUI
     ===================================== */
 
-      
     function setText(id,value){
 
         const element =
@@ -7742,7 +7755,7 @@ function updateStatistics(){
 
 
     /* =====================================
-       BARA REZULTATELOR
+       BARA RESULTATELOR
     ===================================== */
 
     const winBar =
