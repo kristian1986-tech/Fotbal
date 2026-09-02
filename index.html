@@ -8545,8 +8545,181 @@ function loadTrainingSettings(){
     document.getElementById("trainingFridayEnabled").checked =
         settings.friday?.enabled || false;
 
+}     
+
+
+function updateNextTraining(){
+
+    const dayElement =
+        document.getElementById("nextTrainingDay");
+
+    const titleElement =
+        document.getElementById("nextTrainingTitle");
+
+    const infoElement =
+        document.getElementById("nextTrainingInfo");
+
+    if(!dayElement || !titleElement || !infoElement) return;
+
+
+    const saved =
+        localStorage.getItem("juniorstats_training");
+
+
+    if(!saved){
+
+        dayElement.textContent = "DALŠÍ";
+
+        titleElement.textContent = "Trénink U12";
+
+        infoElement.textContent =
+            "Nastavte program tréninků";
+
+        return;
+    }
+
+
+    const settings =
+        JSON.parse(saved);
+
+
+    const trainingDays = [
+
+        {
+            day: 1,
+            name: "PONDĚLÍ",
+            data: settings.monday
+        },
+
+        {
+            day: 3,
+            name: "STŘEDA",
+            data: settings.wednesday
+        },
+
+        {
+            day: 5,
+            name: "PÁTEK",
+            data: settings.friday
+        }
+
+    ];
+
+
+    const today =
+        new Date();
+
+    today.setHours(0,0,0,0);
+
+
+    let nextTraining = null;
+
+
+    for(let addDays = 0; addDays <= 7; addDays++){
+
+        const checkDate =
+            new Date(today);
+
+        checkDate.setDate(
+            today.getDate() + addDays
+        );
+
+
+        const dayNumber =
+            checkDate.getDay();
+
+
+        const training =
+            trainingDays.find(
+                item => item.day === dayNumber
+            );
+
+
+        if(
+            training &&
+            training.data &&
+            training.data.enabled &&
+            training.data.time
+        ){
+
+            nextTraining = {
+
+                date: checkDate,
+
+                name: training.name,
+
+                time: training.data.time,
+
+                isToday: addDays === 0
+
+            };
+
+            break;
+
+        }
+
+    }
+
+
+    if(!nextTraining){
+
+        dayElement.textContent = "DALŠÍ";
+
+        titleElement.textContent =
+            settings.name || "Trénink U12";
+
+        infoElement.textContent =
+            "Program není nastaven";
+
+        return;
+
+    }
+
+
+    dayElement.textContent =
+        nextTraining.isToday
+            ? "DNES"
+            : nextTraining.name;
+
+
+    titleElement.textContent =
+        settings.name || "Trénink U12";
+
+
+    const day =
+        String(
+            nextTraining.date.getDate()
+        ).padStart(2,"0");
+
+
+    const month =
+        String(
+            nextTraining.date.getMonth() + 1
+        ).padStart(2,"0");
+
+
+    const year =
+        nextTraining.date.getFullYear();
+
+
+    const dateText =
+        `${day}.${month}.${year}`;
+
+
+    infoElement.textContent =
+        `${dateText} · ${nextTraining.time} · ${
+            settings.location || "Sportovní areál"
+        }`;
+
 }      
 
+
+
+document.addEventListener(
+    "DOMContentLoaded",
+    updateNextTraining
+);
+      
       
 </script>
 
