@@ -4923,22 +4923,22 @@ body{
         <div style="display:flex;gap:10px">
 
             <div style="flex:1">
-                <label>Naše góly</label>
-                <input
-                    id="matchOurGoals"
-                    type="number"
-                    min="0"
-                    value="0">
-            </div>
+    <label>Naše góly</label>
+    <input
+        id="matchOurGoals"
+        type="number"
+        min="0"
+        placeholder="–">
+</div>
 
-            <div style="flex:1">
-                <label>Góly soupeře</label>
-                <input
-                    id="matchOpponentGoals"
-                    type="number"
-                    min="0"
-                    value="0">
-            </div>
+<div style="flex:1">
+    <label>Góly soupeře</label>
+    <input
+        id="matchOpponentGoals"
+        type="number"
+        min="0"
+        placeholder="–">
+</div>
 
         </div>
 
@@ -7084,15 +7084,21 @@ function saveMatch(){
     const venue =
         document.getElementById("matchVenue").value;
 
-    const ourGoals =
-        Number(
-            document.getElementById("matchOurGoals").value
-        );
+const ourGoalsValue =
+    document.getElementById("matchOurGoals").value;
 
-    const opponentGoals =
-        Number(
-            document.getElementById("matchOpponentGoals").value
-        );
+const opponentGoalsValue =
+    document.getElementById("matchOpponentGoals").value;
+
+const ourGoals =
+    ourGoalsValue === ""
+        ? null
+        : Number(ourGoalsValue);
+
+const opponentGoals =
+    opponentGoalsValue === ""
+        ? null
+        : Number(opponentGoalsValue);
 
     const note =
         document.getElementById("matchNote").value.trim();
