@@ -9729,47 +9729,35 @@ function closeParentPanel(){
 
 function saveParentAttendance(){
 
-    const selectedPlayers = [];
+    alert("BUTONUL FUNCȚIONEAZĂ");
 
-    document
-        .querySelectorAll(".parent-player-check")
-        .forEach(checkbox => {
+}
 
-            if(checkbox.checked){
 
-                selectedPlayers.push(
-                    String(
-                        checkbox.dataset.playerId
-                    )
-                );
+
+
+      document.addEventListener(
+    "DOMContentLoaded",
+    function(){
+
+        const button =
+            document.getElementById(
+                "saveParentAttendanceBtn"
+            );
+
+        if(!button) return;
+
+        button.addEventListener(
+            "click",
+            function(){
+
+                saveParentAttendance();
 
             }
-
-        });
-
-
-    if(selectedPlayers.length === 0){
-
-        showToast(
-            "Vyberte alespoň jedno dítě."
         );
 
-        return;
     }
-
-
-    localStorage.setItem(
-        "juniorstats_parent_attendance",
-        JSON.stringify(selectedPlayers)
-    );
-
-
-    showToast(
-        "Docházka byla potvrzena ✓"
-    );
-
-}      
-      
+);
       
 </script>
       
@@ -9811,10 +9799,11 @@ function saveParentAttendance(){
 
 
     <button
-        class="save-parent-attendance-btn"
-        onclick="saveParentAttendance()"
-    >
-        ✓ Potvrdit docházku
+    id="saveParentAttendanceBtn"
+    class="save-parent-attendance-btn"
+    type="button"
+>
+    ✓ Potvrdit docházku
     </button>
 
 </div>
