@@ -9801,35 +9801,29 @@ function closeParentPanel(){
 }
 
 
-function saveParentAttendance(){
+      
+window.saveParentAttendance = function(){
 
-    const checkboxes =
-        document.querySelectorAll(
-            ".parent-player-check"
-        );
+    const attendance = {};
 
-    const selectedPlayers = [];
+    document
+        .querySelectorAll(".parent-attendance-btn.active")
+        .forEach(button => {
 
-    checkboxes.forEach(checkbox => {
+            const playerId =
+                String(button.dataset.playerId);
 
-        if(checkbox.checked){
+            const status =
+                button.dataset.status;
 
-            selectedPlayers.push(
-                String(
-                    checkbox.dataset.playerId
-                )
-            );
+            attendance[playerId] = status;
 
-        }
-
-    });
+        });
 
 
-    if(selectedPlayers.length === 0){
+    if(Object.keys(attendance).length === 0){
 
-        showToast(
-            "Vyberte alespoň jedno dítě."
-        );
+        alert("Vyberte alespoň jedno dítě.");
 
         return;
     }
@@ -9837,15 +9831,13 @@ function saveParentAttendance(){
 
     localStorage.setItem(
         "juniorstats_parent_attendance",
-        JSON.stringify(selectedPlayers)
+        JSON.stringify(attendance)
     );
 
 
-    showToast(
-        "Docházka byla potvrzena ✓"
-    );
+    alert("Docházka byla potvrzena ✓");
 
-}
+};
 
 
 
@@ -9872,6 +9864,9 @@ function saveParentAttendance(){
 
     }
 );
+
+
+
       
 </script>
       
