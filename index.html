@@ -8935,6 +8935,12 @@ function login(role = "trainer"){
             "loginScreen"
         ).style.display = "none";
 
+       if(role === "parent"){
+
+    openParentPanel();
+
+       }   
+
     }else{
 
         error.textContent =
