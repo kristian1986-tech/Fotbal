@@ -9729,7 +9729,47 @@ function closeParentPanel(){
 
 function saveParentAttendance(){
 
-    alert("BUTONUL FUNCȚIONEAZĂ");
+    const checkboxes =
+        document.querySelectorAll(
+            ".parent-player-check"
+        );
+
+    const selectedPlayers = [];
+
+    checkboxes.forEach(checkbox => {
+
+        if(checkbox.checked){
+
+            selectedPlayers.push(
+                String(
+                    checkbox.dataset.playerId
+                )
+            );
+
+        }
+
+    });
+
+
+    if(selectedPlayers.length === 0){
+
+        showToast(
+            "Vyberte alespoň jedno dítě."
+        );
+
+        return;
+    }
+
+
+    localStorage.setItem(
+        "juniorstats_parent_attendance",
+        JSON.stringify(selectedPlayers)
+    );
+
+
+    showToast(
+        "Docházka byla potvrzena ✓"
+    );
 
 }
 
