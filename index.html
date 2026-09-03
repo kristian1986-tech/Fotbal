@@ -9828,8 +9828,8 @@ function closeParentPanel(){
 }
 
 
-      
-window.saveParentAttendance = function(){
+
+ window.saveParentAttendance = function(){
 
     const parentAttendance = {};
 
@@ -9857,7 +9857,7 @@ window.saveParentAttendance = function(){
 
 
     /* =====================================
-       SALVĂM ALEGEREA PĂRINTELUI
+       SALVĂM ALEGERILE PĂRINȚILOR
     ===================================== */
 
     localStorage.setItem(
@@ -9867,47 +9867,96 @@ window.saveParentAttendance = function(){
 
 
     /* =====================================
-       TRANSFERĂM ÎN DOCHÁZKA ANTRENORULUI
+       TRANSFERĂM ALEGERILE PE BUTOANELE
+       DIN DOCHÁZKA A HRÁČI
     ===================================== */
 
     Object.keys(parentAttendance).forEach(id => {
 
-        attendance[id] =
+        const player =
+            document.querySelector(
+                `.player[data-id="${id}"]`
+            );
+
+        if(!player) return;
+
+
+        const status =
             parentAttendance[id];
+
+
+        const button =
+            player.querySelector(
+                `.att-btn.${status}`
+            );
+
+
+        if(button){
+
+            setAttendance(
+                button,
+                status
+            );
+
+        }
 
     });
 
 
     /* =====================================
-       SALVĂM PREZENȚA CURENTĂ
+       VERIFICĂM DACĂ TOȚI JUCĂTORII
+       SUNT MARCAȚI
     ===================================== */
 
-    localStorage.setItem(
-        "juniorstats_attendance",
-        JSON.stringify(attendance)
-    );
+    const players =
+        document.querySelectorAll(".player");
+
+
+    const activePlayers =
+        [...players].filter(player => {
+
+            const name =
+                player.querySelector(
+                    ".player-name"
+                )?.textContent.trim();
+
+            return (
+                name &&
+                name !== "Volné místo"
+            );
+
+        });
+
+
+    const allMarked =
+        activePlayers.every(player => {
+
+            const id =
+                player.dataset.id;
+
+            return attendance[id];
+
+        });
 
 
     /* =====================================
-       ACTUALIZĂM VIZUAL DOCHÁZKA
+       DACĂ LISTA ESTE COMPLETĂ,
+       SALVĂM ANTRENAMENTUL AUTOMAT
     ===================================== */
 
-    if(typeof renderAttendance === "function"){
-        renderAttendance();
+    if(allMarked){
+
+        saveAttendance();
+
+    }else{
+
+        alert(
+            "Docházka byla potvrzena ✓"
+        );
+
     }
 
-    if(typeof renderAttendanceHistory === "function"){
-        renderAttendanceHistory();
-    }
-
-    if(typeof updateDashboardAttendance === "function"){
-        updateDashboardAttendance();
-    }
-
-
-    alert("Docházka byla potvrzena ✓");
-
-};
+};     
 
 
 
