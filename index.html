@@ -9831,7 +9831,7 @@ function closeParentPanel(){
       
 window.saveParentAttendance = function(){
 
-    const attendance = {};
+    const parentAttendance = {};
 
     document
         .querySelectorAll(".parent-attendance-btn.active")
@@ -9843,12 +9843,12 @@ window.saveParentAttendance = function(){
             const status =
                 button.dataset.status;
 
-            attendance[playerId] = status;
+            parentAttendance[playerId] = status;
 
         });
 
 
-    if(Object.keys(attendance).length === 0){
+    if(Object.keys(parentAttendance).length === 0){
 
         alert("Vyberte alespoň jedno dítě.");
 
@@ -9858,8 +9858,16 @@ window.saveParentAttendance = function(){
 
     localStorage.setItem(
         "juniorstats_parent_attendance",
-        JSON.stringify(attendance)
+        JSON.stringify(parentAttendance)
     );
+
+
+    Object.keys(parentAttendance).forEach(id => {
+
+        attendance[id] =
+            parentAttendance[id];
+
+    });
 
 
     alert("Docházka byla potvrzena ✓");
@@ -9869,7 +9877,7 @@ window.saveParentAttendance = function(){
 
 
 
-      document.addEventListener(
+document.addEventListener(
     "DOMContentLoaded",
     function(){
 
