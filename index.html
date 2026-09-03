@@ -3033,6 +3033,112 @@ body{
     font-weight:700;
     cursor:pointer;
       }
+
+
+.parent-panel{
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:9999;
+    background:#071525;
+    padding:20px;
+    overflow-y:auto;
+}
+
+.parent-panel.show{
+    display:block;
+}
+
+.parent-header{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:20px;
+}
+
+.parent-header button{
+    width:50px;
+    height:50px;
+    border:1px solid #29435e;
+    border-radius:15px;
+    background:#122940;
+    color:#dce8f5;
+    font-size:25px;
+}
+
+.parent-title{
+    color:#fff;
+    font-size:29px;
+    font-weight:800;
+}
+
+.parent-subtitle{
+    margin-top:3px;
+    color:#8fa3b8;
+    font-size:14px;
+}
+
+.parent-box{
+    padding:15px;
+    background:linear-gradient(145deg,#12283f,#0e2034);
+    border:1px solid #203d58;
+    border-radius:17px;
+}
+
+.parent-box-title{
+    margin-bottom:12px;
+    color:#fff;
+    font-size:16px;
+    font-weight:800;
+}
+
+#parentPlayers{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.parent-player{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:13px;
+    background:#10263c;
+    border:1px solid #203d58;
+    border-radius:14px;
+}
+
+.parent-player-number{
+    width:30px;
+    color:#35d07f;
+    font-weight:800;
+    text-align:center;
+}
+
+.parent-player-name{
+    flex:1;
+    color:#fff;
+    font-size:14px;
+    font-weight:700;
+}
+
+.parent-player input{
+    width:20px;
+    height:20px;
+    accent-color:#35d07f;
+}
+
+.save-parent-attendance-btn{
+    width:100%;
+    margin-top:16px;
+    padding:15px;
+    border:none;
+    border-radius:14px;
+    background:#35d07f;
+    color:#06131f;
+    font-size:15px;
+    font-weight:800;
+}
       
       
 </style>
@@ -9538,10 +9644,132 @@ function saveNominace(){
 }
 
 
-      
+ function openParentPanel(){
+
+    const panel =
+        document.getElementById("parentPanel");
+
+    if(!panel) return;
+
+    const container =
+        document.getElementById("parentPlayers");
+
+    container.innerHTML = "";
+
+    document.querySelectorAll(".player").forEach(player => {
+
+        const id =
+            player.dataset.id;
+
+        const name =
+            player.querySelector(".player-name")
+                ?.textContent
+                .trim() || "";
+
+        const number =
+            player.querySelector(".number")
+                ?.textContent
+                .trim() || "";
+
+        if(
+            !id ||
+            !name ||
+            name === "Volné místo"
+        ){
+            return;
+        }
+
+        const card =
+            document.createElement("label");
+
+        card.className =
+            "parent-player";
+
+        card.innerHTML = `
+            <div class="parent-player-number">
+                ${number}
+            </div>
+
+            <div class="parent-player-name">
+                ${name}
+            </div>
+
+            <input
+                type="checkbox"
+                class="parent-player-check"
+                data-player-id="${id}"
+            >
+        `;
+
+        container.appendChild(card);
+
+    });
+
+    panel.classList.add("show");
+ }     
+
+
+function closeParentPanel(){
+
+    const panel =
+        document.getElementById("parentPanel");
+
+    if(!panel) return;
+
+    panel.classList.remove("show");
+
+}
       
       
 </script>
+      
 
+
+
+<div id="parentPanel" class="parent-panel">
+
+    <div class="parent-header">
+
+        <button onclick="closeParentPanel()">
+            ←
+        </button>
+
+        <div>
+            <div class="parent-title">
+                Docházka
+            </div>
+
+            <div class="parent-subtitle">
+                Potvrzení účasti dítěte
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="parent-box">
+
+        <div class="parent-box-title">
+            👨‍👩‍👧 Vyberte dítě
+        </div>
+
+        <div id="parentPlayers">
+
+        </div>
+
+    </div>
+
+
+    <button
+        class="save-parent-attendance-btn"
+        onclick="saveParentAttendance()"
+    >
+        ✓ Potvrdit docházku
+    </button>
+
+</div>
+      
+
+      
 </body>
                   </html>
