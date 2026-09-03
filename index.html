@@ -3122,11 +3122,41 @@ body{
     font-weight:700;
 }
 
-.parent-player input{
-    width:20px;
-    height:20px;
-    accent-color:#35d07f;
+.parent-attendance{
+    display:flex;
+    gap:6px;
+    flex-shrink:0;
 }
+
+.parent-attendance-btn{
+    min-width:48px;
+    height:34px;
+    padding:0 9px;
+    border:1px solid #29435e;
+    border-radius:10px;
+    background:#172b40;
+    color:#8fa3b8;
+    font-size:11px;
+    font-weight:800;
+    cursor:pointer;
+    transition:.2s ease;
+}
+
+.parent-attendance-btn.present.active{
+    background:#35d07f;
+    border-color:#35d07f;
+    color:#06131f;
+}
+
+.parent-attendance-btn.absent.active{
+    background:#ff5368;
+    border-color:#ff5368;
+    color:#fff;
+}
+
+.parent-attendance-btn:active{
+    transform:scale(.95);
+      }
 
 .save-parent-attendance-btn{
     width:100%;
@@ -9685,13 +9715,16 @@ function saveNominace(){
             return;
         }
 
+
         const card =
-            document.createElement("label");
+            document.createElement("div");
 
         card.className =
             "parent-player";
 
+
         card.innerHTML = `
+
             <div class="parent-player-number">
                 ${number}
             </div>
@@ -9700,19 +9733,60 @@ function saveNominace(){
                 ${name}
             </div>
 
-            <input
-                type="checkbox"
-                class="parent-player-check"
-                data-player-id="${id}"
-            >
+            <div class="parent-attendance">
+
+                <button
+                    type="button"
+                    class="parent-attendance-btn present"
+                    data-player-id="${id}"
+                    data-status="present"
+                    onclick="setParentAttendance('${id}','present')"
+                >
+                    ✓
+                </button>
+
+                <button
+                    type="button"
+                    class="parent-attendance-btn absent"
+                    data-player-id="${id}"
+                    data-status="absent"
+                    onclick="setParentAttendance('${id}','absent')"
+                >
+                    ✕
+                </button>
+
+            </div>
+
         `;
+
 
         container.appendChild(card);
 
     });
 
+
     panel.classList.add("show");
- }     
+
+ }   
+
+
+function setParentAttendance(id, status){
+
+    document
+        .querySelectorAll(
+            `.parent-attendance-btn[data-player-id="${id}"]`
+        )
+        .forEach(button => {
+
+            button.classList.toggle(
+                "active",
+                button.dataset.status === status
+            );
+
+        });
+
+}
+      
 
 
 function closeParentPanel(){
