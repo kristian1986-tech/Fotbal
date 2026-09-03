@@ -6395,6 +6395,32 @@ function resetSeason(){
 
 function saveAttendance(){
 
+    /* =====================================
+       PRELUĂM DOCHÁZKA CONFIRMATĂ DE PĂRINȚI
+    ===================================== */
+
+    const parentAttendance =
+        JSON.parse(
+            localStorage.getItem(
+                "juniorstats_parent_attendance"
+            ) || "{}"
+        );
+
+    Object.keys(parentAttendance).forEach(id => {
+
+        if(
+            parentAttendance[id] === "present" ||
+            parentAttendance[id] === "absent"
+        ){
+
+            attendance[id] =
+                parentAttendance[id];
+
+        }
+
+    });
+
+
     const players =
         document.querySelectorAll(".player");
 
