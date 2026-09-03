@@ -9914,54 +9914,11 @@ window.saveParentAttendance = function(){
     ✓ Potvrdit docházku
 </button>
     
-</div>
-      
-
-
-<script>
-
-window.saveParentAttendance = function(){
-
-    const selectedPlayers = [];
-
-    document
-        .querySelectorAll(".parent-player-check")
-        .forEach(checkbox => {
-
-            if(checkbox.checked){
-
-                selectedPlayers.push(
-                    String(
-                        checkbox.dataset.playerId
-                    )
-                );
-
-            }
-
-        });
-
-
-    if(selectedPlayers.length === 0){
-
-        alert("Vyberte alespoň jedno dítě.");
-
-        return;
-    }
-
-
-    localStorage.setItem(
-        "juniorstats_parent_attendance",
-        JSON.stringify(selectedPlayers)
-    );
-
-
-    alert("Docházka byla potvrzena ✓");
-
-};
-
-</script>      
+</div>  
 
       
       
 </body>
-                  </html>
+      
+
+</html>
