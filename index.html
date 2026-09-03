@@ -9839,8 +9839,7 @@ function saveParentAttendance(){
 
 <button
     class="save-parent-attendance-btn"
-    type="button"
-    onclick="this.textContent='APĂSAT';"
+    onclick="saveParentAttendance()"
 >
     ✓ Potvrdit docházku
 </button>
@@ -9848,6 +9847,51 @@ function saveParentAttendance(){
 </div>
       
 
+
+<script>
+
+window.saveParentAttendance = function(){
+
+    const selectedPlayers = [];
+
+    document
+        .querySelectorAll(".parent-player-check")
+        .forEach(checkbox => {
+
+            if(checkbox.checked){
+
+                selectedPlayers.push(
+                    String(
+                        checkbox.dataset.playerId
+                    )
+                );
+
+            }
+
+        });
+
+
+    if(selectedPlayers.length === 0){
+
+        alert("Vyberte alespoň jedno dítě.");
+
+        return;
+    }
+
+
+    localStorage.setItem(
+        "juniorstats_parent_attendance",
+        JSON.stringify(selectedPlayers)
+    );
+
+
+    alert("Docházka byla potvrzena ✓");
+
+};
+
+</script>      
+
+      
       
 </body>
                   </html>
