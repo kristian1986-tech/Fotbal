@@ -9856,11 +9856,19 @@ window.saveParentAttendance = function(){
     }
 
 
+    /* =====================================
+       SALVĂM ALEGEREA PĂRINTELUI
+    ===================================== */
+
     localStorage.setItem(
         "juniorstats_parent_attendance",
         JSON.stringify(parentAttendance)
     );
 
+
+    /* =====================================
+       TRANSFERĂM ÎN DOCHÁZKA ANTRENORULUI
+    ===================================== */
 
     Object.keys(parentAttendance).forEach(id => {
 
@@ -9868,6 +9876,33 @@ window.saveParentAttendance = function(){
             parentAttendance[id];
 
     });
+
+
+    /* =====================================
+       SALVĂM PREZENȚA CURENTĂ
+    ===================================== */
+
+    localStorage.setItem(
+        "juniorstats_attendance",
+        JSON.stringify(attendance)
+    );
+
+
+    /* =====================================
+       ACTUALIZĂM VIZUAL DOCHÁZKA
+    ===================================== */
+
+    if(typeof renderAttendance === "function"){
+        renderAttendance();
+    }
+
+    if(typeof renderAttendanceHistory === "function"){
+        renderAttendanceHistory();
+    }
+
+    if(typeof updateDashboardAttendance === "function"){
+        updateDashboardAttendance();
+    }
 
 
     alert("Docházka byla potvrzena ✓");
