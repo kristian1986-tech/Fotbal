@@ -5587,9 +5587,45 @@ body{
    DOCHÁZKA
 ========================================= */
 
-const attendance = {};
+const attendance =
+    JSON.parse(
+        localStorage.getItem(
+            "juniorstats_attendance"
+        ) || "{}"
+    );
 
 
+
+  function restoreAttendanceButtons(){
+
+    Object.keys(attendance).forEach(id => {
+
+        const player =
+            document.querySelector(
+                `.player[data-id="${id}"]`
+            );
+
+        if(!player) return;
+
+        const status =
+            attendance[id];
+
+        const button =
+            player.querySelector(
+                `.att-btn.${status}`
+            );
+
+        if(button){
+
+            button.classList.add("active");
+
+        }
+
+    });
+
+  }    
+      
+      
 /* =========================================
    ISTORIC - ULTIMELE 6 ANTRENAMENTE
 ========================================= */
