@@ -5665,6 +5665,9 @@ function getTrainingDate(){
 }
 
 
+
+      
+
 /* =========================================
    AFIȘARE ISTORIC
 ========================================= */
@@ -5823,12 +5826,70 @@ const isEmptySlot =
         )
     );
 
+resetAttendanceForNewTraining();
 restoreAttendanceButtons();
       
 }
       
 
+function resetAttendanceForNewTraining(){
 
+    const savedDate =
+        localStorage.getItem(
+            "juniorstats_attendance_date"
+        );
+
+    if(!savedDate) return;
+
+
+    const now =
+        new Date();
+
+    const trainingDate =
+        new Date(savedDate);
+
+
+    /*
+       Resetăm la 3 ore după antrenament
+    */
+
+    const resetTime =
+        trainingDate.getTime()
+        + (3 * 60 * 60 * 1000);
+
+
+    if(now.getTime() >= resetTime){
+
+        Object.keys(attendance).forEach(id => {
+            delete attendance[id];
+        });
+
+
+        localStorage.setItem(
+            "juniorstats_attendance",
+            "{}"
+        );
+
+        localStorage.removeItem(
+            "juniorstats_attendance_date"
+        );
+
+
+        document
+            .querySelectorAll(".att-btn")
+            .forEach(button => {
+
+                button.classList.remove(
+                    "active"
+                );
+
+            });
+
+    }
+
+}
+
+      
 
 function updatePlayerAttendance(
     player,
@@ -6522,6 +6583,11 @@ localStorage.removeItem(
         getTrainingDate();
 
 
+localStorage.setItem(
+    "juniorstats_attendance_date",
+    trainingDate
+);
+      
     /* =====================================
        PENTRU FIECARE JUCĂTOR
     ===================================== */
