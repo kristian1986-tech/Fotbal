@@ -5625,6 +5625,157 @@ const attendance =
 
   }    
       
+
+function resetAttendanceAfterTraining(){
+
+    const saved =
+        localStorage.getItem(
+            "juniorstats_training"
+        );
+
+    if(!saved) return;
+
+
+    const settings =
+        JSON.parse(saved);
+
+
+    const now =
+        new Date();
+
+
+    const trainingDays = [
+
+        { day: 1, data: settings.monday },
+        { day: 2, data: settings.tuesday },
+        { day: 3, data: settings.wednesday },
+        { day: 4, data: settings.thursday },
+        { day: 5, data: settings.friday },
+        { day: 6, data: settings.saturday },
+        { day: 0, data: settings.sunday }
+
+    ];
+
+
+    /*
+       Căutăm ultimul antrenament programat
+       care a avut loc.
+    */
+
+    let lastTraining = null;
+
+
+    for(let daysAgo = 0; daysAgo <= 7; daysAgo++){
+
+        const date =
+            new Date(now);
+
+        date.setHours(0,0,0,0);
+
+        date.setDate(
+            now.getDate() - daysAgo
+        );
+
+
+        const dayNumber =
+            date.getDay();
+
+
+        const training =
+            trainingDays.find(
+                item => item.day === dayNumber
+            );
+
+
+        if(
+            training &&
+            training.data &&
+            training.data.enabled &&
+            training.data.time
+        ){
+
+            const [hours, minutes] =
+                training.data.time
+                    .split(":")
+                    .map(Number);
+
+
+            date.setHours(
+                hours,
+                minutes,
+                0,
+                0
+            );
+
+
+            if(date <= now){
+
+                lastTraining = date;
+
+                break;
+
+            }
+
+        }
+
+    }
+
+
+    if(!lastTraining) return;
+
+
+    /*
+       Resetarea este la 3 ore
+       după antrenament.
+    */
+
+    const resetTime =
+        lastTraining.getTime()
+        + (3 * 60 * 60 * 1000);
+
+
+    if(now.getTime() < resetTime){
+
+        /*
+           Încă suntem în perioada
+           antrenamentului curent.
+           NU atingem attendance.
+        */
+
+        return;
+
+    }
+
+
+    /*
+       Au trecut cele 3 ore.
+       Golim DOAR bifarea curentă.
+    */
+
+    Object.keys(attendance).forEach(id => {
+
+        delete attendance[id];
+
+    });
+
+
+    localStorage.setItem(
+        "juniorstats_attendance",
+        "{}"
+    );
+
+
+    document
+        .querySelectorAll(".att-btn")
+        .forEach(button => {
+
+            button.classList.remove("active");
+
+        });
+
+}
+      
+
       
 /* =========================================
    ISTORIC - ULTIMELE 6 ANTRENAMENTE
@@ -5826,67 +5977,10 @@ const isEmptySlot =
         )
     );
 
-resetAttendanceForNewTraining();
+
+resetAttendanceAfterTraining();
 restoreAttendanceButtons();
       
-}
-      
-
-function resetAttendanceForNewTraining(){
-
-    const savedDate =
-        localStorage.getItem(
-            "juniorstats_attendance_date"
-        );
-
-    if(!savedDate) return;
-
-
-    const now =
-        new Date();
-
-    const trainingDate =
-        new Date(savedDate);
-
-
-    /*
-       Resetăm la 3 ore după antrenament
-    */
-
-    const resetTime =
-        trainingDate.getTime()
-        + (3 * 60 * 60 * 1000);
-
-
-    if(now.getTime() >= resetTime){
-
-        Object.keys(attendance).forEach(id => {
-            delete attendance[id];
-        });
-
-
-        localStorage.setItem(
-            "juniorstats_attendance",
-            "{}"
-        );
-
-        localStorage.removeItem(
-            "juniorstats_attendance_date"
-        );
-
-
-        document
-            .querySelectorAll(".att-btn")
-            .forEach(button => {
-
-                button.classList.remove(
-                    "active"
-                );
-
-            });
-
-    }
-
 }
 
       
@@ -6582,11 +6676,6 @@ localStorage.removeItem(
     const trainingDate =
         getTrainingDate();
 
-
-localStorage.setItem(
-    "juniorstats_attendance_date",
-    trainingDate
-);
       
     /* =====================================
        PENTRU FIECARE JUCĂTOR
