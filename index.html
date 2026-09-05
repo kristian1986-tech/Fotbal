@@ -10096,6 +10096,16 @@ function closeParentPanel(){
     });
 
 
+
+    /* SALVĂM IMEDIAT ȘI BIFĂRILE PARȚIALE */
+
+localStorage.setItem(
+    "juniorstats_attendance",
+    JSON.stringify(attendance)
+);
+   
+
+
     /* =====================================
        VERIFICĂM DACĂ TOȚI JUCĂTORII
        SUNT MARCAȚI
