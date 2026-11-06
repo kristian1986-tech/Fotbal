@@ -6267,33 +6267,7 @@ function resetSeason(){
    SAVE
 ========================================= */
 
-function saveAttendance(){
-
-    /* =====================================
-       PRELUĂM DOCHÁZKA CONFIRMATĂ DE PĂRINȚI
-    ===================================== */
-
-    const parentAttendance =
-        JSON.parse(
-            localStorage.getItem(
-                "juniorstats_parent_attendance"
-            ) || "{}"
-        );
-
-    Object.keys(parentAttendance).forEach(id => {
-
-        if(
-            parentAttendance[id] === "present" ||
-            parentAttendance[id] === "absent"
-        ){
-
-            attendance[id] =
-                parentAttendance[id];
-
-        }
-
-    });
-
+function saveAttendance(){  
 
     const players =
         document.querySelectorAll(".player");
@@ -6389,10 +6363,14 @@ localStorage.removeItem(
            pentru istoricul celor 6.
         ================================= */
 
-        const todayStatus =
-            attendance[id] === "absent"
-                ? "absent"
-                : "present";
+     const todayStatus = attendance[id];
+
+if(
+    todayStatus !== "present" &&
+    todayStatus !== "absent"
+){
+    return;
+} 
 
 /* =================================
    ADAUGĂM ANTRENAMENTUL DE AZI
