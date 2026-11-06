@@ -5456,6 +5456,100 @@ const attendance =
       
 
 
+function getAttendanceTrainingStart(){
+
+    const saved = localStorage.getItem("juniorstats_training");
+
+    if(!saved) return null;
+
+    const settings = JSON.parse(saved);
+
+    const trainingDays = [
+        {day:1, data:settings.monday},
+        {day:2, data:settings.tuesday},
+        {day:3, data:settings.wednesday},
+        {day:4, data:settings.thursday},
+        {day:5, data:settings.friday},
+        {day:6, data:settings.saturday},
+        {day:0, data:settings.sunday}
+    ];
+
+    const now = new Date();
+
+    for(let addDays = 0; addDays <= 7; addDays++){
+
+        const date = new Date(now);
+
+        date.setHours(0,0,0,0);
+        date.setDate(now.getDate() + addDays);
+
+        const training = trainingDays.find(
+            item => item.day === date.getDay()
+        );
+
+        if(
+            !training ||
+            !training.data ||
+            !training.data.enabled ||
+            !training.data.time
+        ){
+            continue;
+        }
+
+        const [hours, minutes] =
+            training.data.time.split(":").map(Number);
+
+        date.setHours(hours, minutes, 0, 0);
+
+        const resetTime =
+            date.getTime() + 3 * 60 * 60 * 1000;
+
+        if(now.getTime() < resetTime){
+            return date;
+        }
+    }
+
+    return null;
+}
+
+
+function resetAttendanceAfterTraining(){
+
+    const savedStart = localStorage.getItem(
+        "juniorstats_attendance_training_start"
+    );
+
+    if(!savedStart) return;
+
+    const trainingStart = new Date(savedStart);
+
+    if(Number.isNaN(trainingStart.getTime())) return;
+
+    const resetTime =
+        trainingStart.getTime() + 3 * 60 * 60 * 1000;
+
+    if(Date.now() < resetTime) return;
+
+    // Ștergem numai prezența curentă din dreapta
+    Object.keys(attendance).forEach(id => {
+        delete attendance[id];
+    });
+
+    localStorage.setItem(
+        "juniorstats_attendance",
+        "{}"
+    );
+
+    localStorage.removeItem(
+        "juniorstats_attendance_training_start"
+    );
+
+    document.querySelectorAll(".att-btn").forEach(button => {
+        button.classList.remove("active");
+    });
+
+}
+
       
 
       
@@ -5660,6 +5754,7 @@ const isEmptySlot =
     );
 
 
+resetAttendanceAfterTraining();
 restoreAttendanceButtons();
       
 }
@@ -9764,6 +9859,16 @@ localStorage.setItem(
 );
    
 
+  const trainingStart = getAttendanceTrainingStart();
+
+if(trainingStart){
+
+    localStorage.setItem(
+        "juniorstats_attendance_training_start",
+        trainingStart.toISOString()
+    );
+
+}     
 
     /* =====================================
        VERIFICĂM DACĂ TOȚI JUCĂTORII
