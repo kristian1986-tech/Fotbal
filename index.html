@@ -5663,7 +5663,8 @@ const isEmptySlot =
         attendanceHistory,
         id
     ) &&
-    !seasonWasReset
+    !seasonWasReset &&
+    !localStorage.getItem("juniorstats_last_saved_training")
 ){
 
                 history = [];
