@@ -6426,23 +6426,7 @@ localStorage.removeItem(
     const trainingDate =
         getTrainingDate();
       
-
-  /* VERIFICĂM DACĂ ANTRENAMENTUL A FOST DEJA SALVAT */
-
-let savedTrainingDates = JSON.parse(
-    localStorage.getItem(
-        "juniorstats_saved_training_dates"
-    ) || "[]"
-);
-
-if(savedTrainingDates.includes(trainingDate)){
-
-    showToast(
-        "Tento trénink již byl uložen."
-    );
-
-    return;
-          }    
+    
       
     /* =====================================
        PENTRU FIECARE JUCĂTOR
@@ -6532,14 +6516,6 @@ attendanceHistory[id] =
     )
 );
     
-      /* OZNAČÍME ANTRENAMENTUL CA SALVAT */
-
-savedTrainingDates.push(trainingDate);
-
-localStorage.setItem(
-    "juniorstats_saved_training_dates",
-    JSON.stringify(savedTrainingDates)
-);
 
     /* =====================================
        SALVĂM ȘI PREZENȚA CURENTĂ
