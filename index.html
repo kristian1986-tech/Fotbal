@@ -5663,8 +5663,7 @@ const isEmptySlot =
         attendanceHistory,
         id
     ) &&
-    !seasonWasReset &&
-    !localStorage.getItem("juniorstats_last_saved_training")
+    !seasonWasReset
 ){
 
                 history = [];
@@ -6428,21 +6427,6 @@ localStorage.removeItem(
         getTrainingDate();
       
       
-    /* VERIFICĂM DACĂ ANTRENAMENTUL ESTE DEJA SALVAT */
-
-const lastSavedTraining =
-    localStorage.getItem(
-        "juniorstats_last_saved_training"
-    );
-
-if(lastSavedTraining === trainingDate){
-
-    showToast(
-        "Tento trénink již byl uložen."
-    );
-
-    return;
-}
       
     /* =====================================
        PENTRU FIECARE JUCĂTOR
@@ -6532,11 +6516,6 @@ attendanceHistory[id] =
     )
 );
 
-      
-localStorage.setItem(
-    "juniorstats_last_saved_training",
-    trainingDate
-);
       
     /* =====================================
        SALVĂM ȘI PREZENȚA CURENTĂ
