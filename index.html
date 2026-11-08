@@ -8948,6 +8948,12 @@ function login(role = "trainer"){
             role
         );
 
+
+document.body.classList.toggle(
+    "parent-mode",
+    role === "parent"
+);
+          
         document.getElementById(
             "loginScreen"
         ).style.display = "none";
@@ -8982,6 +8988,14 @@ function checkLogin(){
     if(!loginScreen) return;
 
     if(loggedIn === "true"){
+
+   const role =
+    sessionStorage.getItem("juniorstats_user_role");
+
+document.body.classList.toggle(
+    "parent-mode",
+    role === "parent"
+);       
 
         loginScreen.style.display = "none";
 
