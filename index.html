@@ -3252,9 +3252,9 @@ body.parent-mode .trainer-only {
     </div>
 
     <button
-        class="save-nominace-btn"
-        onclick="saveNominace()"
-    >
+    class="save-nominace-btn trainer-only"
+    onclick="saveNominace()"
+>
         💾 Uložit nominaci
     </button>
 
@@ -9402,6 +9402,11 @@ document.addEventListener(
             "nominaceMatchSelect"
         );
 
+   if(select){
+    select.disabled =
+        sessionStorage.getItem("juniorstats_user_role") === "parent";
+   }
+        
     if(
         select &&
         savedMatch &&
@@ -9524,10 +9529,11 @@ function closeNominace(){
             <label class="nominace-switch">
 
                 <input
-                    type="checkbox"
-                    class="nominace-player-check"
-                    data-player-id="${id}"
-                >
+    type="checkbox"
+    class="nominace-player-check"
+    data-player-id="${id}"
+    ${sessionStorage.getItem("juniorstats_user_role") === "parent" ? "disabled" : ""}
+>
 
                 <span class="nominace-switch-slider"></span>
 
@@ -9619,50 +9625,42 @@ function loadSavedNominace(){
 
 function saveNominace(){
 
-    const select =
-        document.getElementById(
-            "nominaceMatchSelect"
-        );
-
-    if(!select || !select.value){
-
-        showToast("Vyberte zápas.");
-
+    if(
+        sessionStorage.getItem("juniorstats_user_role") === "parent"
+    ){
+        showToast("Nemáte oprávnění měnit nominaci.");
         return;
     }
 
-    const matchId =
-        select.value;
+    const select =
+        document.getElementById("nominaceMatchSelect");
 
+    if(!select || !select.value){
+        showToast("Vyberte zápas.");
+        return;
+    }
+
+    const matchId = select.value;
     const nominated = [];
 
     document
-        .querySelectorAll(
-            ".nominace-player-check"
-        )
+        .querySelectorAll(".nominace-player-check")
         .forEach(checkbox => {
 
             if(checkbox.checked){
-
                 nominated.push(
-                    String(
-                        checkbox.dataset.playerId
-                    )
+                    String(checkbox.dataset.playerId)
                 );
-
             }
 
         });
 
     let allNominace =
         JSON.parse(
-            localStorage.getItem(
-                "juniorstats_nominace"
-            ) || "{}"
+            localStorage.getItem("juniorstats_nominace") || "{}"
         );
 
-    allNominace[matchId] =
-        nominated;
+    allNominace[matchId] = nominated;
 
     localStorage.setItem(
         "juniorstats_nominace",
@@ -9674,10 +9672,7 @@ function saveNominace(){
         matchId
     );
 
-    showToast(
-        "Nominace byla uložena ✓"
-    );
-
+    showToast("Nominace byla uložena ✓");
 }
 
 
