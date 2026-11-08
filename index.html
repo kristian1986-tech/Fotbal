@@ -3005,6 +3005,13 @@ body.parent-mode .trainer-only {
     display: none !important;
 }
 
+body.parent-attendance-view .att-btn,
+body.parent-attendance-view .add-player-btn,
+body.parent-attendance-view .edit-player-btn,
+body.parent-attendance-view .delete-player-btn {
+    display: none !important;
+      }
+      
       
 </style>
 
@@ -4800,8 +4807,8 @@ body.parent-mode .trainer-only {
         <div class="player-reset-area">
 
             <button
-                class="reset-season-button"
-                onclick="resetSeason()">
+    class="reset-season-button trainer-only"
+    onclick="resetSeason()">
 
                 ↻ &nbsp; Resetovat sezónu
 
@@ -5913,9 +5920,17 @@ function openAttendance(){
         .getElementById("attendancePage")
         .classList.add("show");
 
+    const isParent =
+        sessionStorage.getItem("juniorstats_user_role") === "parent";
+
+    document.body.classList.toggle(
+        "parent-attendance-view",
+        isParent
+    );
+
     window.scrollTo({
-        top:0,
-        behavior:"smooth"
+        top: 0,
+        behavior: "smooth"
     });
 
 }
