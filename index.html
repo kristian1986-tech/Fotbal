@@ -6584,16 +6584,23 @@ function openGoals(){
 
     if(!panel || !container) return;
 
+    const isParent =
+        sessionStorage.getItem("juniorstats_user_role") === "parent";
+
     container.innerHTML = "";
 
     document.querySelectorAll(".player").forEach(player => {
 
         const id = player.dataset.id;
+
         const name =
             player.querySelector(".player-name")?.textContent.trim() || "Volné místo";
 
         const number =
             player.querySelector(".number")?.textContent.trim() || "";
+
+        const goals =
+            JSON.parse(localStorage.getItem("juniorstats_goals") || "{}");
 
         const card = document.createElement("div");
         card.className = "goal-player";
@@ -6605,24 +6612,38 @@ function openGoals(){
             </div>
 
             <div class="goal-counter">
-                <button onclick="changeGoals('${id}',-1)">−</button>
-                <strong id="goals-${id}">${(
-    JSON.parse(localStorage.getItem("juniorstats_goals") || "{}")[id] || 0 
-)}</strong>
-                <button onclick="changeGoals('${id}',1)">+</button>
+
+                ${isParent ? "" : `
+                    <button onclick="changeGoals('${id}',-1)">−</button>
+                `}
+
+                <strong id="goals-${id}">
+                    ${goals[id] || 0}
+                </strong>
+
+                ${isParent ? "" : `
+                    <button onclick="changeGoals('${id}',1)">+</button>
+                `}
+
             </div>
         `;
 
         container.appendChild(card);
     });
 
-updateTotalGoals();
-      
-    panel.classList.add("show");
-}
+    updateTotalGoals();
 
+    panel.classList.add("show");
+      }
 
 function changeGoals(id, amount){
+
+    if(
+    sessionStorage.getItem("juniorstats_user_role") === "parent"
+){
+    showToast("Nemáte oprávnění měnit góly.");
+    return;
+    }  
 
     let goals = JSON.parse(
         localStorage.getItem("juniorstats_goals") || "{}"
