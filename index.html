@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport"
       content="width=device-width, initial-scale=1.0">
-
 <meta name="theme-color"
       content="#07111f">
 
@@ -7155,35 +7154,34 @@ function closeMatches(){
 
 function openAddMatch(){
 
+    if(sessionStorage.getItem("juniorstats_user_role") === "parent"){
+        showToast("Nemáte oprávnění přidávat zápasy.");
+        return;
+    }
+
     const modal =
         document.getElementById("addMatchModal");
 
     if(!modal) return;
 
-    /* Ne asigurăm că este un meci NOU */
     selectedMatchId = null;
 
-    /* Golim formularul */
-
     document.getElementById("matchOpponent").value = "";
-
     document.getElementById("matchDate").value = "";
-
     document.getElementById("matchVenue").value = "home";
-
     document.getElementById("matchOurGoals").value = "";
-
     document.getElementById("matchOpponentGoals").value = "";
-
     document.getElementById("matchNote").value = "";
-
-    /* Deschidem modalul */
 
     modal.style.display = "flex";
 }
 
-
 function editSelectedMatch(){
+      
+      if(sessionStorage.getItem("juniorstats_user_role") === "parent"){
+    showToast("Nemáte oprávnění měnit zápasy.");
+    return;
+      }
 
     if(!selectedMatchId) return;
 
@@ -7243,6 +7241,11 @@ function closeAddMatch(){
       
 
 function saveMatch(){
+
+      if(sessionStorage.getItem("juniorstats_user_role") === "parent"){
+    showToast("Nemáte oprávnění měnit zápasy.");
+    return;
+}
 
     const opponent =
         document.getElementById("matchOpponent").value.trim();
@@ -7515,11 +7518,17 @@ function renderMatches(){
 
                 <div class="match-card-top">
 
-                <button
-                    class="match-menu-btn"
-                    onclick="openMatchMenu(${match.id},event)">
-                    ⋮
-                </button>
+                ${
+    sessionStorage.getItem("juniorstats_user_role") === "parent"
+        ? ""
+        : `
+            <button
+                class="match-menu-btn"
+                onclick="openMatchMenu(${match.id},event)">
+                ⋮
+            </button>
+        `
+                }
 
                     <div>
 
@@ -7605,6 +7614,10 @@ let selectedMatchId = null;
 
 function openMatchMenu(matchId, event){
 
+   if(sessionStorage.getItem("juniorstats_user_role") === "parent"){
+    showToast("Nemáte oprávnění měnit zápasy.");
+    return;
+}   
     event.stopPropagation();
 
     selectedMatchId = matchId;
@@ -7646,6 +7659,11 @@ function openMatchMenu(matchId, event){
 
  function deleteSelectedMatch(){
 
+    if(sessionStorage.getItem("juniorstats_user_role") === "parent"){
+    showToast("Nemáte oprávnění měnit zápasy.");
+    return;
+}   
+
     if(!selectedMatchId) return;
 
     const menu =
@@ -7678,6 +7696,11 @@ function closeDeleteMatchModal(){
 
 
 function confirmDeleteMatch(){
+
+    if(sessionStorage.getItem("juniorstats_user_role") === "parent"){
+    showToast("Nemáte oprávnění měnit zápasy.");
+    return;
+}  
 
     if(!selectedMatchId) return;
 
