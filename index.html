@@ -6362,32 +6362,35 @@ function resetSeason(){
    SAVE
 ========================================= */
 
-function saveAttendance(){  
+
+function saveAttendance(){
 
     const players =
-        document.querySelectorAll(".player");
+        [...document.querySelectorAll(".player")];
 
- const activePlayers =
-    [...players].filter(player => {
-        const name =
-            player.querySelector(".player-name")?.textContent.trim();
+    const activePlayers =
+        players.filter(player => {
 
-        return name && name !== "Volné místo";
-    });
+            const name =
+                player.querySelector(".player-name")
+                    ?.textContent.trim();
 
-const total =
-    activePlayers.length;
+            return name && name !== "Volné místo";
+        });
 
-const marked =
-    activePlayers.filter(player => {
+    const total = activePlayers.length;
+
+    const marked = activePlayers.filter(player => {
+
         const id = player.dataset.id;
-        return attendance[id];
+
+        return (
+            attendance[id] === "present" ||
+            attendance[id] === "absent"
+        );
+
     }).length;
 
-
-    /* =====================================
-       VERIFICĂM DACĂ TOȚI AU FOST MARCAȚI
-    ===================================== */
 
     if(marked < total){
 
@@ -6398,159 +6401,168 @@ const marked =
         return;
     }
 
-      const seasonCount = Math.max(
-    ...Object.values(seasonHistory)
-        .map(history => history.length),
-    
-);
 
-if(seasonCount >= 130){
+    /* IDENTIFICĂM ANTRENAMENTUL */
 
-    showToast(
-        "Sezóna má již 130 tréninků. Resetujte sezónu."
+    const trainingStart =
+        getAttendanceTrainingStart();
+
+    if(!trainingStart){
+
+        showToast("Trénink nebyl nalezen.");
+
+        return;
+    }
+
+    const trainingKey =
+        trainingStart.toISOString();
+
+
+    /* ÎNCĂRCĂM EVIDENȚA ANTRENAMENTELOR */
+
+    let trainingRecords =
+        JSON.parse(
+            localStorage.getItem(
+                "juniorstats_training_records"
+            ) || "{}"
+        );
+
+
+    const existingRecord =
+        trainingRecords[trainingKey];
+
+
+    /* VERIFICĂM LIMITA DE 130 */
+
+    const seasonCount = Math.max(
+        0,
+        ...Object.values(seasonHistory)
+            .map(history => history.length)
     );
 
-    return;
-}
+    if(!existingRecord && seasonCount >= 130){
 
-    /* =====================================
-       DATA ANTRENAMENTULUI
-    ===================================== */
+        showToast(
+            "Sezóna má již 130 tréninků. Resetujte sezónu."
+        );
 
-seasonWasReset = false;
+        return;
+    }
 
-localStorage.removeItem(
-    "juniorstats_season_reset"
-);  
-      
-    const trainingDate =
-        getTrainingDate();
-      
-      
-      
-    /* =====================================
-       PENTRU FIECARE JUCĂTOR
-    ===================================== */
 
-    players.forEach(player => {
+    seasonWasReset = false;
+
+    localStorage.removeItem(
+        "juniorstats_season_reset"
+    );
+
+
+    /* CREĂM SAU ACTUALIZĂM ANTRENAMENTUL */
+
+    if(!existingRecord){
+
+        trainingRecords[trainingKey] = {
+            players: {}
+        };
+
+    }
+
+
+    const record =
+        trainingRecords[trainingKey];
+
+
+    activePlayers.forEach(player => {
 
         const id =
             player.dataset.id;
 
-            const name =
-        player.querySelector(".player-name")?.textContent.trim();
+        const status =
+            attendance[id];
 
-    if(name === "Volné místo"){
-        return;
-      }
-          
-        let history =
-            attendanceHistory[id] || [];
+        let seasonHistoryPlayer =
+            seasonHistory[id] || [];
 
-        let seasonHistoryPlayer = seasonHistory[id] || [];
 
-        /* =================================
-           PREZENȚA DE AZI
+        let index =
+            record.players[id];
 
-           PREZENT = ✓
-           ABSENT = ×
 
-           "late" este considerat prezent
-           pentru istoricul celor 6.
-        ================================= */
+        if(
+            index !== undefined &&
+            index < seasonHistoryPlayer.length
+        ){
 
-     const todayStatus = attendance[id];
+            /* ACTUALIZĂM ANTRENAMENTUL EXISTENT */
 
-if(
-    todayStatus !== "present" &&
-    todayStatus !== "absent"
-){
-    return;
-} 
+            seasonHistoryPlayer[index] = status;
 
-/* =================================
-   ADAUGĂM ANTRENAMENTUL DE AZI
-================================= */
+        }else{
 
-/* =================================
-   ISTORIC COMPLET AL SEZONULUI
-================================= */
+            /* ADAUGĂM ANTRENAMENT NOU */
 
-if(seasonHistoryPlayer.length < 130){
+            if(seasonHistoryPlayer.length >= 130){
+                return;
+            }
 
-    seasonHistoryPlayer.push(todayStatus);
+            index = seasonHistoryPlayer.length;
 
-}
+            seasonHistoryPlayer.push(status);
 
-seasonHistory[id] = seasonHistoryPlayer;
-attendanceHistory[id] =
-    seasonHistoryPlayer.slice(-6);
+            record.players[id] = index;
 
-/* =================================
-   ULTIMELE 6
-   le luăm din istoricul sezonului
-================================= */
+        }
 
-attendanceHistory[id] =
-    seasonHistoryPlayer.slice(-6);
+
+        seasonHistory[id] =
+            seasonHistoryPlayer;
+
+        attendanceHistory[id] =
+            seasonHistoryPlayer.slice(-6);
 
     });
 
 
-    /* =====================================
-       SALVĂM ISTORICUL
-    ===================================== */
+    /* SALVĂM TOATE DATELE */
+
+    localStorage.setItem(
+        "juniorstats_training_records",
+        JSON.stringify(trainingRecords)
+    );
 
     localStorage.setItem(
         "juniorstats_history",
-        JSON.stringify(
-            attendanceHistory
-        )
+        JSON.stringify(attendanceHistory)
     );
 
-
     localStorage.setItem(
-    "juniorstats_season_history",
-    JSON.stringify(
-        seasonHistory
-    )
-);
-
-      
-    /* =====================================
-       SALVĂM ȘI PREZENȚA CURENTĂ
-    ===================================== */
+        "juniorstats_season_history",
+        JSON.stringify(seasonHistory)
+    );
 
     localStorage.setItem(
         "juniorstats_attendance",
-        JSON.stringify(
-            attendance
-        )
+        JSON.stringify(attendance)
     );
 
 
-    /* =====================================
-       ACTUALIZĂM VIZUAL CELE 6
-    ===================================== */
+    /* ACTUALIZĂM INTERFAȚA */
 
     renderAttendanceHistory();
+
     updateDashboardAttendance();
 
-    /* =====================================
-       CONFIRMARE
-    ===================================== */
 
     showToast(
-        "Docházka byla uložena ✓"
+        existingRecord
+            ? "Docházka byla aktualizována ✓"
+            : "Docházka byla uložena ✓"
     );
 
 }
 
 
-/* =========================================
-   OTHER CARDS
-========================================= */
-
+      
 function openFeature(name){
 
     if(name === "Góly"){
