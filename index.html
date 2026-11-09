@@ -9106,7 +9106,6 @@ function openNextTraining(){
 
     loadTrainingSettings();
     panel.classList.add("show");
-    applyParentTrainingRestrictions();
 }
 
 
@@ -9262,37 +9261,6 @@ function loadTrainingSettings(){
         settings.sunday?.enabled || false;
 
 }   
-
-
-function applyParentTrainingRestrictions(){
-
-    const isParent =
-        sessionStorage.getItem("juniorstats_user_role") === "parent";
-
-    const days = [
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-        "Sunday"
-    ];
-
-    days.forEach(day => {
-
-        const checkbox = document.getElementById(
-            "training" + day + "Enabled"
-        );
-
-        if(checkbox){
-            checkbox.disabled = false;
-checkbox.style.pointerEvents = isParent ? "none" : "";
-checkbox.style.opacity = "1";
-        }
-
-    });
-}
 
 
 function updateNextTraining(){
