@@ -6770,6 +6770,8 @@ document
 updateAttendanceSummary();
 
 
+if(sessionStorage.getItem("juniorstats_user_role") !== "parent"){
+
 document.querySelectorAll(".player").forEach(player => {
 
     if(player.querySelector(".player-menu")) return;
@@ -6818,7 +6820,7 @@ document.querySelectorAll(".player").forEach(player => {
         list.classList.toggle("show");
     };
 });
-
+}
 
 function editPlayer(id) {
     const player = document.querySelector(`.player[data-id="${id}"]`);
