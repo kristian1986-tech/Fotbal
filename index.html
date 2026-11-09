@@ -3023,11 +3023,7 @@ body.parent-mode #nextTrainingPanel input {
 
 body.parent-mode #nextTrainingPanel .save-training-btn {
     display: none !important;
-          }
-
-body.parent-mode #nextTrainingPanel input[type="checkbox"] {
-    pointer-events: none !important;
-      }
+}
 
 
       
@@ -10010,6 +10006,59 @@ document.addEventListener(
 );
 
 
+      
+
+document.addEventListener("click", function(event){
+
+    if(
+        sessionStorage.getItem("juniorstats_user_role") !== "parent"
+    ) return;
+
+    const checkbox =
+        event.target.closest(
+            '#nextTrainingPanel input[type="checkbox"]'
+        );
+
+    const label =
+        event.target.closest(
+            "#nextTrainingPanel label"
+        );
+
+    if(checkbox || label){
+
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+    }
+
+}, true);
+
+
+document.addEventListener("keydown", function(event){
+
+    if(
+        sessionStorage.getItem("juniorstats_user_role") !== "parent"
+    ) return;
+
+    if(event.code !== "Space") return;
+
+    if(
+        event.target.closest(
+            '#nextTrainingPanel input[type="checkbox"]'
+        ) ||
+        event.target.closest(
+            "#nextTrainingPanel label"
+        )
+    ){
+
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+    }
+
+}, true);
+      
+      
       
 </script>
       
