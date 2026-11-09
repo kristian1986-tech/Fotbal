@@ -9103,9 +9103,8 @@ function openNextTraining(){
     if(!panel) return;
 
     loadTrainingSettings();
-
     panel.classList.add("show");
-
+    applyParentTrainingRestrictions();
 }
 
 
@@ -9193,11 +9192,8 @@ if(sessionStorage.getItem("juniorstats_user_role") === "parent"){
         JSON.stringify(settings)
     );
 
-
     updateNextTraining();
-
     closeNextTraining();
-
     showToast("Nastavení tréninků bylo uloženo ✓");
 
  } 
@@ -9210,9 +9206,7 @@ function loadTrainingSettings(){
             "juniorstats_training"
         );
 
-
     if(!saved) return;
-
 
     const settings =
         JSON.parse(saved);
@@ -9268,6 +9262,35 @@ function loadTrainingSettings(){
 }   
 
 
+function applyParentTrainingRestrictions(){
+
+    const isParent =
+        sessionStorage.getItem("juniorstats_user_role") === "parent";
+
+    const days = [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday"
+    ];
+
+    days.forEach(day => {
+
+        const checkbox = document.getElementById(
+            "training" + day + "Enabled"
+        );
+
+        if(checkbox){
+            checkbox.disabled = isParent;
+        }
+
+    });
+}
+
+
 function updateNextTraining(){
 
     const dayElement =
@@ -9281,10 +9304,8 @@ function updateNextTraining(){
 
     if(!dayElement || !titleElement || !infoElement) return;
 
-
     const saved =
         localStorage.getItem("juniorstats_training");
-
 
     if(!saved){
 
@@ -9301,7 +9322,6 @@ function updateNextTraining(){
 
     const settings =
         JSON.parse(saved);
-
 
     const trainingDays = [
 
@@ -9349,15 +9369,12 @@ function updateNextTraining(){
 
     ];
 
-
     const today =
         new Date();
 
     today.setHours(0,0,0,0);
 
-
     let nextTraining = null;
-
 
     for(let addDays = 0; addDays <= 7; addDays++){
 
@@ -9368,16 +9385,13 @@ function updateNextTraining(){
             today.getDate() + addDays
         );
 
-
         const dayNumber =
             checkDate.getDay();
-
 
         const training =
             trainingDays.find(
                 item => item.day === dayNumber
             );
-
 
         if(
             training &&
@@ -9387,15 +9401,10 @@ function updateNextTraining(){
         ){
 
             nextTraining = {
-
                 date: checkDate,
-
                 name: training.name,
-
                 time: training.data.time,
-
                 isToday: addDays === 0
-
             };
 
             break;
@@ -9403,7 +9412,6 @@ function updateNextTraining(){
         }
 
     }
-
 
     if(!nextTraining){
 
@@ -9425,30 +9433,24 @@ function updateNextTraining(){
             ? "DNES"
             : nextTraining.name;
 
-
     titleElement.textContent =
         settings.name || "Trénink U12";
-
 
     const day =
         String(
             nextTraining.date.getDate()
         ).padStart(2,"0");
 
-
     const month =
         String(
             nextTraining.date.getMonth() + 1
         ).padStart(2,"0");
 
-
     const year =
         nextTraining.date.getFullYear();
 
-
     const dateText =
         `${day}.${month}.${year}`;
-
 
     infoElement.textContent =
         `${dateText} · ${nextTraining.time} · ${
@@ -9456,7 +9458,6 @@ function updateNextTraining(){
         }`;
 
           }  
-
 
 
 document.addEventListener(
@@ -9473,7 +9474,6 @@ document.addEventListener(
     if(!panel) return;
 
     loadNominaceMatches();
-
     renderNominacePlayers();
 
     const savedMatch =
@@ -9630,7 +9630,6 @@ function closeNominace(){
     });
 
  }
-
 
       
 document.addEventListener(
@@ -9802,7 +9801,6 @@ function saveNominace(){
         card.className =
             "parent-player";
 
-
         card.innerHTML = `
 
             <div class="parent-player-number">
@@ -9839,16 +9837,13 @@ function saveNominace(){
 
         `;
 
-
         container.appendChild(card);
 
     });
 
-
     panel.classList.add("show");
 
  }   
-
       
 
 window.setParentAttendance = function(id, status){
@@ -9869,7 +9864,6 @@ window.setParentAttendance = function(id, status){
 };
       
 
-
 function closeParentPanel(){
 
     const panel =
@@ -9880,7 +9874,6 @@ function closeParentPanel(){
     panel.classList.remove("show");
 
 }
-
 
 
  window.saveParentAttendance = function(){
@@ -9901,14 +9894,12 @@ function closeParentPanel(){
 
         });
 
-
     if(Object.keys(parentAttendance).length === 0){
 
         alert("Vyberte alespoň jedno dítě.");
 
         return;
     }
-
 
     /* =====================================
        SALVĂM ALEGERILE PĂRINȚILOR
@@ -9918,7 +9909,6 @@ function closeParentPanel(){
         "juniorstats_parent_attendance",
         JSON.stringify(parentAttendance)
     );
-
 
     /* =====================================
        TRANSFERĂM ALEGERILE PE BUTOANELE
@@ -9934,20 +9924,17 @@ function closeParentPanel(){
 
         if(!player) return;
 
-
         const status =
             parentAttendance[id];
-
 
         const button =
             player.querySelector(
                 `.att-btn.${status}`
             );
 
-
         if(button){
-
-            setAttendance(
+       
+       setAttendance(
                 button,
                 status
             );
@@ -9957,7 +9944,6 @@ function closeParentPanel(){
     });
 
 
-
     /* SALVĂM IMEDIAT ȘI BIFĂRILE PARȚIALE */
 
 localStorage.setItem(
@@ -9965,7 +9951,6 @@ localStorage.setItem(
     JSON.stringify(attendance)
 );
    
-
   const trainingStart = getAttendanceTrainingStart();
 
 if(trainingStart){
@@ -9985,7 +9970,6 @@ if(trainingStart){
     const players =
         document.querySelectorAll(".player");
 
-
     const activePlayers =
         [...players].filter(player => {
 
@@ -10001,7 +9985,6 @@ if(trainingStart){
 
         });
 
-
     const allMarked =
         activePlayers.every(player => {
 
@@ -10011,7 +9994,6 @@ if(trainingStart){
             return attendance[id];
 
         });
-
 
     /* =====================================
        DACĂ LISTA ESTE COMPLETĂ,
@@ -10031,7 +10013,6 @@ if(trainingStart){
     }
 
 };     
-
 
 
 
@@ -10059,11 +10040,9 @@ document.addEventListener(
 );
 
 
-
       
 </script>
       
-
 
 
 <div id="parentPanel" class="parent-panel">
