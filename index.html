@@ -3016,7 +3016,20 @@ body.parent-attendance-view .delete-player-btn {
     display: none !important;
       }
       
-      
+body.parent-mode #nextTrainingPanel input {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+body.parent-mode #nextTrainingPanel input[type="checkbox"] {
+    pointer-events: none;
+}
+
+body.parent-mode #nextTrainingPanel .save-training-btn {
+    display: none !important;
+          }
+
+
 </style>
 
       
@@ -3637,8 +3650,8 @@ body.parent-attendance-view .delete-player-btn {
         </div>
 
         <button
-            class="save-training-btn"
-            onclick="saveTrainingSettings()">
+    class="save-training-btn trainer-only"
+    onclick="saveTrainingSettings()">
             💾 Uložit nastavení
 
         </button>
@@ -9109,6 +9122,11 @@ function closeNextTraining(){
 
  function saveTrainingSettings(){
 
+if(sessionStorage.getItem("juniorstats_user_role") === "parent"){
+    showToast("Nemáte oprávnění měnit nastavení tréninků.");
+    return;
+}
+       
     const settings = {
 
         name:
