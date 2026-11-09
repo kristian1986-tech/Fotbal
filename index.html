@@ -9033,6 +9033,15 @@ document.body.classList.toggle(
             "loginScreen"
         ).style.display = "none";
 
+if(role === "parent"){
+
+    document
+        .querySelectorAll("#playersList .player-menu")
+        .forEach(menu => menu.remove());
+
+}
+
+          
        if(role === "parent"){
 
     openParentPanel();
