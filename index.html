@@ -9398,7 +9398,18 @@ async function juniorStatsStartDataLayerInternal(profile){
     const privateRef = juniorStatsDb.collection("trainerPrivateData");
     const metaRef = juniorStatsDb.collection("appMeta").doc(groupId);
 
-    let remoteSnapshot = await dataRef.where("groupId", "==", groupId).get();
+    let remoteSnapshot;
+
+if(profile.role === "parent"){
+    remoteSnapshot = await dataRef
+        .where("groupId", "==", groupId)
+        .where("key", "!=", "juniorstats_ratings")
+        .get();
+}else{
+    remoteSnapshot = await dataRef
+        .where("groupId", "==", groupId)
+        .get();
+}
     let privateSnapshot = null;
 
     if(profile.role === "trainer"){
