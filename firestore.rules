@@ -1,0 +1,111 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+    function hasProfile() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+    function myProfile() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+    function isTrainerFor(groupId) {
+      return hasProfile()
+        && myProfile().role == 'trainer'
+        && myProfile().active == true
+        && myProfile().groupId == groupId;
+    }
+    function isParentFor(groupId) {
+      return hasProfile()
+        && myProfile().role == 'parent'
+        && myProfile().active == true
+        && myProfile().groupId == groupId;
+    }
+
+    match /users/{userId} {
+      allow get: if signedIn() && request.auth.uid == userId;
+      allow list, create, update, delete: if false;
+    }
+
+    // Interni marker inicializace, dostupny pouze aktivnimu trenerovi skupiny.
+    match /appMeta/{groupId} {
+      allow read: if isTrainerFor(groupId);
+      allow create, update: if isTrainerFor(groupId)
+        && request.resource.data.groupId == groupId
+        && request.resource.data.initialized == true;
+      allow delete: if false;
+    }
+
+    // Shared team information is readable by parents. Trainer-only ratings
+    // must live in trainerPrivateData and are explicitly denied here.
+    // Keep parent queries constrained by groupId and key so rules can prove access.
+    match /appData/{dataKey} {
+      allow read: if isTrainerFor(resource.data.groupId)
+        || (isParentFor(resource.data.groupId)
+            && resource.data.key != 'juniorstats_ratings');
+
+      allow create: if isTrainerFor(request.resource.data.groupId)
+        && request.resource.data.key == dataKey
+        && request.resource.data.key != 'juniorstats_ratings'
+        && request.resource.data.value is string;
+
+      allow update: if isTrainerFor(resource.data.groupId)
+        && isTrainerFor(request.resource.data.groupId)
+        && request.resource.data.key == dataKey
+        && request.resource.data.key != 'juniorstats_ratings'
+        && request.resource.data.value is string;
+
+      allow delete: if isTrainerFor(resource.data.groupId);
+    }
+
+    // Private data (currently player ratings) is trainer-only.
+    match /trainerPrivateData/{dataKey} {
+      allow read: if isTrainerFor(resource.data.groupId);
+      allow create: if isTrainerFor(request.resource.data.groupId)
+        && request.resource.data.key == dataKey
+        && request.resource.data.value is string;
+      allow update: if isTrainerFor(resource.data.groupId)
+        && isTrainerFor(request.resource.data.groupId)
+        && request.resource.data.key == dataKey
+        && request.resource.data.value is string;
+      allow delete: if isTrainerFor(resource.data.groupId);
+    }
+
+    match /parentSubmissions/{submissionId} {
+      allow create: if isParentFor(request.resource.data.groupId)
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.status == 'pending'
+        && request.resource.data.statuses is map
+        && request.resource.data.statuses.size() > 0
+        && request.resource.data.statuses.keys().hasOnly(myProfile().playerIds)
+        && request.resource.data.statuses.values().hasOnly(['present', 'absent'])
+        && request.resource.data.playerIds is list
+        && request.resource.data.playerIds.size() > 0
+        && request.resource.data.playerIds.toSet().size() == request.resource.data.playerIds.size()
+        && request.resource.data.playerIds.hasOnly(myProfile().playerIds)
+        && request.resource.data.playerIds.toSet() == request.resource.data.statuses.keys().toSet()
+        && request.resource.data.keys().hasOnly([
+          'uid', 'groupId', 'playerIds', 'statuses',
+          'trainingStart', 'status', 'createdAt'
+        ]);
+
+      allow read: if (signedIn()
+        && resource.data.uid == request.auth.uid
+        && isParentFor(resource.data.groupId))
+        || isTrainerFor(resource.data.groupId);
+
+      allow update: if isTrainerFor(resource.data.groupId)
+        && request.resource.data.uid == resource.data.uid
+        && request.resource.data.groupId == resource.data.groupId
+        && request.resource.data.status in ['pending', 'received'];
+
+      allow delete: if isTrainerFor(resource.data.groupId);
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
