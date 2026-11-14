@@ -3052,10 +3052,11 @@ body.parent-mode #nextTrainingPanel .save-training-btn {
   </div>
           
         <input
-            type="text"
-            id="loginUsername"
-            placeholder="Uživatel"
+            type="email"
+            id="loginEmail"
+            placeholder="E-mail"
             autocomplete="username"
+            inputmode="email"
         >
 
         <input
@@ -5419,6 +5420,11 @@ body.parent-mode #nextTrainingPanel .save-training-btn {
 </div>     
       
 
+<div id="juniorstatsParentReview" class="trainer-only" style="margin:12px 16px;padding:12px;border:1px solid #345;border-radius:12px;">
+    <div id="juniorstatsPendingParents" style="margin-bottom:8px"></div>
+    <button type="button" onclick="juniorStatsReviewParentSubmissions()" style="padding:10px;border-radius:9px;">📨 Zkontrolovat potvrzení rodičů</button>
+</div>
+
 <!-- TOAST -->
 
 <div
@@ -5430,6 +5436,12 @@ body.parent-mode #nextTrainingPanel .save-training-btn {
 </div>
 
 
+
+<!-- Firebase SDK: authentication + Firestore (compat build for gradual migration) -->
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
 
 <script>
 
@@ -8966,140 +8978,722 @@ function savePlayerRating(
 
 
       
-const LOGIN_USERNAME = "trener";
-const LOGIN_PASSWORD = "12345";
+// =====================================================
+// JUNIORSTATS – FIREBASE AUTHENTICATION (PHASE 1)
+// User roles are loaded from Firestore users/{uid}.
+// Existing app data remains local until the next migration phase.
+// =====================================================
 
-const PARENT_USERNAME = "rodiče";
-const PARENT_PASSWORD = "1234";
+let juniorStatsCurrentUser = null;
+let juniorStatsCurrentProfile = null;
+let juniorStatsAuthInitialized = false;
 
-
-function login(role = "trainer"){
-
-    const username =
-        document.getElementById("loginUsername").value.trim();
-
-    const password =
-        document.getElementById("loginPassword").value;
-
-    const error =
-        document.getElementById("loginError");
-
-
-    let correctUsername;
-    let correctPassword;
-
-
-    if(role === "parent"){
-
-        correctUsername =
-            PARENT_USERNAME;
-
-        correctPassword =
-            PARENT_PASSWORD;
-
-    }else{
-
-        correctUsername =
-            LOGIN_USERNAME;
-
-        correctPassword =
-            LOGIN_PASSWORD;
-
-    }
-
-
-    if(
-        username === correctUsername &&
-        password === correctPassword
-    ){
-
-        sessionStorage.setItem(
-            "juniorstats_logged_in",
-            "true"
-        );
-
-        sessionStorage.setItem(
-            "juniorstats_user_role",
-            role
-        );
-
-
-document.body.classList.toggle(
-    "parent-mode",
-    role === "parent"
-);
-          
-        document.getElementById(
-            "loginScreen"
-        ).style.display = "none";
-
-if(role === "parent"){
-
-    document
-        .querySelectorAll("#playersList .player-menu")
-        .forEach(menu => menu.remove());
-
+function juniorStatsShowLoginError(message){
+    const error = document.getElementById("loginError");
+    if(error) error.textContent = message;
 }
 
-          
-       if(role === "parent"){
+function juniorStatsFirebaseReady(){
+    return !!(
+        window.firebase &&
+        window.FIREBASE_CONFIG &&
+        window.FIREBASE_CONFIG.apiKey &&
+        !String(window.FIREBASE_CONFIG.apiKey).startsWith("DOPLNIT") &&
+        window.FIREBASE_CONFIG.projectId &&
+        !String(window.FIREBASE_CONFIG.projectId).startsWith("DOPLNIT")
+    );
+}
 
-    openParentPanel();
+function juniorStatsSetRole(role){
+    sessionStorage.setItem("juniorstats_logged_in", "true");
+    sessionStorage.setItem("juniorstats_user_role", role);
+    document.body.classList.toggle("parent-mode", role === "parent");
+}
 
-       }   
+async function juniorStatsLoadProfile(user){
+    const snap = await firebase.firestore().collection("users").doc(user.uid).get();
+    if(!snap.exists){
+        throw new Error("Tento účet ještě nemá nastavený profil. Požádejte správce týmu o aktivaci účtu.");
+    }
+    const profile = snap.data() || {};
+    if(!["trainer", "parent"].includes(profile.role)){
+        throw new Error("Účet nemá platnou roli. Kontaktujte správce.");
+    }
+    if(profile.active !== true){
+        throw new Error("Tento účet není aktivován. Požádejte správce týmu o aktivaci účtu.");
+    }
+    if(typeof profile.groupId !== "string" || !profile.groupId.trim()){
+        throw new Error("Účet nemá přiřazenou skupinu. Kontaktujte správce.");
+    }
+    profile.groupId = profile.groupId.trim();
+    if(profile.role === "parent" && (!Array.isArray(profile.playerIds) || profile.playerIds.length === 0)){
+        throw new Error("K účtu rodiče není přiřazen žádný hráč. Kontaktujte trenéra.");
+    }
+    if(profile.role === "parent"){
+        profile.playerIds = [...new Set(profile.playerIds.map(value => String(value).trim()).filter(Boolean))];
+        if(profile.playerIds.length === 0){
+            throw new Error("K účtu rodiče není přiřazen žádný platný hráč. Kontaktujte trenéra.");
+        }
+    }
+    juniorStatsCurrentUser = user;
+    juniorStatsCurrentProfile = profile;
+    juniorStatsSetRole(profile.role);
+    return profile;
+}
 
-    }else{
+async function login(requestedRole = "trainer"){
+    const email = (document.getElementById("loginEmail")?.value || "").trim().toLowerCase();
+    const password = document.getElementById("loginPassword")?.value || "";
+    const button = document.querySelector(requestedRole === "parent" ? ".parent-login-btn" : "#loginScreen .login-card button:not(.parent-login-btn)");
 
-        error.textContent =
-            "Nesprávné přihlašovací údaje.";
+    juniorStatsShowLoginError("");
 
+    if(!email || !password){
+        juniorStatsShowLoginError("Zadejte e-mail a heslo.");
+        return;
+    }
+    if(!juniorStatsFirebaseReady()){
+        juniorStatsShowLoginError("Firebase zatím není nastaven. Doplňte údaje do souboru firebase-config.js.");
+        return;
     }
 
+    if(button){ button.disabled = true; button.dataset.oldText = button.textContent; button.textContent = "Přihlašuji…"; }
+    try{
+        const credential = await firebase.auth().signInWithEmailAndPassword(email, password);
+        const profile = await juniorStatsLoadProfile(credential.user);
+        if(profile.role !== requestedRole){
+            await firebase.auth().signOut();
+            juniorStatsCurrentUser = null;
+            juniorStatsCurrentProfile = null;
+            sessionStorage.removeItem("juniorstats_logged_in");
+            sessionStorage.removeItem("juniorstats_user_role");
+            throw new Error(requestedRole === "parent"
+                ? "Tento účet není registrován jako rodič. Použijte přihlášení trenéra."
+                : "Tento účet není registrován jako trenér. Použijte přihlášení rodiče.");
+        }
+        const loginScreen = document.getElementById("loginScreen");
+        if(loginScreen) loginScreen.style.display = "none";
+        // onAuthStateChanged loads team data and opens the parent panel.
+    }catch(error){
+        console.error("JuniorStats login error:", error);
+        let message = error.message || "Přihlášení se nezdařilo.";
+        if(error.code === "auth/invalid-credential" || error.code === "auth/wrong-password" || error.code === "auth/user-not-found"){
+            message = "Nesprávný e-mail nebo heslo.";
+        }else if(error.code === "auth/too-many-requests"){
+            message = "Příliš mnoho pokusů. Zkuste to později.";
+        }else if(error.code === "auth/network-request-failed"){
+            message = "Nepodařilo se připojit k internetu.";
+        }
+        juniorStatsShowLoginError(message);
+    }finally{
+        if(button){ button.disabled = false; button.textContent = button.dataset.oldText || (requestedRole === "parent" ? "👨‍👩‍👧 Přihlášení rodiče" : "Přihlášení trenéra"); }
+    }
 }
-  
 
+async function juniorStatsHandleAuthState(user){
+    const loginScreen = document.getElementById("loginScreen");
+    if(!loginScreen) return;
+    if(!user){
+        juniorStatsStopDataLayer();
+        juniorStatsCurrentUser = null;
+        juniorStatsCurrentProfile = null;
+        sessionStorage.removeItem("juniorstats_logged_in");
+        sessionStorage.removeItem("juniorstats_user_role");
+        document.body.classList.remove("parent-mode");
+        loginScreen.style.display = "flex";
+        juniorStatsAuthInitialized = true;
+        return;
+    }
+    try{
+        const profile = await juniorStatsLoadProfile(user);
+        await juniorStatsStartDataLayer(profile);
+        loginScreen.style.display = "none";
+        if(profile.role === "parent"){
+            document.querySelectorAll("#playersList .player-menu").forEach(menu => menu.remove());
+            // Avoid reopening the parent panel after every auth-state notification.
+            if(!document.getElementById("parentPanel")?.classList.contains("show")) openParentPanel();
+        }
+    }catch(error){
+        console.error("JuniorStats profile error:", error);
+        juniorStatsStopDataLayer();
+        await firebase.auth().signOut();
+        juniorStatsShowLoginError(error.message || "Účet nelze načíst.");
+    }finally{
+        juniorStatsAuthInitialized = true;
+    }
+}
 
 function checkLogin(){
-
-    const loggedIn =
-        sessionStorage.getItem(
-            "juniorstats_logged_in"
-        );
-
-    const loginScreen =
-        document.getElementById("loginScreen");
-
+    const loginScreen = document.getElementById("loginScreen");
     if(!loginScreen) return;
-
-    if(loggedIn === "true"){
-
-   const role =
-    sessionStorage.getItem("juniorstats_user_role");
-
-document.body.classList.toggle(
-    "parent-mode",
-    role === "parent"
-);       
-
-        loginScreen.style.display = "none";
-
-    }else{
-
+    if(!juniorStatsFirebaseReady()){
         loginScreen.style.display = "flex";
-
+        juniorStatsShowLoginError("Firebase zatím není nastaven. Doplňte údaje do souboru firebase-config.js.");
+        return;
     }
-
+    if(!firebase.apps.length){
+        firebase.initializeApp(window.FIREBASE_CONFIG);
+    }
+    firebase.auth().onAuthStateChanged(juniorStatsHandleAuthState);
 }
 
-
-      
-document.addEventListener(
-    "DOMContentLoaded",
-    checkLogin
-);   
+document.addEventListener("DOMContentLoaded", checkLogin);
 
 
-      
+// =====================================================
+// JUNIORSTATS – FIRESTORE DATA LAYER
+// One Firebase project = one independently deployed team/group.
+// Trainer owns team data; parents submit attendance separately.
+// =====================================================
+
+const JUNIORSTATS_DATA_PREFIX = "juniorstats_";
+const JUNIORSTATS_LOCAL_ONLY_KEYS = new Set([
+    "juniorstats_logged_in",
+    "juniorstats_user_role"
+]);
+const JUNIORSTATS_TRAINER_PRIVATE_KEYS = new Set(["juniorstats_ratings"]);
+let juniorStatsDb = null;
+let juniorStatsDataUnsubscribe = null;
+let juniorStatsPrivateDataUnsubscribe = null;
+let juniorStatsSubmissionUnsubscribe = null;
+let juniorStatsStorageAdapterInstalled = false;
+let juniorStatsSnapshotReady = false;
+let juniorStatsApplyingRemote = false;
+const juniorStatsWriteTimers = new Map();
+const juniorStatsPendingWrites = new Map();
+const juniorStatsPendingDeletes = new Set();
+const juniorStatsPendingDeleteOps = new Map();
+
+function juniorStatsWriteCloud(dataKey, dataValue, writeUid, writeGroupId, writeDb){
+    if(juniorStatsCurrentUser?.uid !== writeUid ||
+       juniorStatsCurrentProfile?.groupId !== writeGroupId ||
+       juniorStatsCurrentProfile?.role !== "trainer" ||
+       juniorStatsDb !== writeDb) return Promise.resolve(false);
+
+    const targetCollection = JUNIORSTATS_TRAINER_PRIVATE_KEYS.has(dataKey)
+        ? "trainerPrivateData" : "appData";
+
+    return writeDb.collection(targetCollection).doc(dataKey).set({
+        key: dataKey,
+        value: dataValue,
+        groupId: writeGroupId,
+        updatedBy: writeUid,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    }, {merge: true}).then(() => {
+        if(juniorStatsPendingWrites.get(dataKey)?.value === dataValue){
+            juniorStatsPendingWrites.delete(dataKey);
+        }
+        return true;
+    }).catch(error => {
+        console.error("JuniorStats Firestore save error:", dataKey, error);
+        if(typeof showToast === "function"){
+            showToast("Nepodařilo se uložit data online. Změny zůstaly v zařízení a budou znovu odeslány při připojení.");
+        }
+        return false;
+    });
+}
+
+function juniorStatsFlushPendingWrites(){
+    if(juniorStatsCurrentProfile?.role !== "trainer" || !juniorStatsDb) return;
+    const writes = [];
+    juniorStatsPendingWrites.forEach((item, key) => {
+        if(juniorStatsPendingDeletes.has(key)) return;
+        const timer = juniorStatsWriteTimers.get(key);
+        if(timer){
+            clearTimeout(timer);
+            juniorStatsWriteTimers.delete(key);
+        }
+        writes.push(juniorStatsWriteCloud(key, item.value, item.uid, item.groupId, item.db));
+    });
+    return Promise.all(writes);
+}
+
+function juniorStatsScheduleWrite(dataKey, dataValue, writeUid, writeGroupId, writeDb){
+    juniorStatsPendingWrites.set(dataKey, {
+        value: dataValue, uid: writeUid, groupId: writeGroupId, db: writeDb
+    });
+    if(juniorStatsWriteTimers.has(dataKey)){
+        clearTimeout(juniorStatsWriteTimers.get(dataKey));
+    }
+    juniorStatsWriteTimers.set(dataKey, setTimeout(() => {
+        juniorStatsWriteTimers.delete(dataKey);
+        const pending = juniorStatsPendingWrites.get(dataKey);
+        if(!pending || pending.value !== dataValue) return;
+        juniorStatsWriteCloud(dataKey, dataValue, writeUid, writeGroupId, writeDb);
+    }, 350));
+}
+
+function juniorStatsDeleteCloud(dataKey, operation){
+    if(juniorStatsCurrentUser?.uid !== operation.uid ||
+       juniorStatsCurrentProfile?.groupId !== operation.groupId ||
+       juniorStatsCurrentProfile?.role !== "trainer" ||
+       juniorStatsDb !== operation.db) return Promise.resolve(false);
+
+    return operation.db.collection(operation.collection).doc(dataKey).delete()
+        .then(() => {
+            if(juniorStatsPendingDeleteOps.get(dataKey) === operation){
+                juniorStatsPendingDeleteOps.delete(dataKey);
+                juniorStatsPendingDeletes.delete(dataKey);
+            }
+            return true;
+        })
+        .catch(error => {
+            console.error("JuniorStats Firestore delete error:", dataKey, error);
+            if(typeof showToast === "function"){
+                showToast("Smazání se zatím nepodařilo synchronizovat. Zkusí se znovu při připojení.");
+            }
+            return false;
+        });
+}
+
+function juniorStatsFlushPendingDeletes(){
+    const jobs = [];
+    juniorStatsPendingDeleteOps.forEach((operation, key) => {
+        jobs.push(juniorStatsDeleteCloud(key, operation));
+    });
+    return Promise.all(jobs);
+}
+
+function juniorStatsFlushAllPending(){
+    juniorStatsFlushPendingWrites();
+    juniorStatsFlushPendingDeletes();
+}
+
+window.addEventListener("pagehide", juniorStatsFlushAllPending);
+window.addEventListener("online", juniorStatsFlushAllPending);
+document.addEventListener("visibilitychange", () => {
+    if(document.visibilityState === "hidden") juniorStatsFlushAllPending();
+});
+
+function juniorStatsAppStorageKeys(){
+    const keys = [];
+    for(let i = 0; i < localStorage.length; i++){
+        const key = localStorage.key(i);
+        if(key && key.startsWith(JUNIORSTATS_DATA_PREFIX) && !JUNIORSTATS_LOCAL_ONLY_KEYS.has(key)){
+            keys.push(key);
+        }
+    }
+    return keys;
+}
+
+function juniorStatsInstallStorageAdapter(){
+    if(juniorStatsStorageAdapterInstalled) return;
+    juniorStatsStorageAdapterInstalled = true;
+
+    const originalSetItem = Storage.prototype.setItem;
+    const originalRemoveItem = Storage.prototype.removeItem;
+
+    Storage.prototype.setItem = function(key, value){
+        originalSetItem.call(this, key, value);
+        if(this !== window.localStorage || juniorStatsApplyingRemote) return;
+        if(!String(key).startsWith(JUNIORSTATS_DATA_PREFIX)) return;
+        if(JUNIORSTATS_LOCAL_ONLY_KEYS.has(String(key))) return;
+        if(juniorStatsCurrentProfile?.role !== "trainer" || !juniorStatsDb) return;
+
+        const dataKey = String(key);
+        const dataValue = String(value);
+        juniorStatsPendingDeletes.delete(dataKey);
+        juniorStatsPendingDeleteOps.delete(dataKey);
+        const writeUid = juniorStatsCurrentUser?.uid;
+        const writeGroupId = juniorStatsCurrentProfile?.groupId;
+        const writeDb = juniorStatsDb;
+        if(!writeUid || !writeGroupId || !writeDb) return;
+        juniorStatsScheduleWrite(dataKey, dataValue, writeUid, writeGroupId, writeDb);
+    };
+
+    Storage.prototype.removeItem = function(key){
+        originalRemoveItem.call(this, key);
+        if(this !== window.localStorage || juniorStatsApplyingRemote) return;
+        if(!String(key).startsWith(JUNIORSTATS_DATA_PREFIX)) return;
+        if(JUNIORSTATS_LOCAL_ONLY_KEYS.has(String(key))) return;
+        if(juniorStatsCurrentProfile?.role !== "trainer" || !juniorStatsDb) return;
+        const dataKey = String(key);
+
+        // Cancel a pending debounced set before deleting the document.
+        if(juniorStatsWriteTimers.has(dataKey)){
+            clearTimeout(juniorStatsWriteTimers.get(dataKey));
+            juniorStatsWriteTimers.delete(dataKey);
+        }
+        juniorStatsPendingWrites.delete(dataKey);
+
+        const deleteUid = juniorStatsCurrentUser?.uid;
+        const deleteGroupId = juniorStatsCurrentProfile?.groupId;
+        const deleteDb = juniorStatsDb;
+        if(!deleteUid || !deleteGroupId || !deleteDb ||
+           juniorStatsCurrentProfile?.role !== "trainer") return;
+
+        const targetCollection = JUNIORSTATS_TRAINER_PRIVATE_KEYS.has(dataKey)
+            ? "trainerPrivateData" : "appData";
+        juniorStatsPendingDeletes.add(dataKey);
+        const deleteOperation = {
+            uid: deleteUid,
+            groupId: deleteGroupId,
+            db: deleteDb,
+            collection: targetCollection
+        };
+        juniorStatsPendingDeleteOps.set(dataKey, deleteOperation);
+        juniorStatsDeleteCloud(dataKey, deleteOperation);
+    };
+}
+
+let juniorStatsDataLayerPromise = null;
+let juniorStatsDataLayerKey = null;
+
+function juniorStatsStopDataLayer(){
+    if(juniorStatsDataUnsubscribe){
+        juniorStatsDataUnsubscribe();
+        juniorStatsDataUnsubscribe = null;
+    }
+    if(juniorStatsPrivateDataUnsubscribe){
+        juniorStatsPrivateDataUnsubscribe();
+        juniorStatsPrivateDataUnsubscribe = null;
+    }
+    if(juniorStatsSubmissionUnsubscribe){
+        juniorStatsSubmissionUnsubscribe();
+        juniorStatsSubmissionUnsubscribe = null;
+    }
+
+    // Cancel delayed writes so data from a previous account cannot be sent
+    // after logout or when another account signs in on the same device.
+    juniorStatsWriteTimers.forEach(timer => clearTimeout(timer));
+    juniorStatsWriteTimers.clear();
+    juniorStatsPendingWrites.clear();
+    juniorStatsPendingDeletes.clear();
+    juniorStatsPendingDeleteOps.clear();
+
+    juniorStatsDataLayerPromise = null;
+    juniorStatsDataLayerKey = null;
+    juniorStatsSnapshotReady = false;
+    juniorStatsApplyingRemote = false;
+    juniorStatsDb = null;
+}
+
+function juniorStatsStartDataLayer(profile){
+    const identityKey = `${juniorStatsCurrentUser?.uid || ""}:${profile.groupId}:${profile.role}`;
+
+    if(juniorStatsDataLayerKey === identityKey && juniorStatsDataLayerPromise){
+        return juniorStatsDataLayerPromise;
+    }
+
+    // A different user/group/role must never reuse the previous listener setup.
+    juniorStatsStopDataLayer();
+    juniorStatsDataLayerKey = identityKey;
+
+    juniorStatsDataLayerPromise = juniorStatsStartDataLayerInternal(profile)
+        .catch(error => {
+            if(juniorStatsDataLayerKey === identityKey){
+                juniorStatsDataLayerPromise = null;
+                juniorStatsDataLayerKey = null;
+            }
+            throw error;
+        });
+
+    return juniorStatsDataLayerPromise;
+}
+
+async function juniorStatsStartDataLayerInternal(profile){
+    juniorStatsDb = firebase.firestore();
+    const groupId = profile.groupId;
+    const dataRef = juniorStatsDb.collection("appData");
+    const privateRef = juniorStatsDb.collection("trainerPrivateData");
+    const metaRef = juniorStatsDb.collection("appMeta").doc(groupId);
+
+    let remoteSnapshot = await dataRef.where("groupId", "==", groupId).get();
+    let privateSnapshot = null;
+
+    if(profile.role === "trainer"){
+        privateSnapshot = await privateRef.where("groupId", "==", groupId).get();
+        const metaSnapshot = await metaRef.get();
+
+        if(!metaSnapshot.exists){
+            const localKeys = juniorStatsAppStorageKeys();
+            const existingSharedKeys = new Set();
+            const existingPrivateKeys = new Set();
+            remoteSnapshot.forEach(doc => existingSharedKeys.add(doc.id));
+            privateSnapshot.forEach(doc => existingPrivateKeys.add(doc.id));
+
+            if(remoteSnapshot.empty && privateSnapshot.empty && localKeys.length === 0){
+                throw new Error("V tomto zařízení nebyla nalezena původní data týmu a online databáze je prázdná. Otevřete nejprve původní aplikaci s daty.");
+            }
+
+            if(localKeys.length > 0 && !confirm(
+                "Kontrola prvního přenosu: data z tohoto zařízení budou doplněna pouze pro klíče, které v online databázi ještě nejsou. Již uložená online data nebudou přepsána. Pokračovat?"
+            )){
+                throw new Error("Přenos dat byl zrušen. Online data nebyla změněna.");
+            }
+
+            const batch = juniorStatsDb.batch();
+            let operations = 0;
+            const hasLegacyRatings = remoteSnapshot.docs.some(doc => doc.id === "juniorstats_ratings");
+            localKeys.forEach(key => {
+                const isPrivate = JUNIORSTATS_TRAINER_PRIVATE_KEYS.has(key);
+                const existsRemotely = isPrivate
+                    ? (existingPrivateKeys.has(key) || (key === "juniorstats_ratings" && hasLegacyRatings))
+                    : existingSharedKeys.has(key);
+                if(existsRemotely) return;
+                const target = isPrivate ? privateRef : dataRef;
+                batch.set(target.doc(key), {
+                    key,
+                    value: localStorage.getItem(key),
+                    groupId,
+                    updatedBy: juniorStatsCurrentUser.uid,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                operations++;
+            });
+
+            const legacyRatings = remoteSnapshot.docs.find(doc => doc.id === "juniorstats_ratings");
+            if(legacyRatings){
+                if(!existingPrivateKeys.has("juniorstats_ratings")){
+                    const legacyData = legacyRatings.data();
+                    batch.set(privateRef.doc("juniorstats_ratings"), {
+                        key:"juniorstats_ratings",
+                        value:String(legacyData.value || "{}"),
+                        groupId,
+                        updatedBy:juniorStatsCurrentUser.uid,
+                        updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+                    }, {merge:true});
+                    operations++;
+                }
+                batch.delete(legacyRatings.ref);
+                operations++;
+            }
+
+            if(operations > 0) await batch.commit();
+            await metaRef.set({
+                groupId,
+                initialized:true,
+                initializedBy:juniorStatsCurrentUser.uid,
+                initializedAt:firebase.firestore.FieldValue.serverTimestamp(),
+                schemaVersion:2
+            }, {merge:true});
+
+            remoteSnapshot = await dataRef.where("groupId", "==", groupId).get();
+            privateSnapshot = await privateRef.where("groupId", "==", groupId).get();
+        }else if(remoteSnapshot.docs.some(doc => doc.id === "juniorstats_ratings")){
+            const legacy = remoteSnapshot.docs.find(doc => doc.id === "juniorstats_ratings");
+            const legacyData = legacy.data();
+            const batch = juniorStatsDb.batch();
+            const privateHasRatings = privateSnapshot.docs.some(doc => doc.id === "juniorstats_ratings");
+            if(!privateHasRatings){
+                batch.set(privateRef.doc("juniorstats_ratings"), {
+                    key:"juniorstats_ratings",
+                    value:String(legacyData.value || "{}"),
+                    groupId,
+                    updatedBy:juniorStatsCurrentUser.uid,
+                    updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+                }, {merge:true});
+            }
+            batch.delete(legacy.ref);
+            await batch.commit();
+            remoteSnapshot = await dataRef.where("groupId", "==", groupId).get();
+            privateSnapshot = await privateRef.where("groupId", "==", groupId).get();
+        }
+    }else{
+        remoteSnapshot = await dataRef.where("groupId", "==", groupId)
+            .where("key", "!=", "juniorstats_ratings").get();
+        if(remoteSnapshot.empty){
+            throw new Error("Trenér ještě nepřenesl data týmu do online databáze. Požádejte trenéra.");
+        }
+    }
+
+    const remoteValues = {};
+    remoteSnapshot.forEach(doc => {
+        const item = doc.data();
+        if(item && typeof item.key === "string" && typeof item.value === "string"){
+            if(item.key !== "juniorstats_ratings" || profile.role === "trainer"){
+                remoteValues[item.key] = item.value;
+            }
+        }
+    });
+    if(profile.role === "trainer"){
+        privateSnapshot?.forEach(doc => {
+            const item = doc.data();
+            if(item && typeof item.key === "string" && typeof item.value === "string"){
+                remoteValues[item.key] = item.value;
+            }
+        });
+    }
+
+    const before = {};
+    juniorStatsAppStorageKeys().forEach(key => before[key] = localStorage.getItem(key));
+    juniorStatsAppStorageKeys().forEach(key => localStorage.removeItem(key));
+    Object.entries(remoteValues).forEach(([key,value]) => localStorage.setItem(key,value));
+
+    const changed = Object.keys(before).length !== Object.keys(remoteValues).length ||
+        Object.entries(remoteValues).some(([key,value]) => before[key] !== value);
+    if(changed && sessionStorage.getItem("juniorstats_hydrated") !== groupId){
+        sessionStorage.setItem("juniorstats_hydrated",groupId);
+        location.reload();
+        return;
+    }
+
+    sessionStorage.removeItem("juniorstats_hydrated");
+    juniorStatsInstallStorageAdapter();
+    juniorStatsListenForTeamChanges(groupId);
+    if(profile.role === "trainer"){
+        juniorStatsListenForPrivateData(groupId);
+        juniorStatsListenForParentSubmissions(groupId);
+    }
+}
+
+function juniorStatsListenForTeamChanges(groupId){
+    if(juniorStatsDataUnsubscribe) juniorStatsDataUnsubscribe();
+
+    let firstSnapshot = true;
+    let teamQuery = juniorStatsDb.collection("appData")
+        .where("groupId", "==", groupId);
+    if(juniorStatsCurrentProfile?.role === "parent"){
+        teamQuery = teamQuery.where("key", "!=", "juniorstats_ratings");
+    }
+
+    juniorStatsDataUnsubscribe = teamQuery.onSnapshot(snapshot => {
+        // Reconcile the complete snapshot, including the first one. This closes
+        // the race between the initial get() and attaching the realtime listener.
+        const remoteKeys = new Set();
+        const values = {};
+
+        snapshot.forEach(doc => {
+            const item = doc.data();
+            if(!item || typeof item.key !== "string" || typeof item.value !== "string") return;
+            if(item.key === "juniorstats_ratings") return;
+            remoteKeys.add(item.key);
+            values[item.key] = item.value;
+        });
+
+        let changed = false;
+        const localKeys = juniorStatsAppStorageKeys();
+        localKeys.forEach(key => {
+            if(JUNIORSTATS_TRAINER_PRIVATE_KEYS.has(key)) return;
+            if(juniorStatsWriteTimers.has(key) || juniorStatsPendingWrites.has(key) || juniorStatsPendingDeletes.has(key)) return;
+            if(!remoteKeys.has(key) && localStorage.getItem(key) !== null){
+                juniorStatsApplyingRemote = true;
+                try{ localStorage.removeItem(key); }
+                finally{ juniorStatsApplyingRemote = false; }
+                changed = true;
+            }
+        });
+
+        Object.entries(values).forEach(([key,value]) => {
+            if(juniorStatsWriteTimers.has(key) || juniorStatsPendingWrites.has(key) || juniorStatsPendingDeletes.has(key)) return;
+            if(localStorage.getItem(key) !== value){
+                juniorStatsApplyingRemote = true;
+                try{ localStorage.setItem(key,value); }
+                finally{ juniorStatsApplyingRemote = false; }
+                changed = true;
+            }
+        });
+
+        firstSnapshot = false;
+        if(changed){
+            location.reload();
+        }
+    }, error => {
+        console.error("JuniorStats team sync error:", error);
+        if(typeof showToast === "function") showToast("Chyba synchronizace týmu.");
+    });
+}
+
+function juniorStatsListenForPrivateData(groupId){
+    if(juniorStatsPrivateDataUnsubscribe) juniorStatsPrivateDataUnsubscribe();
+
+    juniorStatsPrivateDataUnsubscribe = juniorStatsDb.collection("trainerPrivateData")
+        .where("groupId","==",groupId)
+        .onSnapshot(snapshot => {
+            const remoteKeys = new Set();
+            const values = {};
+
+            snapshot.forEach(doc => {
+                const item = doc.data();
+                if(!item || typeof item.key !== "string" || typeof item.value !== "string") return;
+                if(!JUNIORSTATS_TRAINER_PRIVATE_KEYS.has(item.key)) return;
+                remoteKeys.add(item.key);
+                values[item.key] = item.value;
+            });
+
+            let changed = false;
+            JUNIORSTATS_TRAINER_PRIVATE_KEYS.forEach(key => {
+                if(juniorStatsWriteTimers.has(key) || juniorStatsPendingWrites.has(key) || juniorStatsPendingDeletes.has(key)) return;
+                if(!remoteKeys.has(key) && localStorage.getItem(key) !== null){
+                    juniorStatsApplyingRemote = true;
+                    try{ localStorage.removeItem(key); }
+                    finally{ juniorStatsApplyingRemote = false; }
+                    changed = true;
+                }
+            });
+
+            Object.entries(values).forEach(([key,value]) => {
+                if(juniorStatsWriteTimers.has(key) || juniorStatsPendingWrites.has(key) || juniorStatsPendingDeletes.has(key)) return;
+                if(localStorage.getItem(key) !== value){
+                    juniorStatsApplyingRemote = true;
+                    try{ localStorage.setItem(key,value); }
+                    finally{ juniorStatsApplyingRemote = false; }
+                    changed = true;
+                }
+            });
+
+            if(changed) location.reload();
+        },error => {
+            console.error("JuniorStats private data sync error:",error);
+            if(typeof showToast === "function") showToast("Chyba synchronizace soukromých dat.");
+        });
+}
+
+function juniorStatsListenForParentSubmissions(groupId){
+    if(juniorStatsSubmissionUnsubscribe) juniorStatsSubmissionUnsubscribe();
+    juniorStatsSubmissionUnsubscribe = juniorStatsDb.collection("parentSubmissions")
+        .where("groupId", "==", groupId)
+        .onSnapshot(snapshot => {
+            const pending = snapshot.docs.filter(doc => doc.data()?.status === "pending");
+            const badge = document.getElementById("juniorstatsPendingParents");
+            if(badge) badge.textContent = pending.length ?
+                `Potvrzení rodičů ke kontrole: ${pending.length}` : "";
+        }, error => console.error("Parent submissions listener error:", error));
+}
+
+async function juniorStatsReviewParentSubmissions(){
+    if(juniorStatsCurrentProfile?.role !== "trainer") return;
+    const groupId = juniorStatsCurrentProfile.groupId;
+    try{
+        const snapshot = await juniorStatsDb.collection("parentSubmissions")
+            .where("groupId", "==", groupId).get();
+        const pending = snapshot.docs.filter(doc => doc.data()?.status === "pending");
+        if(!pending.length){ alert("Žádná nová potvrzení."); return; }
+        if(typeof attendance !== "object" || attendance === null){
+            attendance = {};
+        }
+        const messages = pending.map(doc => {
+            const d = doc.data();
+            return Object.entries(d.statuses || {}).map(([id,status]) =>
+                `${id}: ${status === "present" ? "účast" : "neúčast"}`).join(", ");
+        });
+        if(!confirm("Přijmout následující potvrzení do rozpracované docházky?\n\n" + messages.join("\n"))) return;
+        for(const doc of pending){
+            const d = doc.data();
+            Object.entries(d.statuses || {}).forEach(([id,status]) => {
+                if(!["present","absent"].includes(status)) return;
+                attendance[String(id)] = status;
+                const player = document.querySelector(`.player[data-id="${CSS.escape(String(id))}"]`);
+                const btn = player?.querySelector(`.att-btn.${status}`);
+                if(btn && typeof setAttendance === "function") setAttendance(btn,status);
+            });
+            await doc.ref.update({status:"received", receivedAt:firebase.firestore.FieldValue.serverTimestamp()});
+        }
+        localStorage.setItem("juniorstats_attendance",JSON.stringify(attendance));
+        alert("Potvrzení načtena. Zkontrolujte docházku a uložte trénink.");
+    }catch(error){
+        console.error("Cannot review parent submissions:",error);
+        alert("Potvrzení se nepodařilo načíst.");
+    }
+}
+
+// Stop cloud listeners when the page is closed.
+window.addEventListener("beforeunload", () => {
+    if(juniorStatsDataUnsubscribe) juniorStatsDataUnsubscribe();
+    if(juniorStatsPrivateDataUnsubscribe) juniorStatsPrivateDataUnsubscribe();
+    if(juniorStatsSubmissionUnsubscribe) juniorStatsSubmissionUnsubscribe();
+});
+
 function openNextTraining(){
 
     const panel =
@@ -9751,6 +10345,12 @@ function saveNominace(){
         const id =
             player.dataset.id;
 
+        const allowedIds = juniorStatsCurrentProfile?.role === "parent"
+            ? juniorStatsCurrentProfile.playerIds.map(String)
+            : null;
+
+        if(allowedIds && !allowedIds.includes(String(id))) return;
+
         const name =
             player.querySelector(".player-name")
                 ?.textContent
@@ -9851,168 +10451,48 @@ function closeParentPanel(){
 }
 
 
- window.saveParentAttendance = function(){
-
-    const parentAttendance = {};
-
-    document
-        .querySelectorAll(".parent-attendance-btn.active")
-        .forEach(button => {
-
-            const playerId =
-                String(button.dataset.playerId);
-
-            const status =
-                button.dataset.status;
-
-            parentAttendance[playerId] = status;
-
-        });
-
-    if(Object.keys(parentAttendance).length === 0){
-
-        alert("Vyberte alespoň jedno dítě.");
-
+window.saveParentAttendance = async function(){
+    if(juniorStatsCurrentProfile?.role !== "parent" || !juniorStatsCurrentUser){
+        alert("Přihlaste se jako rodič.");
         return;
     }
-
-    /* =====================================
-       SALVĂM ALEGERILE PĂRINȚILOR
-    ===================================== */
-
-    localStorage.setItem(
-        "juniorstats_parent_attendance",
-        JSON.stringify(parentAttendance)
-    );
-
-    /* =====================================
-       TRANSFERĂM ALEGERILE PE BUTOANELE
-       DIN DOCHÁZKA A HRÁČI
-    ===================================== */
-
-    Object.keys(parentAttendance).forEach(id => {
-
-        const player =
-            document.querySelector(
-                `.player[data-id="${id}"]`
-            );
-
-        if(!player) return;
-
-        const status =
-            parentAttendance[id];
-
-        const button =
-            player.querySelector(
-                `.att-btn.${status}`
-            );
-
-        if(button){
-       
-       setAttendance(
-                button,
-                status
-            );
-
+    const allowedIds = (juniorStatsCurrentProfile.playerIds || []).map(String);
+    const statuses = {};
+    document.querySelectorAll(".parent-attendance-btn.active").forEach(button => {
+        const id = String(button.dataset.playerId);
+        if(allowedIds.includes(id) && ["present", "absent"].includes(button.dataset.status)){
+            statuses[id] = button.dataset.status;
         }
-
     });
-
-
-    /* SALVĂM IMEDIAT ȘI BIFĂRILE PARȚIALE */
-
-localStorage.setItem(
-    "juniorstats_attendance",
-    JSON.stringify(attendance)
-);
-   
-  const trainingStart = getAttendanceTrainingStart();
-
-if(trainingStart){
-
-    localStorage.setItem(
-        "juniorstats_attendance_training_start",
-        trainingStart.toISOString()
-    );
-
-}     
-
-    /* =====================================
-       VERIFICĂM DACĂ TOȚI JUCĂTORII
-       SUNT MARCAȚI
-    ===================================== */
-
-    const players =
-        document.querySelectorAll(".player");
-
-    const activePlayers =
-        [...players].filter(player => {
-
-            const name =
-                player.querySelector(
-                    ".player-name"
-                )?.textContent.trim();
-
-            return (
-                name &&
-                name !== "Volné místo"
-            );
-
-        });
-
-    const allMarked =
-        activePlayers.every(player => {
-
-            const id =
-                player.dataset.id;
-
-            return attendance[id];
-
-        });
-
-    /* =====================================
-       DACĂ LISTA ESTE COMPLETĂ,
-       SALVĂM ANTRENAMENTUL AUTOMAT
-    ===================================== */
-
-    if(allMarked){
-
-        saveAttendance();
-
-    }else{
-
-        alert(
-            "Docházka byla potvrzena ✓"
-        );
-
+    if(!Object.keys(statuses).length){
+        alert("Vyberte alespoň jedno dítě.");
+        return;
     }
-
-};     
-
-
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function(){
-
-        const button =
-            document.getElementById(
-                "saveParentAttendanceBtn"
-            );
-
-        if(!button) return;
-
-        button.addEventListener(
-            "click",
-            function(){
-
-                saveParentAttendance();
-
-            }
-        );
-
+    const button = document.querySelector("#parentPanel .save-parent-attendance-btn");
+    if(button?.disabled) return;
+    if(button) button.disabled = true;
+    try{
+        await firebase.firestore().collection("parentSubmissions").add({
+            uid: juniorStatsCurrentUser.uid,
+            groupId: juniorStatsCurrentProfile.groupId,
+            playerIds: Object.keys(statuses),
+            statuses,
+            trainingStart: new Date().toISOString(),
+            status: "pending",
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        alert("Docházka byla odeslána trenérovi ✓");
+        closeParentPanel();
+    }catch(error){
+        console.error("Parent attendance submit error:", error);
+        alert("Docházku se nepodařilo odeslat. Zkuste to znovu.");
+    }finally{
+        if(button) button.disabled = false;
     }
-);
+};
+
+
+
 
 
       
